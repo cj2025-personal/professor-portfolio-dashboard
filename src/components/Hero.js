@@ -18,8 +18,8 @@ const Hero = () => {
                 <span className="block text-crimson-600 text-lg sm:text-xl md:text-2xl font-medium">Paul H. O'Neill School of Public and Environmental Affairs</span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              Public finance scholar specializing in municipal finance, budgeting, and state and local borrowing.
+              Expert in tax increment finance, economic development, and financial condition analysis. 
               </p>
               <div className="mt-5 sm:flex sm:justify-start md:mt-8">
                 <div className="rounded-md shadow">

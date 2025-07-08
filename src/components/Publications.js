@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 const Publications = () => {
   const [publications, setPublications] = useState({});
-  const [activeCategory, setActiveCategory] = useState('journal article');
+  const [activeCategory, setActiveCategory] = useState('books');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -202,54 +202,82 @@ const Publications = () => {
                           </h3>
                           <p className="text-gray-600 mb-2">
                             {publication.author}
-                            {publication.bookChapterDetails?.isCoAuthor && (
+                            {/* Show (Co-author) if isCoAuthor is true in journalArticleDetails */}
+                            {publication.category === 'journal article' && publication.journalArticleDetails?.isCoAuthor && (
                               <span className="ml-2 text-sm text-gray-500">(Co-author)</span>
                             )}
                           </p>
-                          <p className="text-gray-500 mb-4">
-                            {formatDate(publication.date)}
-                            <div className="flex flex-wrap gap-2 mt-2">
-                              {publication.link && (
-                                <a
-                                  href={publication.link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-crimson-600 hover:text-crimson-700 font-medium"
-                                >
-                                  View Publication
-                                </a>
-                              )}
-                              {/* For Books tab, show View Synopsis button if synopsis exists */}
-                              {activeCategory === 'books' && publication.synopsis && (
-                                <button
-                                  onClick={() => openSynopsisModal(
-                                    publication.synopsis,
-                                    publication.title,
-                                    false,
-                                    null
-                                  )}
-                                  className="text-crimson-600 hover:text-crimson-700 font-medium"
-                                >
-                                  View Synopsis
-                                </button>
-                              )}
-                              {/* For other categories, show View Synopsis if synopsis exists */}
-                              {activeCategory !== 'books' && publication.synopsis && (
-                                <button
-                                  onClick={() => openSynopsisModal(
-                                    publication.synopsis, 
-                                    publication.title, 
-                                    publication.category === 'book chapter',
-                                    publication.bookChapterDetails
-                                  )}
-                                  className="text-crimson-600 hover:text-crimson-700 font-medium"
-                                >
-                                  View Synopsis
-                                </button>
-                              )}
+                          {/* Journal Article Details */}
+                          {publication.category === 'journal article' && publication.journalArticleDetails && (
+                            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                              <h4 className="font-semibold text-gray-900 mb-2">Journal Article Details:</h4>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                                {publication.journalArticleDetails.articleTitle && (
+                                  <div>
+                                    <span className="font-medium text-gray-700">Article Title:</span>
+                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.articleTitle}</span>
+                                  </div>
+                                )}
+                                {publication.journalArticleDetails.journalName && (
+                                  <div>
+                                    <span className="font-medium text-gray-700">Journal Name:</span>
+                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.journalName}</span>
+                                  </div>
+                                )}
+                                {publication.journalArticleDetails.volume && (
+                                  <div>
+                                    <span className="font-medium text-gray-700">Volume:</span>
+                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.volume}</span>
+                                  </div>
+                                )}
+                                {publication.journalArticleDetails.issue && (
+                                  <div>
+                                    <span className="font-medium text-gray-700">Issue:</span>
+                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.issue}</span>
+                                  </div>
+                                )}
+                                {publication.journalArticleDetails.pageNumbers && (
+                                  <div>
+                                    <span className="font-medium text-gray-700">Pages:</span>
+                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.pageNumbers}</span>
+                                  </div>
+                                )}
+                                {publication.journalArticleDetails.publicationDate && (
+                                  <div>
+                                    <span className="font-medium text-gray-700">Publication Date:</span>
+                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.publicationDate}</span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
-                          </p>
-                          {/* Book Chapter Details */}
+                          )}
+                          {/* Publication Link and Synopsis */}
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {publication.link && (
+                              <a
+                                href={publication.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-crimson-600 hover:text-crimson-700 font-medium"
+                              >
+                                View Publication
+                              </a>
+                            )}
+                            {publication.synopsis && (
+                              <button
+                                onClick={() => openSynopsisModal(
+                                  publication.synopsis,
+                                  publication.title,
+                                  publication.category === 'book chapter',
+                                  publication.bookChapterDetails
+                                )}
+                                className="text-crimson-600 hover:text-crimson-700 font-medium"
+                              >
+                                View Synopsis
+                              </button>
+                            )}
+                          </div>
+                          {/* Book Chapter Details (unchanged) */}
                           {publication.category === 'book chapter' && publication.bookChapterDetails && (
                             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                               <h4 className="font-semibold text-gray-900 mb-2">Book Chapter Details:</h4>
