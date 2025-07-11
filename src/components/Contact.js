@@ -72,8 +72,8 @@ const Contact = () => {
                 </div>
                 <div className="ml-3">
                   <h3 className="text-lg font-medium text-gray-900">Email</h3>
-                  <a href="mailto:crjohn@indiana.edu" className="mt-1 text-crimson-600 hover:text-crimson-700">
-                    crjohn@indiana.edu
+                  <a href="mailto:crljohns@iu.edu" className="mt-1 text-crimson-600 hover:text-crimson-700">
+                    crljohns@iu.edu
                   </a>
                 </div>
               </div>
@@ -86,7 +86,7 @@ const Contact = () => {
                 </div>
                 <div className="ml-3">
                   <h3 className="text-lg font-medium text-gray-900">Phone</h3>
-                  <p className="mt-1 text-gray-600">812-XXX-XXXX</p>
+                  <p className="mt-1 text-gray-600">812-855-0742</p>
                 </div>
               </div>
             </div>
