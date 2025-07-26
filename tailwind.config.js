@@ -32,7 +32,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Inter var', 'sans-serif'],
+        sans: ['Work Sans', 'sans-serif'],
       },
     },
   },

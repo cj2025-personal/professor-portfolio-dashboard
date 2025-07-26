@@ -440,8 +440,15 @@ const Teaching = () => {
   );
 
   return (
-    <section id="teaching" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="teaching" className="py-20 bg-gray-50 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-15">
+        <div className="absolute top-10 right-10 w-20 h-20 border border-crimson-800 rounded-full"></div>
+        <div className="absolute bottom-20 left-10 w-16 h-16 border border-crimson-800 transform rotate-45"></div>
+        <div className="absolute top-1/2 left-1/4 w-12 h-12 border border-crimson-800 rounded-full"></div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -450,7 +457,27 @@ const Teaching = () => {
         >
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Teaching</h2>
+              <div className="text-center mb-8 relative">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-crimson-100 rounded-full mb-4">
+                  <svg className="w-8 h-8 text-crimson-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                {/* Themed Illustration: Stack of books and chalkboard */}
+                <div className="absolute top-0 right-0 hidden md:block z-0 opacity-80 pointer-events-none">
+                  <svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="60" width="100" height="12" rx="4" fill="#fee2e2"/>
+                    <rect x="20" y="48" width="80" height="12" rx="4" fill="#fca5a5"/>
+                    <rect x="35" y="36" width="50" height="12" rx="4" fill="#991b1b"/>
+                    <rect x="60" y="10" width="40" height="20" rx="6" fill="#b91c1c"/>
+                    <rect x="65" y="15" width="30" height="10" rx="2" fill="#fff"/>
+                    <rect x="40" y="20" width="20" height="8" rx="2" fill="#fca5a5"/>
+                  </svg>
+                </div>
+                {/* End Illustration */}
+                <h2 className="text-3xl font-bold text-gray-900">Teaching</h2>
+                <p className="text-gray-600 mt-2">Explore my courses and educational resources</p>
+              </div>
 
               <div className="space-y-8">
                 {/* Loading State */}
@@ -506,13 +533,18 @@ const Teaching = () => {
                             fetchModules(course.id);
                             setActiveSection('overview');
                           }}
-                          className={`px-6 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
                             activeCourse === course.id
-                              ? 'bg-crimson-600 text-white'
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              ? 'bg-crimson-600 text-white shadow-lg'
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-md'
                           }`}
                         >
-                          {course.code}
+                          <div className="flex items-center space-x-2">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                            <span>{course.code}</span>
+                          </div>
                         </button>
                       ))}
                     </div>

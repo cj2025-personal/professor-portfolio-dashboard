@@ -18,12 +18,33 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically handle the form submission
-    // For now, we'll just show a success message
-    setSubmitStatus('success');
-    setTimeout(() => setSubmitStatus(''), 3000);
+    setSubmitStatus('');
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/api/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => setSubmitStatus(''), 3000);
+      } else {
+        setSubmitStatus(data.message || 'error');
+      }
+    } catch (error) {
+      setSubmitStatus('An error occurred while sending your message. Please try again.');
+    }
   };
 
   return (
@@ -39,7 +60,7 @@ const Contact = () => {
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Contact</h2>
+              <h2 className="text-3xl font-bold text-gray-900 font-section-title">Contact</h2>
               <p className="text-lg text-gray-600 mb-8">
                 Feel free to reach out with any questions about my research, 
                 teaching, or potential collaborations.
@@ -176,6 +197,22 @@ const Contact = () => {
                     <div className="ml-3">
                       <p className="text-sm font-medium text-green-800">
                         Message sent successfully!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {submitStatus && submitStatus !== 'success' && (
+                <div className="rounded-md bg-red-50 p-4 mt-2">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-7V7a1 1 0 112 0v4a1 1 0 01-2 0zm1 4a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm font-medium text-red-800">
+                        {submitStatus}
                       </p>
                     </div>
                   </div>
