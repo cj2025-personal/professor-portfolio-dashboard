@@ -19,7 +19,8 @@ const Publications = () => {
   const [imageModal, setImageModal] = useState({
     isOpen: false,
     imageUrl: '',
-    title: ''
+    title: '',
+    publicationLink: ''
   });
 
   // Fetch publications data from API
@@ -93,12 +94,12 @@ const Publications = () => {
   };
 
   // Handle image modal
-  const openImageModal = (imageUrl, title) => {
-    setImageModal({ isOpen: true, imageUrl, title });
+  const openImageModal = (imageUrl, title, publicationLink = '') => {
+    setImageModal({ isOpen: true, imageUrl, title, publicationLink });
   };
 
   const closeImageModal = () => {
-    setImageModal({ isOpen: false, imageUrl: '', title: '' });
+    setImageModal({ isOpen: false, imageUrl: '', title: '', publicationLink: '' });
   };
 
   // Check if there are any books in the data
@@ -398,7 +399,7 @@ const Publications = () => {
                               onError={(e) => {
                                 e.target.style.display = 'none';
                               }}
-                              onClick={() => openImageModal(publication.bookImage, publication.title)}
+                              onClick={() => openImageModal(publication.bookImage, publication.title, publication.link)}
                             />
                           )}
                           {/* Category label - hide for books */}
@@ -489,9 +490,14 @@ const Publications = () => {
                 <img 
                   src={imageModal.imageUrl} 
                   alt={imageModal.title}
-                  className="max-w-full max-h-[70vh] object-contain mx-auto"
+                  className={`max-w-full max-h-[85vh] object-contain mx-auto ${imageModal.publicationLink ? 'cursor-pointer hover:opacity-90 transition-opacity' : ''}`}
                   onError={(e) => {
                     e.target.style.display = 'none';
+                  }}
+                  onClick={() => {
+                    if (imageModal.publicationLink) {
+                      window.open(imageModal.publicationLink, '_blank');
+                    }
                   }}
                 />
               </div>

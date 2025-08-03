@@ -140,12 +140,25 @@ const CourseLectures = () => {
                   </svg>
                   Back to Teaching
                 </Link>
-                <h1 className="text-3xl font-bold text-gray-900">
-                  Course {courseInfo?.courseId || courseId} Lecture Videos
-                </h1>
-                {courseInfo?.count && (
-                  <p className="text-lg text-gray-600 mt-2">Total Lectures: {courseInfo.count}</p>
-                )}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900">
+                      Course {courseInfo?.courseId || courseId} Lecture Videos
+                    </h1>
+                    {courseInfo?.count && (
+                      <p className="text-lg text-gray-600 mt-2">Total Lectures: {courseInfo.count}</p>
+                    )}
+                  </div>
+                  <Link
+                    to={`/course/${courseId}/discussions`}
+                    className="inline-flex items-center px-4 py-2 border border-crimson-300 text-sm font-medium rounded-md text-crimson-700 bg-white hover:bg-crimson-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimson-500"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    Discussions
+                  </Link>
+                </div>
               </div>
               {/* Loading State */}
               {loading && (

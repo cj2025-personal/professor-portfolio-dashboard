@@ -124,7 +124,6 @@ const Navbar = () => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
-        audioRef.current.currentTime = 0; // Reset to beginning when stopping
         setIsPlaying(false);
       } else {
         audioRef.current.muted = false;

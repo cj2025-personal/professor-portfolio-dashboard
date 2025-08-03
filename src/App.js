@@ -14,6 +14,9 @@ import CourseLectures from './components/CourseLectures';
 import CourseModules from './components/CourseModules';
 import ModulePresentations from './components/ModulePresentations';
 import ModuleLectures from './components/ModuleLectures';
+import DiscussionTopics from './components/DiscussionTopics';
+import DiscussionComments from './components/DiscussionComments';
+import Chatbot from './components/Chatbot';
 import './App.css';
 
 function App() {
@@ -37,10 +40,13 @@ function App() {
             <Route path="/course/:courseId/presentations" element={<CoursePresentations />} />
             <Route path="/course/:courseId/lectures" element={<CourseLectures />} />
             <Route path="/course/:courseId/modules" element={<CourseModules />} />
+            <Route path="/course/:courseId/discussions" element={<DiscussionTopics />} />
+            <Route path="/course/:courseId/discussions/:topicId" element={<DiscussionComments />} />
             <Route path="/module/:moduleId/presentations" element={<ModulePresentations />} />
             <Route path="/module/:moduleId/lectures" element={<ModuleLectures />} />
           </Routes>
         </main>
+        <Chatbot />
       </div>
     </Router>
   );

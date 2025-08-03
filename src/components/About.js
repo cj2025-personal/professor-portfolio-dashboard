@@ -63,7 +63,7 @@ const About = () => {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="ml-4 text-gray-800">Public Finance and Financial Management</p>
+                  <p className="ml-4 text-black-800" style={{ fontSize: '19px' }}>Public Finance and Financial Management</p>
                 </div>
               </div>
               <div className="bg-white rounded-lg shadow-sm p-6">
@@ -80,7 +80,7 @@ const About = () => {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="ml-4 text-gray-800">Financial Markets and Municipal Finance</p>
+                  <p className="ml-4 text-gray-800" style={{ fontSize: '19px' }}>Financial Markets and Municipal Finance</p>
                 </div>
               </div>
               <div className="bg-white rounded-lg shadow-sm p-6">
@@ -97,7 +97,7 @@ const About = () => {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="ml-4 text-gray-800">Public Finance and Financial Management</p>
+                  <p className="ml-4 text-gray-800" style={{ fontSize: '19px' }}>Public Finance and Financial Management</p>
                 </div>
               </div>
             </div>

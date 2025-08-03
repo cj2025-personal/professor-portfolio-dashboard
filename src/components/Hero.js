@@ -41,7 +41,7 @@ const Hero = () => {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-4xl md:text-5xl">
-                <span className="block mb-2" style={{marginLeft: '30px'}}>Craig L. Johnson Ph.D.</span>
+                <span className="block mb-2" style={{marginLeft: '30px'}}>Craig L. Johnson, Ph.D.</span>
                 <span className="block text-crimson-600 text-lg sm:text-xl md:text-2xl font-medium" style={{marginLeft: '30px'}}>Paul H. O'Neill School of Public and Environmental Affairs</span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl" style={{marginLeft: '30px'}}>
