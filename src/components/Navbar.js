@@ -22,6 +22,9 @@ const Navbar = () => {
     { name: 'Contact', href: 'contact' },
   ];
 
+  // Feature flag to disable the music player implementation
+  const MUSIC_ENABLED = false;
+
   const fetchRandomMusic = async () => {
     setIsLoading(true);
     setError(null);
@@ -159,6 +162,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    if (!MUSIC_ENABLED) return;
     fetchRandomMusic();
     
     // Add comprehensive event listeners for user interaction
@@ -364,7 +368,7 @@ const Navbar = () => {
       document.removeEventListener('touchcancel', handleTouchpadScroll);
       document.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [MUSIC_ENABLED]);
 
   return (
     <nav className="fixed w-full bg-white shadow-sm z-50">
@@ -387,7 +391,8 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Music Player - Desktop */}
+          {/* Music Player - Desktop (disabled) */}
+          {MUSIC_ENABLED && (
           <div className="hidden md:flex items-center space-x-2">
             <div className="bg-black/80 backdrop-blur-sm rounded-lg p-2 text-white max-w-48">
               <div className="flex items-center space-x-2">
@@ -437,6 +442,7 @@ const Navbar = () => {
               </div>
             </div>
           </div>
+          )}
 
           {/* Mobile menu button */}
           <div className="md:hidden flex w-full justify-end">
@@ -471,7 +477,8 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {/* Music Player - Mobile */}
+            {/* Music Player - Mobile (disabled) */}
+            {MUSIC_ENABLED && (
             <div className="mt-4 px-3 py-2 bg-black/80 backdrop-blur-sm rounded-lg text-white">
               <div className="flex items-center space-x-2">
                 <div className="flex-shrink-0">
@@ -519,17 +526,20 @@ const Navbar = () => {
                 </div>
               </div>
             </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* Hidden audio element */}
+      {/* Hidden audio element (disabled) */}
+      {MUSIC_ENABLED && (
       <audio
         ref={audioRef}
         onEnded={handleAudioEnded}
         onError={handleAudioError}
         preload="metadata"
       />
+      )}
     </nav>
   );
 };

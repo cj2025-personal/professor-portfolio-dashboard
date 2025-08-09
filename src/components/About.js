@@ -1,7 +1,37 @@
 import React from 'react';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 
 const About = () => {
+  const handleDownloadVitae = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URI}/api/cv/url`);
+      const data = response?.data?.data ?? response?.data ?? {};
+      const fileUrl = data.fileUrl || data.url || data.cvUrl;
+      if (!fileUrl) {
+        throw new Error('CV URL not found in response');
+      }
+
+      // Attempt a programmatic download; fallback to opening in a new tab
+      const anchor = document.createElement('a');
+      anchor.href = fileUrl;
+      anchor.target = '_blank';
+      anchor.rel = 'noopener noreferrer';
+      anchor.download = 'Vitae.pdf';
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+    } catch (err) {
+      console.error('Failed to download vitae:', err);
+      // Fallback: try opening the endpoint directly
+      try {
+        window.open(`${process.env.REACT_APP_BACKEND_URI}/api/cv/url`, '_blank');
+      } catch (_) {
+        // no-op
+      }
+    }
+  };
   return (
     <section id="about" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,9 +47,8 @@ const About = () => {
             <div className="flex justify-between items-center">
               <h2 className="text-3xl font-bold text-gray-900">About Me</h2>
               <a
-                href="/vitae.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#"
+                onClick={handleDownloadVitae}
                 className="inline-flex items-center text-crimson-600 hover:text-crimson-700 transition"
               >
                 <span className="mr-2">Download Vitae</span>
@@ -97,7 +126,7 @@ const About = () => {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="ml-4 text-gray-800" style={{ fontSize: '19px' }}>Public Finance and Financial Management</p>
+                  <p className="ml-4 text-gray-800" style={{ fontSize: '19px' }}>Tax Increment Finance and Economic Development</p>
                 </div>
               </div>
             </div>
