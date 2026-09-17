@@ -33,6 +33,13 @@ server {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
+    # /images/ is not fingerprinted, so it cannot be immutable — but a week
+    # of caching stops the portrait and favicon being refetched on every visit.
+    location /images/ {
+        expires 7d;
+        add_header Cache-Control "public";
+    }
+
     location = /index.html {
         add_header Cache-Control "no-store, must-revalidate";
     }
