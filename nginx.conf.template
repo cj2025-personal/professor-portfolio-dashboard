@@ -1,7 +1,22 @@
 # Rendered at container start by nginx's envsubst entrypoint, so ${PORT} picks
 # up whatever Cloud Run injects.
+
+# www -> apex. Cloud Run domain mappings cannot redirect, and Cloudflare
+# redirect rules only fire on proxied records — which the apex cannot be, since
+# proxying breaks Google's certificate issuance. Doing it here keeps the
+# canonical-host decision inside the app, where it is visible and testable.
+#
+# Cloud Run terminates TLS and forwards the original Host, so this matches on
+# the real hostname. It is an exact server_name match, so it wins over the
+# default_server block below.
 server {
-    listen       ${PORT};
+    listen      ${PORT};
+    server_name www.craigljohnson.org;
+    return 301  https://craigljohnson.org$request_uri;
+}
+
+server {
+    listen       ${PORT} default_server;
     server_name  _;
     root         /usr/share/nginx/html;
     index        index.html;
