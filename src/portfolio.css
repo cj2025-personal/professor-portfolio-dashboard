@@ -109,8 +109,8 @@ footer.ark-stripe::before, .seg__btn--on::after, nav .after\:bg-signal-red::afte
   .portfolio-hero__grid { grid-template-columns: minmax(0, 1fr) 270px; gap: 24px; }
   .hero__name { font-size: clamp(2rem, 4.2vw, 2.75rem); }
   nav .ark-container { padding-left: 24px; padding-right: 24px; }
-  nav .hidden.md\:flex { gap: 0; }
-  nav .hidden.md\:flex > a { padding-left: 9px; padding-right: 9px; font-size: 11px; }
+  nav .hidden.lg\:flex { gap: 0; }
+  nav .hidden.lg\:flex > a { padding-left: 9px; padding-right: 9px; font-size: 11px; }
 }
 @media (max-width: 767px) {
   nav .h-16 { height: 68px; }
@@ -296,4 +296,43 @@ section[id] { scroll-margin-top: 88px; }
 .proj-arch-nav--mobile { width: 100%; justify-content: space-between; padding-left: 16px; }
 @media (min-width: 768px) and (max-width: 1050px) {
   .proj-arch-nav { padding-inline: 12px; font-size: 11px; }
+}
+
+/* Nav links carried a 34px hit area, under the 44px minimum that touch
+   guidance asks for. The visual size is unchanged — only the padding grows,
+   so the row height and type are untouched while the target reaches 44px. */
+nav .hidden.lg\:flex > a,
+nav .hidden.lg\:flex > div > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* Publication row actions ("View paper", the abstract toggle) sat at a 20px
+   hit area. They are standalone controls rather than links inside a sentence,
+   so the 44px touch minimum applies. Padding grows, type and colour do not,
+   and the negative margin keeps the row's visual rhythm unchanged. */
+@media (max-width: 1024px) {
+  .link-cta,
+  #publications button.text-sm.font-semibold {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-block: 12px;
+    margin-block: -12px;
+  }
+}
+
+/* Footer navigation on touch. The links stack in a 2.5-unit-spaced list with
+   a 19px hit area; padding brings each to 44px without changing the visual
+   gap, since the added space is what the list gap was already providing. */
+@media (max-width: 1024px) {
+  footer.ark-stripe a,
+  .portfolio-platform__credit {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  footer.ark-stripe ul { margin-top: 0; }
+  footer.ark-stripe ul > li + li { margin-top: 0; }
 }

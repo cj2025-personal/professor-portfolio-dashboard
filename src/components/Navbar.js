@@ -91,7 +91,7 @@ const Navbar = () => {
       <div className="ark-container">
         <div className="flex items-center justify-between h-16">
           {/* Desktop menu */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {sections.map((item) => sectionLink(item, desktopItem, activeItem))}
 
             <span className="mx-1.5 h-4 w-px bg-gray-200" aria-hidden />
@@ -109,7 +109,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             {onHome ? (
               <ScrollLink
                 to="contact"
@@ -129,7 +129,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="ml-auto md:hidden">
+          <div className="ml-auto lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle navigation menu"
@@ -144,7 +144,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white">
+        <div className="lg:hidden border-t border-gray-100 bg-white">
           <div className="px-3 pt-3 pb-4 space-y-1">
             {sections.map((item) => sectionLink(item, mobileItem, activeItem))}
 
