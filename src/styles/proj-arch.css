@@ -1,0 +1,558 @@
+/* ============================================================
+   Proj Arch product page
+
+   Structure, not decoration. The previous template was seven
+   identically shaped sections (eyebrow, serif title, lead, content)
+   all left-aligned inside the left half of a 1240px container, on
+   seven bands that were all within four points of the same lightness.
+   It read as a document, not a page.
+
+   This one alternates ink / paper / cream so the scroll has a pulse,
+   uses the full container width in every band, and varies the shape of
+   each section: split hero, centred manifesto, bento feature grid,
+   horizontal timeline, card row, centred close.
+   ============================================================ */
+.proj-arch-page {
+  /* Ink */
+  --pa-ink: #0c2129;
+  --pa-ink-2: #123440;
+  --pa-teal: #183e48;
+
+  /* Paper */
+  --pa-paper: #fff;
+  --pa-cream: #f6f5f1;
+  --pa-sage: #edf2ee;
+
+  /* Accent: the portfolio's gold, used as this page's through-line */
+  --pa-gold: #aa8051;
+  --pa-gold-bright: #c89b4a;
+  --pa-gold-soft: #d9bd8d;
+
+  /* Ink-on-paper */
+  --pa-text: #182d35;
+  --pa-text-muted: #526369;
+  --pa-text-faint: #6b797c;
+  --pa-line: #e2e5df;
+  --pa-line-strong: #cfd6ce;
+
+  /* Paper-on-ink */
+  --pa-on-ink: #b4c9cd;
+  --pa-on-ink-faint: #8fa8ad;
+  --pa-ink-line: rgba(255, 255, 255, .13);
+
+  --pa-shadow-sm: 0 1px 2px rgba(24, 62, 72, .04), 0 10px 28px -18px rgba(24, 62, 72, .3);
+  --pa-shadow-md: 0 2px 6px rgba(24, 62, 72, .05), 0 24px 48px -22px rgba(24, 62, 72, .4);
+  --pa-ease: cubic-bezier(.22, .61, .36, 1);
+
+  background: var(--pa-paper);
+  color: var(--pa-text);
+  padding-top: 80px;
+}
+.proj-arch-page section[id], #project-top { scroll-margin-top: 96px; }
+.proj-arch-page a:focus-visible,
+.proj-arch-page button:focus-visible { outline: 2px solid var(--pa-gold-bright); outline-offset: 3px; border-radius: 8px; }
+
+/* ── Reveal on scroll ────────────────────────────────────────
+   Fenced behind .pa-motion, which the page strips when it cannot
+   animate, so a missing IntersectionObserver or a reduced-motion
+   preference leaves every band at full opacity rather than blank. */
+.pa-motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .55s var(--pa-ease), transform .55s var(--pa-ease);
+  transition-delay: var(--pa-delay, 0ms);
+}
+.pa-motion [data-reveal].is-revealed { opacity: 1; transform: none; }
+
+/* ============================================================
+   TYPE
+
+   Every title resolves to one of the shared roles declared in
+   portfolio.css and every run of body copy to one of the site's five
+   text sizes. No one-off clamps live on this page.
+
+     masthead     hero only, see below    the page's one display exception
+     section      --portfolio-title-section   every section h2
+     subsection   --portfolio-title-subsection
+     featured     --portfolio-title-featured  the two lead cards
+     card         --portfolio-title-card      every other h3
+
+     lead    14px / 1.7    matches .sec-lead
+     body    13px / 1.8
+     button  12px          matches .btn-primary
+     meta    11px
+     kicker  10px / .17em  matches .sec-eyebrow
+
+   The hero is the exception: its headline is a masthead meant to dominate
+   the banner, so it runs well past the section role, and its tagline, lead
+   and buttons step up with it. Everything below the hero stays on the
+   shared scale.
+   ============================================================ */
+
+/* Kicker. Same size, tracking and 22px gold rule as .sec-eyebrow, so a
+   section opens identically here and on the portfolio pages. */
+.pa-kicker {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0;
+  font-family: var(--ark-font-ui); font-size: 10px; font-weight: 700;
+  letter-spacing: .17em; text-transform: uppercase; color: var(--pa-text-faint);
+}
+.pa-kicker::before {
+  content: ''; width: 22px; height: 2px; border-radius: 2px;
+  background: var(--pa-gold); flex: none;
+}
+.pa-kicker--light { color: var(--pa-on-ink-faint); }
+.pa-kicker--light::before { background: var(--pa-gold-bright); }
+
+/* Section title. */
+.pa-display {
+  font-family: var(--ark-font-display); font-weight: 400;
+  font-size: var(--portfolio-title-section); line-height: 1.2;
+  letter-spacing: -.025em; color: var(--pa-text);
+  margin: .6rem 0 0; text-wrap: balance;
+}
+.pa-band--ink .pa-display { color: #fff; }
+
+/* Subsection title. */
+.pa-subheading {
+  font-family: var(--ark-font-display); font-weight: 400;
+  font-size: var(--portfolio-title-subsection); line-height: 1.3;
+  letter-spacing: -.015em; text-wrap: balance;
+}
+
+/* Card title. */
+.pa-card-title {
+  font-family: var(--ark-font-display); font-weight: 400;
+  font-size: var(--portfolio-title-card); line-height: 1.35;
+  letter-spacing: -.01em; color: var(--pa-text); overflow-wrap: anywhere;
+}
+
+/* Lead, body, meta. */
+.pa-lead { margin: 18px 0 0; font-size: 14px; line-height: 1.7; color: var(--pa-text-muted); max-width: 64ch; }
+.pa-band--ink .pa-lead { color: var(--pa-on-ink); }
+.pa-body { margin: 12px 0 0; font-size: 13px; line-height: 1.8; color: var(--pa-text-muted); }
+.pa-band--ink .pa-body { color: var(--pa-on-ink); }
+.pa-meta { font-size: 11px; line-height: 1.6; color: var(--pa-text-faint); }
+
+/* ── Bands ───────────────────────────────────────────────────── */
+.pa-band { padding: clamp(56px, 7vw, 104px) 0; position: relative; }
+.pa-band--paper { background: var(--pa-paper); }
+.pa-band--tint { background: var(--pa-cream); }
+.pa-band--ink {
+  background: radial-gradient(120% 100% at 15% 0%, #1c4c59 0%, var(--pa-ink-2) 46%, var(--pa-ink) 100%);
+  color: #fff; overflow: hidden;
+}
+/* A faint engineering grid, faded out toward the bottom, so the dark
+   bands have surface instead of reading as flat blocks of paint. */
+.pa-band--ink::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(100% 72% at 50% 0%, #000 0%, transparent 78%);
+  mask-image: radial-gradient(100% 72% at 50% 0%, #000 0%, transparent 78%);
+}
+.pa-band--ink > * { position: relative; }
+.pa-glow {
+  position: absolute; width: min(560px, 70vw); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 155, 74, .2) 0%, rgba(200, 155, 74, 0) 68%);
+  pointer-events: none;
+}
+
+/* ── Split: copy one side, media the other, alternating ───────
+   `--reverse` flips the columns with `order` rather than by reordering the
+   markup, so the copy stays first in the DOM for screen readers and for the
+   single-column stack below 860px. */
+.pa-split {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 4.6vw, 72px); align-items: center;
+}
+.pa-split__text { min-width: 0; }
+/* Full width, the headline and lead still need a reading measure. */
+:not(.pa-split) > .pa-split__text > .pa-display { max-width: 26ch; }
+:not(.pa-split) > .pa-split__text > .pa-lead { max-width: 74ch; }
+.pa-band--ink :not(.pa-split) > .pa-split__text > .pa-display { max-width: 30ch; }
+.pa-split--reverse .pa-split__text { order: 2; }
+.pa-split--reverse .pa-split__media { order: 1; }
+.pa-split__below { margin-top: clamp(36px, 4.4vw, 64px); }
+
+/* ── Media slot ──────────────────────────────────────────────── */
+.pa-media { margin: 0; min-width: 0; }
+.pa-media__frame {
+  position: relative; overflow: hidden; aspect-ratio: 16 / 9;
+  border-radius: 16px; background: var(--pa-sage);
+  border: 1px solid var(--pa-line); box-shadow: var(--pa-shadow-sm);
+}
+.pa-media__frame > img,
+.pa-media__frame > video,
+.pa-media__frame > iframe { display: block; width: 100%; height: 100%; border: 0; object-fit: cover; }
+.pa-media figcaption { margin-top: 12px; font-size: 11px; line-height: 1.6; color: var(--pa-text-faint); }
+/* On ink the slot has to sit on the band rather than punch a pale hole in it. */
+.pa-band--ink .pa-media__frame {
+  background: rgba(255, 255, 255, .04); border-color: var(--pa-ink-line);
+  box-shadow: 0 30px 60px -34px rgba(0, 0, 0, .9);
+}
+.pa-band--ink .pa-media figcaption { color: var(--pa-on-ink-faint); }
+
+/* ── Buttons: .btn-primary's size and tap target ─────────────── */
+.pa-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 44px; padding: 0 22px; border-radius: 10px;
+  font-family: var(--ark-font-ui); font-size: 12px; font-weight: 700; letter-spacing: .01em;
+  border: 1px solid transparent; white-space: nowrap;
+  transition: transform .25s var(--pa-ease), background .25s var(--pa-ease),
+              border-color .25s var(--pa-ease), box-shadow .25s var(--pa-ease);
+}
+.pa-btn svg { width: 15px; height: 15px; transition: transform .25s var(--pa-ease); }
+.pa-btn:hover { transform: translateY(-2px); }
+.pa-btn--gold {
+  background: linear-gradient(135deg, var(--pa-gold-bright), var(--pa-gold));
+  color: #17333c; box-shadow: 0 14px 30px -16px rgba(200, 155, 74, .9);
+}
+.pa-btn--gold:hover { box-shadow: 0 20px 38px -16px rgba(200, 155, 74, 1); }
+.pa-btn--gold:hover svg { transform: translate(2px, -2px); }
+.pa-btn--ghost { color: #fff; border-color: rgba(255, 255, 255, .28); }
+.pa-btn--ghost:hover { background: rgba(255, 255, 255, .09); border-color: rgba(255, 255, 255, .5); }
+
+/* ── Hero ────────────────────────────────────────────────────── */
+.pa-hero { padding: clamp(52px, 6.4vw, 92px) 0 clamp(56px, 6.4vw, 96px); }
+.pa-hero .pa-glow { right: -6%; top: -22%; }
+.pa-hero__inner {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(32px, 4.4vw, 64px); align-items: center;
+}
+.pa-hero__inner--solo { grid-template-columns: minmax(0, 1fr); }
+.pa-hero__title {
+  font-family: var(--ark-font-display); font-weight: 400;
+  font-size: clamp(3.5rem, 11vw, 9.5rem); line-height: .95;
+  letter-spacing: -.045em; color: #fff; margin: 0;
+}
+/* Sharing the banner with a demo video it has half the width to sit in, so
+   the masthead steps back down rather than wrapping. */
+.pa-hero__inner:not(.pa-hero__inner--solo) .pa-hero__title {
+  font-size: clamp(3rem, 6vw, 5.5rem); line-height: 1.02; letter-spacing: -.04em;
+}
+.pa-hero__tagline {
+  font-size: var(--portfolio-title-section); line-height: 1.2;
+  letter-spacing: -.025em; color: var(--pa-gold-soft);
+  margin: 18px 0 0; max-width: 24ch;
+}
+.pa-hero__inner:not(.pa-hero__inner--solo) .pa-hero__tagline {
+  font-size: var(--portfolio-title-subsection); line-height: 1.3; letter-spacing: -.015em;
+}
+.pa-hero__lead {
+  margin: 26px 0 0; padding-top: 26px; max-width: 62ch;
+  font-size: 17px; line-height: 1.8;
+  border-top: 1px solid var(--pa-ink-line); color: var(--pa-on-ink);
+}
+.pa-hero__inner:not(.pa-hero__inner--solo) .pa-hero__lead { font-size: 15px; line-height: 1.75; max-width: 58ch; }
+.pa-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.pa-hero__actions .pa-btn { min-height: 52px; padding: 0 28px; font-size: 13px; }
+.pa-hero__actions .pa-btn svg { width: 16px; height: 16px; }
+.pa-hero__actions--center { justify-content: center; margin-top: 30px; }
+
+/* The demo video is the banner's anchor. DemoVideo's own markup is shared
+   with the home page, so this only re-skins it for the dark band. */
+.pa-hero__media { min-width: 0; }
+.pa-demo { margin: 0; min-width: 0; }
+.pa-demo .portfolio-platform__video {
+  border-radius: 16px; border-color: var(--pa-ink-line); background: #08171d;
+  box-shadow: 0 40px 80px -38px rgba(0, 0, 0, .95);
+}
+.pa-demo figcaption { margin-top: 12px; font-size: 11px; line-height: 1.6; color: var(--pa-on-ink-faint); }
+
+/* ── Mission: centred manifesto + full-width pull quote ───────── */
+.pa-goal {
+  margin: clamp(26px, 3vw, 36px) 0 0; padding: clamp(20px, 2.2vw, 26px) 0 0;
+  border-top: 1px solid var(--pa-gold);
+}
+.pa-goal__label {
+  font-size: 10px; font-weight: 700; letter-spacing: .17em;
+  text-transform: uppercase; color: var(--pa-gold);
+}
+/* The page's thesis, set at the section role: a display statement of the
+   same weight as the headings around it. */
+.pa-goal blockquote {
+  margin: 14px 0 0;
+  font-family: var(--ark-font-display); font-weight: 400;
+  font-size: var(--portfolio-title-featured); line-height: 1.25;
+  letter-spacing: -.02em; color: var(--pa-text); text-wrap: balance;
+}
+
+/* ── Features: bento grid ────────────────────────────────────── */
+.pa-features { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
+.pa-feature {
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  grid-column: span 2; padding: clamp(22px, 2.2vw, 30px);
+  background: var(--pa-paper); border: 1px solid var(--pa-line); border-radius: 16px;
+  box-shadow: var(--pa-shadow-sm);
+  transition: transform .3s var(--pa-ease), box-shadow .3s var(--pa-ease),
+              border-color .3s var(--pa-ease);
+}
+/* The two lead features take half a row each; the remaining six sit
+   three-up beneath them, so the grid closes without an orphan. */
+.pa-feature--lead, .pa-feature--wide { grid-column: span 3; }
+.pa-feature::after {
+  content: ''; position: absolute; inset: 0 0 auto; height: 2px;
+  background: linear-gradient(90deg, var(--pa-gold-bright), rgba(200, 155, 74, 0) 72%);
+  opacity: 0; transition: opacity .3s var(--pa-ease);
+}
+.pa-feature:hover { transform: translateY(-4px); box-shadow: var(--pa-shadow-md); border-color: var(--pa-line-strong); }
+.pa-feature:hover::after { opacity: 1; }
+.pa-feature__num {
+  margin: 0; font-size: 10px; font-weight: 700; letter-spacing: .17em;
+  font-variant-numeric: tabular-nums; color: var(--pa-gold);
+}
+.pa-feature__icon {
+  display: grid; place-items: center; width: 46px; height: 46px; margin: 18px 0 20px;
+  border-radius: 14px; background: var(--pa-sage); color: var(--pa-teal);
+}
+.pa-feature__icon svg { width: 22px; height: 22px; stroke-width: 1.4; }
+/* Classes, not a bare `p`: an element selector would out-specify
+   .pa-feature__label and kill the `margin-top: auto` that pins the label to
+   the bottom of every card, so the labels stopped aligning across a row. */
+.pa-feature__copy { margin: 12px 0 0; font-size: 13px; line-height: 1.8; color: var(--pa-text-muted); }
+.pa-feature__label {
+  margin: auto 0 0; padding-top: 18px; font-size: 10px; font-weight: 700;
+  letter-spacing: .17em; text-transform: uppercase; color: var(--pa-text-faint);
+}
+
+.pa-feature--lead {
+  background: radial-gradient(120% 130% at 12% 0%, #22515f 0%, var(--pa-ink-2) 52%, var(--pa-ink) 100%);
+  border-color: rgba(255, 255, 255, .1);
+}
+.pa-feature--lead .pa-card-title,
+.pa-feature--wide .pa-card-title { font-size: var(--portfolio-title-featured); line-height: 1.25; }
+.pa-feature--lead .pa-card-title { color: #fff; }
+.pa-feature--lead .pa-feature__copy { color: var(--pa-on-ink); }
+.pa-feature--lead .pa-feature__icon { background: rgba(255, 255, 255, .1); color: var(--pa-gold-soft); }
+.pa-feature--lead .pa-feature__num { color: var(--pa-gold-soft); }
+.pa-feature--lead .pa-feature__label { color: var(--pa-on-ink-faint); }
+
+.pa-feature--wide { background: linear-gradient(150deg, #fff 0%, #f8f6f0 100%); }
+.pa-feature--wide .pa-feature__icon { background: #f1ece0; color: var(--pa-gold); }
+
+/* ── Workflow: horizontal timeline on ink ────────────────────── */
+.pa-flow__steps {
+  --pa-flow-gap: clamp(24px, 3.4vw, 48px);
+  position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--pa-flow-gap); margin: clamp(30px, 3.6vw, 48px) 0 0; padding: 0; list-style: none;
+}
+.pa-flow__steps li { position: relative; }
+/* The rail is drawn per step so it stops at the last node instead of
+   running past it. */
+.pa-flow__steps li:not(:last-child)::before {
+  content: ''; position: absolute; left: 52px; top: 26px; height: 1px;
+  width: calc(100% - 52px + var(--pa-flow-gap));
+  background: linear-gradient(90deg, rgba(200, 155, 74, .5), rgba(255, 255, 255, .12));
+}
+.pa-flow__steps .pa-card-title { margin-top: 22px; }
+/* Sharing the row with an asset, the timeline turns vertical. */
+.pa-split .pa-flow__steps { grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: clamp(26px, 3vw, 36px); }
+.pa-split .pa-flow__steps li { padding: 0 0 28px 72px; }
+.pa-split .pa-flow__steps li:last-child { padding-bottom: 0; }
+.pa-split .pa-flow__steps li:not(:last-child)::before {
+  left: 25px; top: 52px; width: 1px; height: calc(100% - 52px);
+  background: linear-gradient(180deg, rgba(200, 155, 74, .5), rgba(255, 255, 255, .12));
+}
+.pa-split .pa-flow__node { position: absolute; left: 0; top: 0; }
+.pa-split .pa-flow__steps .pa-card-title { margin-top: 0; }
+.pa-flow__node {
+  position: relative; z-index: 1; display: grid; place-items: center;
+  width: 52px; height: 52px; border-radius: 50%; background: var(--pa-ink);
+  border: 1px solid rgba(200, 155, 74, .45); color: var(--pa-gold-soft);
+  font-size: 10px; font-weight: 700; letter-spacing: .1em; font-variant-numeric: tabular-nums;
+}
+.pa-flow__steps .pa-card-title { color: #fff; }
+.pa-flow__steps .pa-body { color: var(--pa-on-ink); }
+
+/* ── Audience: four tinted cards on paper ────────────────────── */
+.pa-audience {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px; margin-top: clamp(26px, 3vw, 36px);
+}
+.pa-split .pa-audience { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pa-audience article {
+  display: flex; flex-direction: column; padding: clamp(22px, 2vw, 28px);
+  background: var(--pa-sage); border-radius: 16px;
+  transition: transform .3s var(--pa-ease), box-shadow .3s var(--pa-ease);
+}
+.pa-audience article:hover { transform: translateY(-4px); box-shadow: var(--pa-shadow-md); }
+.pa-audience__icon {
+  display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 20px;
+  border-radius: 13px; background: var(--pa-paper); color: var(--pa-teal);
+  box-shadow: var(--pa-shadow-sm);
+}
+.pa-audience__icon svg { width: 21px; height: 21px; stroke-width: 1.4; }
+
+/* ── Rollout: two wide phase rows ────────────────────────────
+   A different shape from the feature bento and the workflow timeline on
+   purpose, so a third list of cards does not read as a repeat of either. */
+.pa-rollout { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
+.pa-rollout { margin-top: clamp(26px, 3vw, 36px); }
+.pa-rollout__phase {
+  display: grid; grid-template-columns: 96px minmax(0, .9fr) minmax(0, 1.5fr);
+  gap: clamp(18px, 3vw, 44px); align-items: center;
+  padding: clamp(22px, 2.4vw, 30px) clamp(24px, 2.6vw, 34px);
+  background: var(--pa-paper); border: 1px solid var(--pa-line);
+  border-radius: 16px; box-shadow: var(--pa-shadow-sm);
+}
+.pa-split .pa-rollout__phase {
+  grid-template-columns: minmax(0, 1fr); gap: 10px;
+  justify-items: start; align-items: start;
+  padding: clamp(20px, 2.2vw, 26px) clamp(22px, 2.4vw, 28px);
+}
+.pa-rollout__chip {
+  display: inline-flex; align-items: center; margin: 0;
+  padding: 7px 14px; border-radius: 999px;
+  font-size: 10px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;
+}
+/* The first phase is the one in play, so it carries the accent and the
+   second reads as queued behind it. */
+.pa-rollout__phase:first-child .pa-rollout__chip {
+  background: linear-gradient(135deg, var(--pa-gold-bright), var(--pa-gold)); color: #17333c;
+}
+.pa-rollout__phase:not(:first-child) .pa-rollout__chip {
+  background: var(--pa-sage); color: var(--pa-teal);
+}
+.pa-rollout__copy { margin: 0; }
+
+/* ── Team: an org chart ──────────────────────────────────────
+   No card grounds. The people are drawn as nodes joined by a connector, so
+   the band carries the reporting shape instead of three mostly empty
+   panels. The connector is pure CSS: a stem down from the lead, a bar
+   across, and an arrow dropping into each node below. */
+/* Centred and capped: across the full 1240px container the two reports sat
+   ~620px apart, which is the empty-band problem again. */
+.pa-team > .ark-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.pa-org { width: 100%; max-width: 720px; margin-top: clamp(30px, 3.4vw, 44px); }
+.pa-org__node { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.pa-org__portrait {
+  width: clamp(136px, 13.5vw, 176px); aspect-ratio: 1; margin-bottom: 18px;
+  overflow: hidden; border-radius: 50%; background: var(--pa-sage);
+  box-shadow: var(--pa-shadow-md);
+}
+/* The source is 4:3 landscape, so covering a square scales it by height and
+   crops the sides — which makes object-position's Y inert and leaves the full
+   frame height in view: sky above, shoulders below, head small in the middle.
+   The zoom does what object-position cannot here, pulled toward the face
+   rather than the centre of the photograph. */
+.pa-org__portrait img {
+  display: block; width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 50%;
+  transform: scale(1.2); transform-origin: 50% 42%;
+}
+.pa-org__monogram {
+  display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: 14px;
+  border-radius: 50%; color: #fff;
+  background: linear-gradient(145deg, #234e5b, var(--pa-teal) 72%);
+  box-shadow: 0 12px 24px -12px rgba(24, 62, 72, .6);
+  font-family: var(--ark-font-display); font-size: 1.15rem; letter-spacing: .02em;
+}
+.pa-org__monogram--lead {
+  width: clamp(136px, 13.5vw, 176px); height: auto; aspect-ratio: 1;
+  margin-bottom: 18px; font-size: 2.6rem;
+}
+.pa-org__role { margin-top: 5px; }
+
+.pa-org__row {
+  position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 40px); margin: 0; padding: 72px 0 0; list-style: none;
+}
+/* Stem: lead down to the bar. */
+.pa-org__row::after {
+  content: ''; position: absolute; top: 0; left: 50%; width: 1px; height: 34px;
+  background: var(--pa-line-strong);
+}
+/* Bar: across to sit above both nodes. A two-column grid puts the column
+   centres at 25% and 75%, so the bar spans exactly between them. */
+.pa-org__row::before {
+  content: ''; position: absolute; top: 34px; left: 25%; right: 25%; height: 1px;
+  background: var(--pa-line-strong);
+}
+.pa-org__row > li { position: relative; }
+/* Drop into each node, ending in an arrowhead. */
+.pa-org__row > li::before {
+  content: ''; position: absolute; top: -38px; left: 50%; width: 1px; height: 24px;
+  background: var(--pa-line-strong);
+}
+.pa-org__row > li::after {
+  content: ''; position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent;
+  border-top: 7px solid var(--pa-gold);
+}
+
+/* ── Closing + footer: one continuous ink block ──────────────── */
+.pa-closing { padding-bottom: clamp(44px, 5vw, 76px); text-align: center; }
+.pa-closing .pa-glow { left: 50%; transform: translateX(-50%); top: -34%; }
+.pa-closing__inner { display: flex; flex-direction: column; align-items: center; }
+.pa-closing .pa-display { max-width: 20ch; margin-top: 0; }
+.pa-closing .pa-lead { max-width: 60ch; }
+.pa-footer { background: var(--pa-ink); padding: 0 0 40px; }
+.pa-footer__inner {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 16px; padding-top: 26px; border-top: 1px solid var(--pa-ink-line);
+  font-size: 11px; color: var(--pa-on-ink-faint);
+}
+.pa-footer__brand { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; }
+.pa-footer__brand strong { color: #fff; letter-spacing: .01em; }
+.pa-footer a {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
+  color: var(--pa-on-ink); transition: color .25s var(--pa-ease);
+}
+.pa-footer a:hover { color: var(--pa-gold-soft); }
+.pa-footer svg { width: 14px; height: 14px; transition: transform .25s var(--pa-ease); }
+.pa-footer a:hover svg { transform: translate(2px, -2px); }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .pa-features { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .pa-feature { grid-column: span 2; }
+  .pa-feature--lead, .pa-feature--wide { grid-column: span 4; }
+}
+@media (max-width: 860px) {
+  /* The hero holds its two columns down to here: at 900 to 1100 the split
+     still gives the headline and the video enough room each. */
+  .pa-hero__inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .pa-hero__lead { max-width: 62ch; }
+  /* Stacked, every section reads copy then media, so the alternation is
+     dropped rather than leaving half the sections image-first. */
+  .pa-split { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .pa-split--reverse .pa-split__text,
+  .pa-split--reverse .pa-split__media { order: 0; }
+  /* The full-width variants have to fold here too. */
+  .pa-audience { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pa-flow__steps { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .pa-flow__steps li { padding: 0 0 28px 72px; }
+  .pa-flow__steps li:last-child { padding-bottom: 0; }
+  .pa-flow__steps li:not(:last-child)::before {
+    left: 25px; top: 52px; width: 1px; height: calc(100% - 52px);
+    background: linear-gradient(180deg, rgba(200, 155, 74, .5), rgba(255, 255, 255, .12));
+  }
+  .pa-flow__node { position: absolute; left: 0; top: 0; }
+  .pa-flow__steps .pa-card-title { margin-top: 0; }
+  .pa-rollout__phase {
+    grid-template-columns: minmax(0, 1fr); gap: 10px;
+    justify-items: start; align-items: start;
+  }
+}
+@media (max-width: 640px) {
+  .proj-arch-page { padding-top: 68px; }
+  .pa-band { padding: clamp(44px, 9vw, 60px) 0; }
+  .pa-hero { padding: 40px 0 52px; }
+  .pa-hero__actions .pa-btn { flex: 1 1 100%; }
+  .pa-features, .pa-audience { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .pa-org__row { gap: 14px; padding-top: 60px; }
+  .pa-org__monogram { width: 54px; height: 54px; font-size: 1rem; }
+  .pa-feature, .pa-feature--lead, .pa-feature--wide { grid-column: span 1; }
+  .pa-closing__inner .pa-btn { flex: 1 1 100%; }
+  .pa-footer { padding-bottom: 96px; }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .pa-motion [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .pa-btn, .pa-btn svg, .pa-feature, .pa-feature::after,
+  .pa-audience article, .pa-footer a, .pa-footer svg { transition: none; }
+  .pa-btn:hover, .pa-feature:hover, .pa-audience article:hover { transform: none; }
+}

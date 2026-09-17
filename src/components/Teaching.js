@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Teaching = () => {
-  const [activeTab, setActiveTab] = useState('current');
+  const [activeTab] = useState('current');
   const [activeCourse, setActiveCourse] = useState(null);
-  const [activeSection, setActiveSection] = useState('overview');
   const [courses, setCourses] = useState({ current: [], past: [] });
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -76,7 +75,7 @@ const Teaching = () => {
           const testUrl = `${process.env.REACT_APP_BACKEND_URI}/api/courses/${testCourseId}/modules`;
           console.log('Testing URL:', testUrl);
           
-          const testResponse = await axios.get(testUrl);
+          await axios.get(testUrl);
           console.log('Success with courseId:', testCourseId);
           
           // If we get here, the endpoint exists and works
@@ -285,73 +284,64 @@ const Teaching = () => {
       setActiveCourse(null);
       setModules([]);
     }
-    setActiveSection('overview');
+    // fetchModules is stable for the lifetime of the component and takes the
+    // course explicitly; the course list and tab are the real triggers.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, courses]);
 
   const renderOverview = () => (
-    <div className="space-y-6">
+    <div>
       {activeCourseData ? (
         <>
-          <div>
-            <h3 className="text-2xl font-bold text-gray-900">{activeCourseData.title}</h3>
-            <p className="text-gray-600 mt-2">{activeCourseData.description}</p>
-            <div className="mt-4 space-y-3 sm:space-y-2">
+          {/* Course header. The catalogue code was the only thing on the
+              selector pill; here it becomes a kicker above the real title so
+              both pieces of information land. */}
+          <div className="ark-card p-5 md:p-6">
+            <p className="ark-kicker tabular-nums">{activeCourseData.code}</p>
+            <h3 className="type-subheading mt-2 text-gray-900">
+              {activeCourseData.title}
+            </h3>
+            <p className="mt-2.5 max-w-reading text-[0.9375rem] leading-relaxed text-gray-600">
+              {activeCourseData.description}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2.5">
               <a
                 href={activeCourseData.syllabusUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-crimson-600 hover:text-crimson-700 transition-colors duration-200 p-2 rounded-md hover:bg-crimson-50"
+                className="btn-primary"
               >
-                <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <span className="text-sm sm:text-base">View Syllabus</span>
+                Syllabus
               </a>
-              <Link
-                to={`/course/${activeCourse}/discussions`}
-                className="inline-flex items-center text-crimson-600 hover:text-crimson-700 transition-colors duration-200 p-2 rounded-md hover:bg-crimson-50"
-              >
-                <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <Link to={`/course/${activeCourse}/discussions`} className="btn-quiet">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
-                <span className="text-sm sm:text-base">Course Discussions</span>
+                Discussions
               </Link>
             </div>
           </div>
 
           {/* Modules Section */}
-          <div className="mt-8">
-            <h4 className="text-xl font-semibold text-gray-900 mb-4">Course Modules</h4>
-            
+          <div className="mt-6">
+            <h4 className="type-subheading mb-4 text-gray-900">Course modules</h4>
+
             {/* Modules Loading State */}
             {modulesLoading && (
-              <div className="text-center py-4">
-                <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-crimson-600 hover:bg-crimson-500 transition ease-in-out duration-150 cursor-not-allowed">
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Loading modules...
-                </div>
+              <div className="py-8 text-center">
+                <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-brand-600"></div>
+                <p className="ark-meta mt-3">Loading modules…</p>
               </div>
             )}
 
             {/* Modules Error State */}
             {modulesError && !modulesLoading && (
-              <div className="bg-red-50 border border-red-200 rounded-md p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">Error loading modules</h3>
-                    <div className="mt-2 text-sm text-red-700">
-                      <p>{modulesError}</p>
-                    </div>
-                  </div>
-                </div>
+              <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+                <h3 className="text-sm font-semibold text-red-800">Error loading modules</h3>
+                <p className="mt-1 text-sm text-red-700">{modulesError}</p>
               </div>
             )}
 
@@ -367,72 +357,62 @@ const Teaching = () => {
                     <p className="mt-1 text-sm text-gray-500">No modules have been created for this course yet.</p>
                   </div>
                 ) : (
-                  <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                    <table className="min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Module
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Description
-                          </th>
-                          <th scope="col" className="relative px-6 py-3">
-                            <span className="sr-only">Actions</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {modules
-                          .sort((a, b) => {
-                            // Sort by order number from smallest to largest
-                            const orderA = a.order || 0;
-                            const orderB = b.order || 0;
-                            return orderA - orderB;
-                          })
-                          .map((module) => (
-                          <tr key={module._id || module.id || Math.random()} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div>
-                                  <div className="text-sm font-medium text-gray-900">
-                                    {module.moduleName || module.name || 'Untitled Module'}
-                                  </div>
-                                </div>
+                  /* A numbered syllabus register rather than a data table.
+                     Modules are an ordered reading sequence, and the old table
+                     spent a whole column repeating "No description available".
+                     Both actions step down in weight — neither is the point of
+                     the row; the module is. */
+                  <div className="ark-card ark-list overflow-hidden">
+                    {[...modules]
+                      .sort((a, b) => (a.order || 0) - (b.order || 0))
+                      .map((module, i) => (
+                        /* Stacked until there is room for a single row.
+                           Previously this was one flex line with the title on
+                           `flex-1` (basis 0, so it may shrink to nothing) and
+                           the buttons on `flex-none`. `flex-wrap` never fired,
+                           because nothing was ever forced to overflow — the
+                           title just absorbed every pixel of the shortfall and
+                           collapsed to 17px on a 375px screen, one word per
+                           line. */
+                        <div
+                          key={module._id || module.id || i}
+                          className="px-5 py-4 transition-colors hover:bg-gray-50 md:px-6"
+                        >
+                          <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center md:gap-x-5">
+                            <div className="flex min-w-0 flex-1 items-baseline gap-3.5 md:min-w-[14rem]">
+                              <span className="ark-display w-6 flex-none text-base tabular-nums text-gray-300">
+                                {String(i + 1).padStart(2, '0')}
+                              </span>
+
+                              <div className="min-w-0">
+                                <p className="text-sm font-semibold text-gray-900">
+                                  {module.moduleName || module.name || 'Untitled module'}
+                                </p>
+                                {module.description && module.description !== 'No description available' && (
+                                  <p className="ark-meta mt-0.5 truncate">{module.description}</p>
+                                )}
                               </div>
-                            </td>
-                            <td className="px-6 py-4">
-                              <div className="text-sm text-gray-900 max-w-xs truncate">
-                                {module.description || 'No description available'}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              <div className="flex space-x-2">
-                                <Link
-                                  to={`/module/${module.moduleId || module.id}/presentations`}
-                                  className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-crimson-600 hover:bg-crimson-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimson-500"
-                                >
-                                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                  </svg>
-                                  Presentations
-                                </Link>
-                                <Link
-                                  to={`/module/${module.moduleId || module.id}/lectures`}
-                                  className="inline-flex items-center px-3 py-1 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimson-500"
-                                >
-                                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                  </svg>
-                                  Lectures
-                                </Link>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                            </div>
+
+                            {/* Indented to the title's left edge while stacked, so
+                                the row still reads as one item. */}
+                            <div className="flex flex-none gap-2 pl-[2.375rem] md:pl-0">
+                              <Link
+                                to={`/module/${module.moduleId || module.id}/presentations`}
+                                className="btn-quiet"
+                              >
+                                Presentations
+                              </Link>
+                              <Link
+                                to={`/module/${module.moduleId || module.id}/lectures`}
+                                className="btn-quiet"
+                              >
+                                Lectures
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                   </div>
                 )}
               </div>
@@ -448,142 +428,66 @@ const Teaching = () => {
   );
 
   return (
-    <section id="teaching" className="py-20 bg-gray-50 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-15">
-        <div className="absolute top-10 right-10 w-20 h-20 border border-crimson-800 rounded-full"></div>
-        <div className="absolute bottom-20 left-10 w-16 h-16 border border-crimson-800 transform rotate-45"></div>
-        <div className="absolute top-1/2 left-1/4 w-12 h-12 border border-crimson-800 rounded-full"></div>
-      </div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="teaching" className="ark-band--tint ark-section">
+      <div className="ark-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true, margin: '-80px' }}
         >
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-8">
-              <div className="text-center mb-8 relative">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-crimson-100 rounded-full mb-4">
-                  <svg className="w-8 h-8 text-crimson-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-                {/* Themed Illustration: Stack of books and chalkboard */}
-                <div className="absolute top-0 right-0 hidden md:block z-0 opacity-80 pointer-events-none">
-                  <svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="60" width="100" height="12" rx="4" fill="#fee2e2"/>
-                    <rect x="20" y="48" width="80" height="12" rx="4" fill="#fca5a5"/>
-                    <rect x="35" y="36" width="50" height="12" rx="4" fill="#991b1b"/>
-                    <rect x="60" y="10" width="40" height="20" rx="6" fill="#b91c1c"/>
-                    <rect x="65" y="15" width="30" height="10" rx="2" fill="#fff"/>
-                    <rect x="40" y="20" width="20" height="8" rx="2" fill="#fca5a5"/>
-                  </svg>
-                </div>
-                {/* End Illustration */}
-                <h2 className="text-3xl font-bold text-gray-900">Teaching</h2>
-                <p className="text-gray-600 mt-2">Explore my courses and educational resources</p>
-              </div>
-
-              <div className="space-y-8">
-                {/* Loading State */}
-                {loading && (
-                  <div className="text-center py-8">
-                    <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-crimson-600 hover:bg-crimson-500 transition ease-in-out duration-150 cursor-not-allowed">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Loading courses...
-                    </div>
-                  </div>
-                )}
-
-                {/* Error State */}
-                {error && !loading && (
-                  <div className="text-center py-8">
-                    <div className="bg-red-50 border border-red-200 rounded-md p-4">
-                      <div className="flex">
-                        <div className="flex-shrink-0">
-                          <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                        <div className="ml-3">
-                          <h3 className="text-sm font-medium text-red-800">Error loading courses</h3>
-                          <div className="mt-2 text-sm text-red-700">
-                            <p>{error}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Course Type Tabs */}
-                {!loading && !error && (
-                  <>
-                    <div className="flex justify-center space-x-4 border-b border-gray-200">
-                      <span className="px-4 py-2 text-sm font-medium border-b-2 border-crimson-600 text-crimson-600">
-                        Courses
-                      </span>
-                    </div>
-
-                    {/* Course Selection */}
-                    <div className="flex flex-wrap gap-4 justify-center">
-                      {courses.current.map((course) => (
-                        <button
-                          key={course.id}
-                          onClick={() => {
-                            setActiveCourse(course.id);
-                            fetchModules(course.id);
-                            setActiveSection('overview');
-                          }}
-                          className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
-                            activeCourse === course.id
-                              ? 'bg-crimson-600 text-white shadow-lg'
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-md'
-                          }`}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                            </svg>
-                            <span>{course.code}</span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-
-                    {activeCourseData && (
-                      <>
-                        {/* Course Navigation */}
-                        <div className="flex justify-center space-x-4 border-b border-gray-200">
-                          <button
-                            onClick={() => setActiveSection('overview')}
-                            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-                              activeSection === 'overview'
-                                ? 'border-crimson-600 text-crimson-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                            }`}
-                          >
-                            Overview
-                          </button>
-                        </div>
-
-                        {/* Course Content */}
-                        <div className="mt-8">
-                          {activeSection === 'overview' && renderOverview()}
-                        </div>
-                      </>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
+          <div className="sec-head">
+            <p className="sec-eyebrow">In the classroom</p>
+            <h2 className="sec-title">Teaching</h2>
+            <p className="sec-lead">
+              Graduate courses in public finance and debt, with syllabi, module
+              presentations, and lecture recordings.
+            </p>
           </div>
+
+          {/* Loading State */}
+          {loading && (
+            <div className="py-10 text-center">
+              <div className="mx-auto h-7 w-7 animate-spin rounded-full border-2 border-gray-200 border-t-brand-600"></div>
+              <p className="ark-meta mt-4">Loading courses…</p>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && !loading && (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+              <h3 className="text-sm font-semibold text-red-800">Error loading courses</h3>
+              <p className="mt-1 text-sm text-red-700">{error}</p>
+            </div>
+          )}
+
+          {!loading && !error && (
+            <>
+              {/* Course selector. Previously this was three stacked navigation
+                  layers — a one-item "Courses" tab bar, the course pills, and a
+                  one-item "Overview" tab bar — for a single real choice. Only
+                  the real choice remains, and the pills now carry course names
+                  rather than bare catalogue codes. */}
+              <div className="seg mb-5" role="tablist" aria-label="Course">
+                {courses.current.map((course) => (
+                  <button
+                    key={course.id}
+                    role="tab"
+                    aria-selected={activeCourse === course.id}
+                    onClick={() => {
+                      setActiveCourse(course.id);
+                      fetchModules(course.id);
+                    }}
+                    className={`seg__btn ${activeCourse === course.id ? 'seg__btn--on' : ''}`}
+                  >
+                    <span className="tabular-nums">{course.code}</span>
+                  </button>
+                ))}
+              </div>
+
+              {activeCourseData && renderOverview()}
+            </>
+          )}
         </motion.div>
       </div>
     </section>

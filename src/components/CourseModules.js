@@ -106,20 +106,20 @@ const CourseModules = () => {
   }, [courseId]);
 
   return (
-    <section className="py-20 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="resource-page">
+      <div className="ark-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-8">
+          <div className="resource-layout">
+            <div className="resource-content">
               {/* Header */}
-              <div className="mb-8">
+              <div className="resource-header">
                 <Link
                   to="/#teaching"
-                  className="inline-flex items-center text-crimson-600 hover:text-crimson-700 mb-4"
+                  className="resource-back"
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -129,16 +129,16 @@ const CourseModules = () => {
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="resource-title">
                       Course {courseInfo?.courseId || courseId} Modules
                     </h1>
-                    {courseInfo?.count && (
-                      <p className="text-lg text-gray-600 mt-2">Total Modules: {courseInfo.count}</p>
+                    {courseInfo?.count > 0 && (
+                      <p className="resource-count">Total Modules: {courseInfo.count}</p>
                     )}
                   </div>
                   <Link
                     to={`/course/${courseId}/discussions`}
-                    className="inline-flex items-center px-4 py-2 border border-crimson-300 text-sm font-medium rounded-md text-crimson-700 bg-white hover:bg-crimson-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimson-500"
+                    className="btn-secondary"
                   >
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -151,7 +151,7 @@ const CourseModules = () => {
               {/* Loading State */}
               {loading && (
                 <div className="text-center py-8">
-                  <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-crimson-600 hover:bg-crimson-500 transition ease-in-out duration-150 cursor-not-allowed">
+                  <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-brand-600 hover:bg-brand-500 transition ease-in-out duration-150 cursor-not-allowed">
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -194,38 +194,38 @@ const CourseModules = () => {
                       <p className="mt-1 text-sm text-gray-500">No modules have been created for this course yet.</p>
                     </div>
                   ) : (
-                    <div className="grid gap-6">
+                    <div className="resource-list">
                       {modules.map((module) => (
                         <div
                           key={module._id || module.id || Math.random()}
-                          className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
+                          className="resource-item"
                         >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
+                          <div className="resource-item__row">
+                            <div className="resource-item__copy">
                               <div className="mb-2">
-                                <span className="text-sm font-medium text-crimson-600 bg-crimson-50 px-2 py-1 rounded">
+                                <span className="resource-topic">
                                   {module.moduleId || module.id}
                                 </span>
-                                {module.order && (
+                                {module.order > 0 && (
                                   <span className="ml-2 text-sm text-gray-500">
                                     Module {module.order}
                                   </span>
                                 )}
                               </div>
-                              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                              <h3 className="resource-item__title">
                                 {module.moduleName || module.name || 'Untitled Module'}
                               </h3>
-                              <p className="text-gray-600 mb-4">
+                              <p className="resource-description">
                                 {module.description || 'No description available'}
                               </p>
-                              <div className="flex items-center space-x-4 text-sm text-gray-500">
+                              <div className="resource-meta">
                                 <span>Created: {new Date(module.createdAt || new Date()).toLocaleDateString()}</span>
                               </div>
                             </div>
-                            <div className="ml-4 flex flex-col space-y-2">
+                            <div className="resource-item__actions resource-item__actions--stack">
                               <Link
                                 to={`/module/${module.moduleId || module.id}/presentations`}
-                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-crimson-600 hover:bg-crimson-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimson-500"
+                                className="btn-primary"
                               >
                                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -234,7 +234,7 @@ const CourseModules = () => {
                               </Link>
                               <Link
                                 to={`/module/${module.moduleId || module.id}/lectures`}
-                                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimson-500"
+                                className="btn-secondary"
                               >
                                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />

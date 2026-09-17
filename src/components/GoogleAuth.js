@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  UserIcon, UserCircleIcon, ArrowRightIcon, ShieldCheckIcon, EyeIcon
+  UserIcon, UserCircleIcon, ShieldCheckIcon, EyeIcon
 } from '@heroicons/react/24/outline';
 
 const GoogleAuth = ({ onAuthSuccess, onGuestMode }) => {
@@ -191,7 +191,7 @@ const GoogleAuth = ({ onAuthSuccess, onGuestMode }) => {
               <UserCircleIcon className="h-12 w-12 text-blue-500" />
             )}
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-base font-semibold text-gray-900 mb-2">
             Welcome, {user.pseudonym || user.pseudoName}!
           </h3>
           <p className="text-sm text-gray-600 mb-4">
@@ -223,7 +223,7 @@ const GoogleAuth = ({ onAuthSuccess, onGuestMode }) => {
         >
           <div className="text-center">
             <UserIcon className="mx-auto h-12 w-12 text-blue-500 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-base font-semibold text-gray-900 mb-2">
               {authMode === 'guest' ? 'Create Guest Account' : 'Set Your Display Name'}
             </h3>
             <p className="text-sm text-gray-600 mb-4">
@@ -273,7 +273,7 @@ const GoogleAuth = ({ onAuthSuccess, onGuestMode }) => {
         <div className="flex items-center justify-center mb-6">
           <ShieldCheckIcon className="h-12 w-12 text-blue-500" />
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <h3 className="text-base font-semibold text-gray-900 mb-2">
           Join the Discussion
         </h3>
         <p className="text-sm text-gray-600 mb-6">

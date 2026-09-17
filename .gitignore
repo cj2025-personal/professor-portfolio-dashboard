@@ -23,3 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 .vercel
+
+# Local secrets. .env was tracked until now; rotate anything it held.
+.env
+
+# UI-review screenshots (19MB of scratch, regenerate as needed)
+/artifacts

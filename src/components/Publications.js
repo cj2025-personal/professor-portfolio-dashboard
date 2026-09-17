@@ -41,9 +41,6 @@ const Publications = () => {
     fetchPublications();
   }, []);
 
-  // Get available categories from the fetched data
-  const categories = Object.keys(publications);
-
   // Define the four fixed tabs in the desired order
   const tabs = ['books', 'book chapter', 'journal article', 'other'];
   // Display mapping for tab labels
@@ -73,16 +70,10 @@ const Publications = () => {
 
   const filteredPublications = getFilteredPublications();
 
-  // Format date for display
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  };
+  // Counts sit on the tabs so the reader can see the shape of the record
+  // before clicking. Unfiltered by search — a tab's size is a fact about
+  // the bibliography, not about the current query.
+  const countFor = (category) => allPublications.filter((pub) => pub.category === category).length;
 
   // Handle synopsis modal
   const openSynopsisModal = (synopsis, title, isBookChapter = false, bookDetails = null) => {
@@ -102,29 +93,13 @@ const Publications = () => {
     setImageModal({ isOpen: false, imageUrl: '', title: '', publicationLink: '' });
   };
 
-  // Check if there are any books in the data
-  const hasBooks = Object.values(publications).some(categoryPublications => 
-    Array.isArray(categoryPublications) &&
-    categoryPublications.some(pub => pub.category === 'books')
-  );
-
-  // Check if there are any book chapters in the data
-  const hasBookChapters = Object.values(publications).some(categoryPublications => 
-    Array.isArray(categoryPublications) &&
-    categoryPublications.some(pub => pub.category === 'book chapter')
-  );
-
   if (loading) {
     return (
-      <section id="publications" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-8">
-              <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-crimson-600"></div>
-                <span className="ml-3 text-gray-600">Loading publications...</span>
-              </div>
-            </div>
+      <section id="publications" className="ark-band ark-section">
+        <div className="ark-container">
+          <div className="flex items-center justify-center py-12">
+            <div className="h-7 w-7 animate-spin rounded-full border-2 border-gray-200 border-t-brand-600"></div>
+            <span className="ark-meta ml-3">Loading publications…</span>
           </div>
         </div>
       </section>
@@ -133,20 +108,13 @@ const Publications = () => {
 
   if (error) {
     return (
-      <section id="publications" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-8">
-              <div className="text-center py-12">
-                <p className="text-red-600 mb-4">{error}</p>
-                <button 
-                  onClick={() => window.location.reload()} 
-                  className="px-4 py-2 bg-crimson-600 text-white rounded-lg hover:bg-crimson-700"
-                >
-                  Try Again
-                </button>
-              </div>
-            </div>
+      <section id="publications" className="ark-band ark-section">
+        <div className="ark-container">
+          <div className="py-12 text-center">
+            <p className="mb-4 text-sm text-red-600">{error}</p>
+            <button onClick={() => window.location.reload()} className="btn-secondary">
+              Try again
+            </button>
           </div>
         </div>
       </section>
@@ -155,276 +123,163 @@ const Publications = () => {
 
   return (
     <>
-      <section id="publications" className="py-20 bg-gray-50 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-15">
-          <div className="absolute top-20 left-20 w-24 h-24 border border-crimson-800 transform rotate-12"></div>
-          <div className="absolute bottom-20 right-20 w-20 h-20 border border-crimson-800 rounded-full"></div>
-          <div className="absolute top-1/3 right-1/4 w-16 h-16 border border-crimson-800 transform rotate-45"></div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section id="publications" className="ark-band ark-section">
+        <div className="ark-container">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true, margin: '-80px' }}
           >
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="p-8">
-                {/* Section Title */}
-                <div className="text-center mb-8 relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-crimson-100 rounded-full mb-4">
-                    <svg className="w-8 h-8 text-crimson-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                  </div>
-                  {/* Themed Illustration: Open journal and magnifying glass */}
-                  <div className="absolute top-0 left-0 hidden md:block z-0 opacity-80 pointer-events-none">
-                    <svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="10" y="50" width="100" height="20" rx="6" fill="#fee2e2"/>
-                      <rect x="30" y="40" width="60" height="10" rx="3" fill="#fca5a5"/>
-                      <rect x="50" y="20" width="20" height="20" rx="6" fill="#991b1b"/>
-                      <circle cx="90" cy="30" r="10" fill="#b91c1c"/>
-                      <rect x="95" y="35" width="15" height="5" rx="2" fill="#fca5a5"/>
-                      <rect x="60" y="60" width="40" height="6" rx="2" fill="#fff"/>
-                    </svg>
-                  </div>
-                  {/* End Illustration */}
-                  <h2 className="text-3xl font-bold text-gray-900">Publications</h2>
-                  <p className="text-gray-600 mt-2">Explore my research contributions and academic work</p>
-                </div>
-                
-                {/* Category Tabs */}
-                <div className="flex justify-center space-x-4 mb-8">
-                  {tabs.map((category) => (
-                    <button
-                      key={category}
-                      onClick={() => setActiveCategory(category)}
-                      className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
-                        activeCategory === category
-                          ? 'bg-crimson-600 text-white shadow-lg'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-md'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-2">
-                        {category === 'books' && (
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                          </svg>
-                        )}
-                        {category === 'book chapter' && (
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                        )}
-                        {category === 'journal article' && (
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                          </svg>
-                        )}
-                        {category === 'other' && (
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                        )}
-                        <span className="capitalize">{tabDisplay[category]}</span>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-                
-                {/* Selected Tab Title */}
-                <h3 className="text-2xl font-semibold text-gray-800 mb-8 text-center capitalize">
-                  {tabDisplay[activeCategory]}
-                </h3>
-                
-                {/* Search */}
-                <div className="mb-8">
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search publications..."
-                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-crimson-500 focus:border-transparent transition-all duration-200"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                </div>
+            <div className="sec-head">
+              <p className="sec-eyebrow">Bibliography</p>
+              <h2 className="sec-title">Publications</h2>
+              <p className="sec-lead">
+                Books, chapters, and peer-reviewed articles across public finance,
+                municipal securities, and development finance.
+              </p>
+            </div>
 
-                {/* Publications List */}
-                <div className="space-y-6">
-                  {filteredPublications.map((publication, index) => (
-                    <motion.div
-                      key={publication.publicationId || index}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      viewport={{ once: true }}
-                      className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-all duration-200"
-                    >
-                      <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-                        <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                            {publication.title}
-                          </h3>
-                          <p className="text-gray-600 mb-2">
-                            {publication.author}
-                            {/* Show (Co-author) if isCoAuthor is true in journalArticleDetails */}
-                            {publication.category === 'journal article' && publication.journalArticleDetails?.isCoAuthor && (
-                              <span className="ml-2 text-sm text-gray-500">(Co-author)</span>
-                            )}
-                          </p>
-                          {/* Journal Article Details */}
-                          {publication.category === 'journal article' && publication.journalArticleDetails && (
-                            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                              <h4 className="font-semibold text-gray-900 mb-2">Journal Article Details:</h4>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                                {publication.journalArticleDetails.articleTitle && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Article Title:</span>
-                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.articleTitle}</span>
-                                  </div>
-                                )}
-                                {publication.journalArticleDetails.journalName && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Journal Name:</span>
-                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.journalName}</span>
-                                  </div>
-                                )}
-                                {publication.journalArticleDetails.volume && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Volume:</span>
-                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.volume}</span>
-                                  </div>
-                                )}
-                                {publication.journalArticleDetails.issue && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Issue:</span>
-                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.issue}</span>
-                                  </div>
-                                )}
-                                {publication.journalArticleDetails.pageNumbers && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Pages:</span>
-                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.pageNumbers}</span>
-                                  </div>
-                                )}
-                                {publication.journalArticleDetails.publicationDate && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Publication Date:</span>
-                                    <span className="ml-2 text-gray-600">{publication.journalArticleDetails.publicationDate}</span>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                          {/* Publication Link and Synopsis */}
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {publication.link && (
-                              <a
-                                href={publication.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-crimson-600 hover:text-crimson-700 font-medium"
-                              >
-                                {publication.category === 'journal article' ? 'View Publication / DOI link' : 'View Publication'}
-                              </a>
-                            )}
-                            {publication.synopsis && (
-                              <button
-                                onClick={() => openSynopsisModal(
-                                  publication.synopsis,
-                                  publication.title,
-                                  publication.category === 'book chapter',
-                                  publication.bookChapterDetails
-                                )}
-                                className="text-crimson-600 hover:text-crimson-700 font-medium"
-                              >
-                                View Synopsis
-                              </button>
-                            )}
-                          </div>
-                          {/* Book Chapter Details (unchanged) */}
-                          {publication.category === 'book chapter' && publication.bookChapterDetails && (
-                            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                              <h4 className="font-semibold text-gray-900 mb-2">Book Chapter Details:</h4>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                                {publication.bookChapterDetails.reportTitle && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Report/Book Title:</span>
-                                    <span className="ml-2 text-gray-600">{publication.bookChapterDetails.reportTitle}</span>
-                                  </div>
-                                )}
-                                {publication.bookChapterDetails.publicationName && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Publication Name:</span>
-                                    <span className="ml-2 text-gray-600">{publication.bookChapterDetails.publicationName}</span>
-                                  </div>
-                                )}
-                                {publication.bookChapterDetails.pageNumbers && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Pages:</span>
-                                    <span className="ml-2 text-gray-600">{publication.bookChapterDetails.pageNumbers}</span>
-                                  </div>
-                                )}
-                                {publication.bookChapterDetails.volume && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Volume:</span>
-                                    <span className="ml-2 text-gray-600">{publication.bookChapterDetails.volume}</span>
-                                  </div>
-                                )}
-                                {publication.bookChapterDetails.issue && (
-                                  <div>
-                                    <span className="font-medium text-gray-700">Issue:</span>
-                                    <span className="ml-2 text-gray-600">{publication.bookChapterDetails.issue}</span>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        <div className="mt-4 md:mt-0 md:ml-6 flex items-center space-x-4">
-                          {/* Book Image for Books */}
-                          {publication.category === 'books' && publication.bookImage && (
-                            <img 
-                              src={publication.bookImage} 
-                              alt={`Cover of ${publication.title}`}
-                              className="w-32 h-40 object-cover rounded-lg shadow-md border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow duration-200"
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                              }}
-                              onClick={() => openImageModal(publication.bookImage, publication.title, publication.link)}
-                            />
-                          )}
-                          {/* Category label - hide for books */}
-                          {publication.category !== 'books' && (
-                            <span className="px-3 py-1 bg-crimson-100 text-crimson-600 rounded-full text-sm font-medium capitalize">
-                              {publication.category.replace('-', ' ')}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {filteredPublications.length === 0 && (
-                  <div className="text-center py-12">
-                    <p className="text-gray-500">
-                      {searchTerm 
-                        ? 'No publications found matching your criteria.' 
-                        : `No ${tabDisplay[activeCategory]}s available.`
-                      }
-                    </p>
-                  </div>
-                )}
+            {/* Filter bar. The four categories carried four near-identical
+                document icons that distinguished nothing; counts do the job
+                the icons were pretending to. The redundant heading that
+                repeated the active tab below it is gone. */}
+            <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="seg" role="tablist" aria-label="Publication category">
+                {tabs.map((category) => (
+                  <button
+                    key={category}
+                    role="tab"
+                    aria-selected={activeCategory === category}
+                    onClick={() => setActiveCategory(category)}
+                    className={`seg__btn ${activeCategory === category ? 'seg__btn--on' : ''}`}
+                  >
+                    {tabDisplay[category]}
+                    <span className="seg__count">{countFor(category)}</span>
+                  </button>
+                ))}
               </div>
+
+              <div className="relative lg:w-72">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </span>
+                <input
+                  type="search"
+                  aria-label="Search publications"
+                  placeholder="Search publications…"
+                  className="ark-field pl-9"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Publications register */}
+            <div className="ark-card ark-list overflow-hidden">
+              {filteredPublications.map((publication, index) => {
+                const journal = publication.category === 'journal article' ? publication.journalArticleDetails : null;
+                const chapter = publication.category === 'book chapter' ? publication.bookChapterDetails : null;
+
+                /* Bibliographic detail belongs on one citation line, not in a
+                   six-cell grid of "Label: value" pairs inside a grey box. */
+                const citation = [
+                  journal?.journalName || chapter?.publicationName || chapter?.reportTitle,
+                  (journal?.volume || chapter?.volume) && `Vol. ${journal?.volume || chapter?.volume}`,
+                  (journal?.issue || chapter?.issue) && `No. ${journal?.issue || chapter?.issue}`,
+                  (journal?.pageNumbers || chapter?.pageNumbers) && `pp. ${journal?.pageNumbers || chapter?.pageNumbers}`,
+                  journal?.publicationDate,
+                ]
+                  .filter(Boolean)
+                  .join(' · ');
+
+                return (
+                  <motion.article
+                    key={publication.publicationId || index}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.45, delay: Math.min(index, 5) * 0.05 }}
+                    viewport={{ once: true }}
+                    className="flex items-start gap-5 p-5 transition-colors hover:bg-gray-50 md:gap-6 md:p-5"
+                  >
+                    {publication.category === 'books' && publication.bookImage && (
+                      <button
+                        type="button"
+                        onClick={() => openImageModal(publication.bookImage, publication.title, publication.link)}
+                        className="hidden flex-none sm:block"
+                        aria-label={`Enlarge cover of ${publication.title}`}
+                      >
+                        <img
+                          src={publication.bookImage}
+                          alt=""
+                          className="h-24 w-[4.5rem] rounded-lg border border-gray-200 object-cover shadow-sm transition-shadow duration-200 hover:shadow-md"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </button>
+                    )}
+
+                    <div className="min-w-0 flex-1">
+                      <h3 className="type-card-title text-gray-900">
+                        {publication.title}
+                      </h3>
+
+                      <p className="mt-1.5 text-sm text-gray-600">
+                        {publication.author}
+                        {journal?.isCoAuthor && <span className="ml-2 text-gray-500">(Co-author)</span>}
+                      </p>
+
+                      {journal?.articleTitle && journal.articleTitle !== publication.title && (
+                        <p className="ark-meta mt-1 italic">{journal.articleTitle}</p>
+                      )}
+
+                      {citation && <p className="ark-meta mt-1.5">{citation}</p>}
+
+                      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+                        {publication.link && (
+                          <a
+                            href={publication.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="link-cta"
+                          >
+                            {publication.category === 'journal article' ? 'DOI link' : 'View publication'}
+                            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        )}
+                        {publication.synopsis && (
+                          <button
+                            onClick={() =>
+                              openSynopsisModal(
+                                publication.synopsis,
+                                publication.title,
+                                publication.category === 'book chapter',
+                                publication.bookChapterDetails
+                              )
+                            }
+                            className="text-sm font-semibold text-gray-500 transition-colors hover:text-brand-600"
+                          >
+                            Synopsis
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </motion.article>
+                );
+              })}
+
+              {filteredPublications.length === 0 && (
+                <p className="ark-meta py-14 text-center">
+                  {searchTerm
+                    ? 'No publications match that search.'
+                    : `No ${tabDisplay[activeCategory].toLowerCase()} recorded yet.`}
+                </p>
+              )}
             </div>
           </motion.div>
         </div>
@@ -437,25 +292,27 @@ const Publications = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+            className="ark-stripe max-h-[80vh] w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-xl"
           >
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-gray-900">
-                  Synopsis: {synopsisModal.title}
-                </h3>
+            <div className="border-b border-gray-100 p-6">
+              <div className="flex items-start justify-between gap-6">
+                <div>
+                  <p className="ark-kicker">Synopsis</p>
+                  <h3 className="type-dialog-title mt-1 text-gray-900">{synopsisModal.title}</h3>
+                </div>
                 <button
                   onClick={closeSynopsisModal}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label="Close synopsis"
+                  className="flex-none text-gray-400 transition-colors hover:text-gray-600"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
             </div>
-            <div className="p-6 overflow-y-auto max-h-[60vh]">
-              <p className="text-gray-700 leading-relaxed">
+            <div className="max-h-[60vh] overflow-y-auto p-6">
+              <p className="max-w-reading text-[0.9375rem] leading-[1.75] text-gray-700">
                 {synopsisModal.synopsis}
               </p>
             </div>
@@ -482,7 +339,7 @@ const Publications = () => {
             </button>
             <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
               <div className="p-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 text-center">
+                <h3 className="type-dialog-title text-gray-900 text-center">
                   {imageModal.title}
                 </h3>
               </div>

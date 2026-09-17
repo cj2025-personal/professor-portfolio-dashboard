@@ -165,10 +165,10 @@ const TeachingAdmin = () => {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-8">
               <div className="flex justify-between items-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900">Course Management</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Course Management</h2>
                 <button
                   onClick={handleNewCourse}
-                  className="px-4 py-2 bg-crimson-600 text-white rounded-lg hover:bg-crimson-700 transition-colors"
+                  className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors"
                 >
                   Add New Course
                 </button>
@@ -182,7 +182,7 @@ const TeachingAdmin = () => {
                       onClick={() => setActiveTab('current')}
                       className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                         activeTab === 'current'
-                          ? 'border-crimson-600 text-crimson-600'
+                          ? 'border-brand-600 text-brand-600'
                           : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                       }`}
                     >
@@ -192,7 +192,7 @@ const TeachingAdmin = () => {
                       onClick={() => setActiveTab('past')}
                       className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                         activeTab === 'past'
-                          ? 'border-crimson-600 text-crimson-600'
+                          ? 'border-brand-600 text-brand-600'
                           : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                       }`}
                     >
@@ -207,13 +207,13 @@ const TeachingAdmin = () => {
                         key={course.id}
                         className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
                       >
-                        <h3 className="text-xl font-semibold text-gray-900">{course.title}</h3>
-                        <p className="text-crimson-600 font-medium mt-1">{course.code}</p>
+                        <h3 className="text-lg font-semibold text-gray-900">{course.title}</h3>
+                        <p className="text-brand-600 font-medium mt-1">{course.code}</p>
                         <p className="text-gray-600 mt-2">{course.description}</p>
                         <div className="mt-4 flex justify-end">
                           <button
                             onClick={() => handleCourseSelect(course)}
-                            className="text-crimson-600 hover:text-crimson-700"
+                            className="text-brand-600 hover:text-brand-700"
                           >
                             Edit Course
                           </button>
@@ -233,7 +233,7 @@ const TeachingAdmin = () => {
                         name="title"
                         value={formData.title}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                       />
                     </div>
                     <div>
@@ -243,7 +243,7 @@ const TeachingAdmin = () => {
                         name="code"
                         value={formData.code}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                       />
                     </div>
                     <div>
@@ -253,7 +253,7 @@ const TeachingAdmin = () => {
                         name="semester"
                         value={formData.semester}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                       />
                     </div>
                     <div>
@@ -263,7 +263,7 @@ const TeachingAdmin = () => {
                         name="syllabus"
                         value={formData.syllabus}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                       />
                     </div>
                   </div>
@@ -275,7 +275,7 @@ const TeachingAdmin = () => {
                       value={formData.description}
                       onChange={handleInputChange}
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                     />
                   </div>
 
@@ -286,7 +286,7 @@ const TeachingAdmin = () => {
                       <button
                         type="button"
                         onClick={handleAddTopic}
-                        className="text-crimson-600 hover:text-crimson-700"
+                        className="text-brand-600 hover:text-brand-700"
                       >
                         Add Topic
                       </button>
@@ -298,7 +298,7 @@ const TeachingAdmin = () => {
                             type="text"
                             value={topic}
                             onChange={(e) => handleTopicChange(index, e.target.value)}
-                            className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                            className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                           />
                           <button
                             type="button"
@@ -319,7 +319,7 @@ const TeachingAdmin = () => {
                       <button
                         type="button"
                         onClick={handleAddLecture}
-                        className="text-crimson-600 hover:text-crimson-700"
+                        className="text-brand-600 hover:text-brand-700"
                       >
                         Add Lecture
                       </button>
@@ -328,7 +328,7 @@ const TeachingAdmin = () => {
                       {formData.lectures.map((lecture, index) => (
                         <div key={lecture.id} className="border border-gray-200 rounded-lg p-4">
                           <div className="flex justify-between items-start mb-4">
-                            <h4 className="text-lg font-medium text-gray-900">Lecture {index + 1}</h4>
+                            <h4 className="text-base font-medium text-gray-900">Lecture {index + 1}</h4>
                             <button
                               type="button"
                               onClick={() => handleRemoveLecture(index)}
@@ -344,7 +344,7 @@ const TeachingAdmin = () => {
                                 type="text"
                                 value={lecture.title}
                                 onChange={(e) => handleLectureChange(index, 'title', e.target.value)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                               />
                             </div>
                             <div>
@@ -353,7 +353,7 @@ const TeachingAdmin = () => {
                                 type="date"
                                 value={lecture.date}
                                 onChange={(e) => handleLectureChange(index, 'date', e.target.value)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                               />
                             </div>
                             <div>
@@ -362,7 +362,7 @@ const TeachingAdmin = () => {
                                 type="url"
                                 value={lecture.video}
                                 onChange={(e) => handleLectureChange(index, 'video', e.target.value)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                               />
                             </div>
                             <div>
@@ -371,7 +371,7 @@ const TeachingAdmin = () => {
                                 type="url"
                                 value={lecture.slides}
                                 onChange={(e) => handleLectureChange(index, 'slides', e.target.value)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                               />
                             </div>
                             <div>
@@ -380,7 +380,7 @@ const TeachingAdmin = () => {
                                 type="url"
                                 value={lecture.audio}
                                 onChange={(e) => handleLectureChange(index, 'audio', e.target.value)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                               />
                             </div>
                             <div className="md:col-span-2">
@@ -389,7 +389,7 @@ const TeachingAdmin = () => {
                                 value={lecture.description}
                                 onChange={(e) => handleLectureChange(index, 'description', e.target.value)}
                                 rows={2}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                               />
                             </div>
                           </div>
@@ -409,7 +409,7 @@ const TeachingAdmin = () => {
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-crimson-600 text-white rounded-lg hover:bg-crimson-700"
+                      className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700"
                     >
                       Save Course
                     </button>

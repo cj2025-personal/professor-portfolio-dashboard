@@ -1,0 +1,690 @@
+﻿/* ============================================================
+   PARIS standards layer
+   Class vocabulary and anatomy ported from
+   user-dashboard/frontend/src/features/paris/components/* so the
+   two surfaces read as the same system: eyebrow + card titles,
+   pill badges, evidence cards, filter chips, dashed empty
+   states.
+
+   Type is set in --ark-font-ui, not the reference's Fraunces.
+   The portfolio sets every heading in the UI face, and a serif
+   here read as a foreign page behind the same navbar.
+
+   Colour is the one thing NOT copied. The reference uses a local
+   palette (#0f766e teal, #12213f ink) that predates the shared
+   sheet; the sheet forbids forking values, so every colour here
+   resolves to an --ark-* token instead.
+   ============================================================ */
+
+.paris-page {
+  background: var(--ark-bg);
+  min-height: 100vh;
+}
+
+/* ---- Shell cards ---------------------------------------- */
+.paris-growth-header,
+.paris-card {
+  border-radius: var(--ark-radius-modal);
+  border: 1px solid var(--ark-border);
+  box-shadow: var(--ark-shadow-md);
+  background: linear-gradient(180deg, var(--ark-surface-2) 0%, var(--ark-surface) 60%);
+  padding: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .paris-growth-header,
+  .paris-card {
+    border-radius: var(--ark-radius-panel);
+    padding: 1.1rem;
+  }
+}
+
+.paris-growth-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .paris-growth-header {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* ---- Type ------------------------------------------------ */
+.paris-growth-header__eyebrow,
+.paris-card__eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ark-navy);
+}
+
+.paris-growth-header__title {
+  margin: 0.4rem 0 0;
+  font-family: var(--ark-font-display);
+  font-size: 1.85rem;
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: 0.005em;
+  color: var(--ark-text);
+}
+
+@media (min-width: 768px) {
+  .paris-growth-header__title { font-size: 1.875rem; }
+}
+
+.paris-card__title {
+  margin: 0.25rem 0 0;
+  font-family: var(--ark-font-display);
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.005em;
+  color: var(--ark-text);
+}
+
+.paris-growth-header__subtitle {
+  margin: 0.7rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ark-text-muted);
+  max-width: 52ch;
+}
+
+/* ---- Fact tiles ------------------------------------------ */
+.paris-growth-header__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.paris-growth-header__score,
+.paris-growth-header__rail-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  padding: 1rem;
+  border-radius: var(--ark-radius-panel);
+  border: 1px solid var(--ark-border);
+  background: var(--ark-surface);
+}
+
+.paris-growth-header__score-label,
+.paris-growth-header__rail-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ark-text-faint);
+}
+
+.paris-growth-header__score-value {
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--ark-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.paris-growth-header__score-detail,
+.paris-growth-header__rail-detail {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--ark-text-faint);
+}
+
+.paris-growth-header__rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.paris-growth-header__rail-value {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--ark-text);
+  line-height: 1.35;
+}
+
+/* ---- Pills ----------------------------------------------- */
+.paris-growth-header__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1.1rem;
+}
+
+.paris-growth-header__badge,
+.paris-card__hint,
+.paris-filter-chip,
+.paris-status,
+.paris-reliability,
+.paris-evidence-card__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.paris-growth-header__badge,
+.paris-card__hint,
+.paris-filter-chip {
+  padding: 0.34rem 0.72rem;
+  background: var(--ark-surface-2);
+  color: var(--ark-text-muted);
+  border: 1px solid var(--ark-border-soft);
+}
+
+.paris-filter-chip {
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.paris-filter-chip:hover {
+  border-color: var(--ark-navy);
+  color: var(--ark-navy);
+}
+
+.paris-filter-chip--active,
+.paris-filter-chip--active:hover {
+  background: var(--ark-navy);
+  border-color: var(--ark-navy);
+  color: #fff;
+}
+
+/* Claim status. One meaning, one colour - these map to the four
+   statuses the scoring service can emit, nothing else. */
+.paris-status { padding: 0.24rem 0.6rem; text-transform: capitalize; }
+.paris-status--unmeasured  { background: var(--ark-surface-2);      color: var(--ark-text-faint); }
+.paris-status--provisional { background: var(--ark-warning-soft);   color: var(--ark-warning); }
+.paris-status--measured    { background: var(--ark-info-soft);      color: var(--ark-info-strong); }
+.paris-status--stable      { background: var(--ark-success-soft);   color: var(--ark-success-strong); }
+
+.paris-reliability { padding: 0.24rem 0.6rem; text-transform: capitalize; }
+.paris-reliability--low      { background: var(--ark-danger-soft);  color: var(--ark-danger); }
+.paris-reliability--moderate { background: var(--ark-warning-soft); color: var(--ark-warning); }
+.paris-reliability--high     { background: var(--ark-success-soft); color: var(--ark-success-strong); }
+
+/* ---- Card header ----------------------------------------- */
+.paris-card__header {
+  display: flex;
+  gap: 0.85rem;
+  align-items: start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+/* ---- Claim rows ------------------------------------------ */
+.paris-claim-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.paris-claim {
+  width: 100%;
+  text-align: left;
+  padding: 1rem;
+  border-radius: var(--ark-radius-panel);
+  border: 1px solid var(--ark-border);
+  background: var(--ark-surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.paris-claim:hover {
+  border-color: var(--ark-navy);
+  box-shadow: var(--ark-shadow-sm);
+}
+
+.paris-claim--active {
+  border-color: var(--ark-navy);
+  box-shadow: var(--ark-shadow-sm);
+}
+
+.paris-claim__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.paris-claim__name {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--ark-text);
+}
+
+.paris-claim__figure {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+
+.paris-claim__value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ark-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.paris-claim__value--none { color: var(--ark-text-faint); }
+
+.paris-claim__claimed {
+  font-size: 0.78rem;
+  color: var(--ark-text-faint);
+}
+
+.paris-claim__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  margin-top: 0.7rem;
+}
+
+/* ---- Coverage meter -------------------------------------- */
+.paris-meter {
+  margin-top: 0.75rem;
+}
+
+.paris-meter__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.7rem;
+  color: var(--ark-text-faint);
+  margin-bottom: 0.35rem;
+}
+
+.paris-meter__value {
+  font-weight: 700;
+  color: var(--ark-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.paris-meter__track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ark-surface-2);
+  overflow: hidden;
+}
+
+.paris-meter__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--ark-navy);
+  transition: width 0.4s ease;
+}
+
+/* ---- Evidence ------------------------------------------- */
+.paris-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.paris-evidence-list {
+  display: grid;
+  gap: 0.65rem;
+  max-height: 30rem;
+  overflow-y: auto;
+}
+
+.paris-evidence-card {
+  padding: 0.9rem 1rem;
+  border-radius: var(--ark-radius-panel);
+  border: 1px solid var(--ark-border);
+  background: var(--ark-surface);
+}
+
+.paris-evidence-card__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.paris-evidence-card__title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ark-text);
+  line-height: 1.4;
+}
+
+.paris-evidence-card__meta {
+  margin: 0.22rem 0 0;
+  font-size: 0.76rem;
+  color: var(--ark-text-faint);
+}
+
+.paris-evidence-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+
+.paris-evidence-card__tag {
+  padding: 0.24rem 0.54rem;
+  background: var(--ark-navy-soft);
+  color: var(--ark-info-strong);
+}
+
+.paris-evidence-card__score {
+  font-size: 0.72rem;
+  color: var(--ark-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.paris-evidence-card__link {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ark-blue);
+  margin-left: auto;
+}
+
+.paris-evidence-card__link:hover { text-decoration: underline; }
+
+/* ---- Reasons -------------------------------------------- */
+.paris-reasons {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--ark-border-soft);
+}
+
+.paris-reasons li {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ark-text-muted);
+}
+
+.paris-reasons li::before {
+  content: '';
+  flex: none;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--ark-text-faint);
+  margin-top: 0.55rem;
+}
+
+/* ---- Empty / error -------------------------------------- */
+.paris-empty {
+  padding: 1.25rem;
+  border-radius: var(--ark-radius-panel);
+  background: var(--ark-surface-2);
+  border: 1px dashed var(--ark-border);
+}
+
+.paris-empty strong {
+  display: block;
+  color: var(--ark-text);
+  font-size: 0.95rem;
+}
+
+.paris-empty p {
+  margin: 0.3rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--ark-text-muted);
+}
+
+/* ---- Motion (ark-fade-up / ark-lift in the reference) ---- */
+@keyframes parisFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.ark-fade-up { animation: parisFadeUp 0.5s ease both; }
+.ark-fade-up-d1 { animation-delay: 0.06s; }
+.ark-fade-up-d2 { animation-delay: 0.12s; }
+.ark-fade-up-d3 { animation-delay: 0.18s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ark-fade-up { animation: none; }
+  .paris-meter__fill { transition: none; }
+}
+
+/* ---- Demo banner ----------------------------------------- */
+/* Seeded data has to announce itself above the fold, in warning
+   semantics, before any figure is read. */
+.paris-demo-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1.25rem;
+  border-radius: var(--ark-radius-panel);
+  border: 1px solid var(--ark-warning);
+  background: var(--ark-warning-soft);
+}
+
+.paris-demo-banner__tag {
+  flex: none;
+  border-radius: 999px;
+  padding: 0.24rem 0.6rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  background: var(--ark-warning);
+  color: #fff;
+}
+
+.paris-demo-banner p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--ark-text);
+}
+
+/* ---- Mastery bands --------------------------------------- */
+.paris-band {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  border-radius: 999px;
+  padding: 0.24rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.paris-band--none        { background: var(--ark-surface-2);    color: var(--ark-text-faint); }
+.paris-band--building    { background: var(--ark-danger-soft);  color: var(--ark-danger); }
+.paris-band--emerging    { background: var(--ark-warning-soft); color: var(--ark-warning); }
+.paris-band--steady      { background: var(--ark-info-soft);    color: var(--ark-info-strong); }
+.paris-band--strong      { background: var(--ark-success-soft); color: var(--ark-success-strong); }
+.paris-band--exceptional { background: var(--ark-navy);         color: #fff; }
+
+/* An unmeasured competency reads as absent, not as zero. */
+.paris-meter__fill--none { background: var(--ark-border); }
+
+/* ---- Score components ------------------------------------ */
+.paris-components {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem 1.5rem;
+}
+
+.paris-component .paris-meter__head { margin-bottom: 0.4rem; }
+
+/* ---- Competency list ------------------------------------- */
+.paris-competency-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0 0.85rem;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--ark-border-soft);
+}
+
+.paris-competency {
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--ark-radius-card);
+  border: 1px solid var(--ark-border-soft);
+  background: var(--ark-surface);
+}
+
+.paris-competency__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.paris-competency__name {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ark-text);
+}
+
+/* ---- Footnote -------------------------------------------- */
+.paris-footnote {
+  margin-top: 1.5rem;
+  font-size: 0.82rem;
+  color: var(--ark-text-faint);
+}
+
+.paris-footnote a {
+  color: var(--ark-blue);
+  font-weight: 600;
+}
+
+.paris-footnote a:hover { text-decoration: underline; }
+
+/* ---- Section divider ------------------------------------- */
+/* The sourcing section answers a different question to the progress view
+   above it, so it gets a visible rule rather than just more vertical space. */
+.paris-section-divider {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--ark-border);
+  margin-bottom: 1.25rem;
+}
+
+/* A real profile is not a warning â€” same shape, success semantics. */
+.paris-demo-banner--live {
+  border-color: var(--ark-success);
+  background: var(--ark-success-soft);
+}
+.paris-demo-banner--live .paris-demo-banner__tag { background: var(--ark-success-strong); }
+
+/* ---- Cold-viewer intro ----------------------------------- */
+.paris-intro {
+  border-radius: var(--ark-radius-modal);
+  border: 1px solid var(--ark-border);
+  background: linear-gradient(180deg, var(--ark-navy-soft) 0%, var(--ark-surface) 55%);
+  box-shadow: var(--ark-shadow-sm);
+  padding: 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .paris-intro { padding: 1.1rem; border-radius: var(--ark-radius-panel); }
+}
+
+.paris-intro__title {
+  margin: 0.4rem 0 0;
+  font-family: var(--ark-font-display);
+  font-size: 1.85rem;
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: 0.005em;
+  color: var(--ark-text);
+  max-width: 30ch;
+}
+
+.paris-intro__lead {
+  margin: 0.8rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ark-text-muted);
+  max-width: 68ch;
+}
+
+.paris-intro__lead strong { color: var(--ark-text); }
+
+.paris-intro__steps {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .paris-intro__steps { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+}
+
+.paris-intro__steps li {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+
+/* Numbered because the three steps are a genuine sequence â€” each one only
+   makes sense after the previous. Not decoration. */
+.paris-intro__num {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--ark-navy);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  margin-top: 0.1rem;
+}
+
+.paris-intro__steps strong {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--ark-text);
+  margin-bottom: 0.15rem;
+}
+
+.paris-intro__steps p {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--ark-text-muted);
+}
+
+.paris-intro__foot {
+  margin: 1.4rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ark-border-soft);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ark-text-faint);
+  max-width: 74ch;
+}
+
+.paris-intro__foot strong { color: var(--ark-text-muted); }

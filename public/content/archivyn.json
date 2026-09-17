@@ -1,0 +1,191 @@
+{
+  "brand": "Proj Arch",
+  "summary": {
+    "eyebrow": "Our startup",
+    "title": "Proj Arch: connecting students to real scholars.",
+    "description": "Proj Arch is a startup I’m building with my collaborator to connect K-14 students with verified scholars and their research. We’re making complex ideas easier to understand through grade-aware explanations, evidence-based reading activities, and pathways to scholars who reflect students’ backgrounds and communities. Our goal is to build a new American education model for reading comprehension with the help of AI.",
+    "linkLabel": "Learn about Proj Arch",
+    "video": {
+      "src": "",
+      "type": "embed",
+      "poster": "",
+      "title": "Proj Arch demo",
+      "pendingLabel": "Demo video coming soon",
+      "unavailableLabel": "The demo video is currently unavailable."
+    }
+  },
+  "footerLabel": "Powered by Proj Arch",
+  "page": {
+    "description": "Proj Arch brings scholar discovery, AI-assisted explanations, reading practice, and learning communities into one platform. From young readers to adult learners, the aim is to make academic expertise easier to find, understand, and use.",
+    "preview": {
+      "eyebrow": "The learning pathway",
+      "title": "Discover. Understand. Keep learning.",
+      "note": "One platform. Different ways to learn.",
+      "steps": [
+        {
+          "title": "Find the expertise",
+          "description": "Explore scholars, their fields, and the work behind their ideas.",
+          "icon": "scholar"
+        },
+        {
+          "title": "Make it understandable",
+          "description": "Ask Veri AI and choose the language and depth that suit you.",
+          "icon": "explanation"
+        },
+        {
+          "title": "Put learning into practice",
+          "description": "Build reading skills, explore a knowledge hub, or join a community.",
+          "icon": "reading"
+        }
+      ]
+    },
+    "mission": {
+      "media": { "type": "image", "src": "", "alt": "", "caption": "" },
+      "eyebrow": "Why we’re building this",
+      "title": "Make academic knowledge part of everyday learning.",
+      "description": "Finding a scholar is only the beginning. Learners need a way to understand unfamiliar ideas, connect them to their own interests, and practice reasoning. Proj Arch brings discovery, explanation, and participation together so that research can become a starting point for learning at every level.",
+      "goalLabel": "Our goal",
+      "goal": "Build a new American education model for reading comprehension with the help of AI."
+    },
+    "product": {
+      "media": { "type": "image", "src": "", "alt": "", "caption": "" },
+      "eyebrow": "Inside Proj Arch",
+      "title": "From the first question to a deeper understanding."
+    },
+    "features": [
+      {
+        "demo": "directory",
+        "icon": "scholar",
+        "label": "Scholar directory",
+        "title": "Find the person behind the work.",
+        "description": "Explore academic profiles through fields of study, institutions, and backgrounds. A profile brings together a scholar’s research focus, work, milestones, and publications, giving learners a starting point for understanding their expertise."
+      },
+      {
+        "demo": "veri",
+        "icon": "explanation",
+        "label": "Veri AI",
+        "title": "Explore expertise at your level.",
+        "description": "Veri AI is the platform’s domain-specialized AI layer. Ask about a scholar or an idea, then adapt the explanation by age, grade, language, and learning depth, from a first introduction to a more advanced discussion."
+      },
+      {
+        "demo": "readers",
+        "icon": "reading",
+        "label": "Young readers",
+        "title": "Build comprehension through practice.",
+        "description": "Reading warm-ups combine riddles, passage puzzles, story prompts, vocabulary, and inference questions. Learners practice noticing clues, making predictions, and supporting an answer with evidence. Streaks and badges are part of the proposed experience."
+      },
+      {
+        "demo": "hubs",
+        "icon": "reading",
+        "label": "Scholar knowledge hubs",
+        "title": "Keep the conversation and resources together.",
+        "description": "A scholar’s hub connects AI-assisted conversation with course materials, podcasts, course videos, and groups. Summarize an answer, request a different explanation, or translate it to keep exploring in a way that works for you."
+      },
+      {
+        "demo": "community",
+        "icon": "community",
+        "label": "Learning communities",
+        "title": "Learn through shared questions.",
+        "description": "Discover research circles, interest groups, and labs through scholar details. Open and closed groups provide spaces to share updates, discuss papers, comment on ideas, and organize course materials, meetings, and resources."
+      },
+      {
+        "demo": "adult",
+        "icon": "community",
+        "label": "Adult Hub",
+        "title": "Continue learning beyond the classroom.",
+        "description": "An adult-focused space brings profiles, courses, community news, and social updates together. It gives learners a place to explore academic interests and follow conversations across research, professional learning, and community life."
+      },
+      {
+        "demo": "discovery",
+        "icon": "explanation",
+        "label": "AI-assisted discovery",
+        "title": "Start with a topic that interests you.",
+        "description": "Describe what you want to explore in your own words. The search experience is designed to bring together relevant scholars, courses, labs, podcasts, and community resources so a question can lead to several useful paths."
+      },
+      {
+        "demo": "schools",
+        "icon": "scholar",
+        "label": "Schools and learning platforms",
+        "title": "Adapt the experience to your learners.",
+        "description": "The Veri AI concept includes customization for schools and other platforms. Explanations by age and grade, multiple languages, and adjustable learning depth help shape the experience around different learners and educational settings."
+      }
+    ],
+    "workflow": {
+      "media": { "type": "video", "src": "", "alt": "", "caption": "" },
+      "eyebrow": "How it comes together",
+      "title": "Follow your curiosity. Build your understanding.",
+      "steps": [
+        {
+          "title": "Discover a starting point.",
+          "description": "Browse a scholar’s profile or search for a topic. Explore the research, publications, and resources connected to it."
+        },
+        {
+          "title": "Ask and adapt.",
+          "description": "Use Veri AI to explore a question. Choose your language and learning level, then summarize, explain, or translate as needed."
+        },
+        {
+          "title": "Practice and participate.",
+          "description": "Work through reading activities, explore a knowledge hub, or continue the discussion in a learning community."
+        }
+      ]
+    },
+    "audience": {
+      "media": { "type": "image", "src": "", "alt": "", "caption": "" },
+      "eyebrow": "Who it’s for",
+      "title": "Different learners. A shared connection to knowledge.",
+      "items": [
+        {
+          "title": "Young readers and students",
+          "description": "Build reading skills through vocabulary, inference, and evidence-based questions, then explore academic ideas through explanations suited to your level."
+        },
+        {
+          "title": "Educators and schools",
+          "description": "Connect scholar profiles and learning resources with classroom interests, and shape explanations around learners’ grades, languages, and needs."
+        },
+        {
+          "title": "Adult learners",
+          "description": "Explore topics, courses, podcasts, and community conversations through the Adult Hub and AI-assisted search."
+        },
+        {
+          "title": "Scholars and research communities",
+          "description": "Bring research, publications, teaching resources, and discussions together so visitors can understand the work and find ways to keep learning."
+        }
+      ]
+    },
+    "rollout": {
+      "media": { "type": "image", "src": "", "alt": "", "caption": "" },
+      "eyebrow": "Where we’re starting",
+      "title": "Built for R1 universities, starting with the Big Ten.",
+      "description": "Proj Arch is built for research-intensive universities, where the work students are trying to understand is being produced. We are starting with the Big Ten and expanding across R1 institutions from there.",
+      "phases": [
+        {
+          "label": "First",
+          "title": "Big Ten universities",
+          "description": "The first rollout focuses on the Big Ten, connecting learners to the scholars and research at those institutions."
+        },
+        {
+          "label": "Next",
+          "title": "R1 universities",
+          "description": "The platform then extends to R1 institutions, the Carnegie classification for universities with very high research activity."
+        }
+      ]
+    },
+    "team": {
+      "eyebrow": "The people behind the project",
+      "title": "Meet the team",
+      "leadRole": "Innovator, CEO",
+      "members": [
+        { "name": "Ram", "role": "Technology developer" },
+        { "name": "Nikhil Sai Jaddu", "role": "Technology developer" }
+      ]
+    },
+    "closing": {
+      "title": "Explore the work behind the idea.",
+      "portfolioLabel": "Explore the portfolio",
+      "contactLabel": "Talk about Proj Arch"
+    },
+    "topLabel": "Back to top",
+    "metadataTitle": "Research & learning",
+    "tagline": "from Archives to You, accelerated by AI"
+  }
+}

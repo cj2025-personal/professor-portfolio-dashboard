@@ -1,3 +1,60 @@
+/* Canonical Archivyn token sheet. Imported before Tailwind so the :root
+   variables exist by the time the theme resolves var(--ark-*). Never edit
+   archivyn-tokens.css in this repo — it is shared verbatim across all apps. */
+@import './archivyn-tokens.css';
+
+/* Typeface override, app-local.
+   Overridden here rather than in archivyn-tokens.css, which is shared
+   verbatim across repos and must not be forked.
+
+   --ark-font-serif is a misnomer now: the display slot holds Fjalla One, a
+   condensed grotesque, not a serif. The name is kept because the Tailwind
+   theme, styles/paris.css and .ark-display all resolve through it, and
+   renaming it in this app alone would fork the contract. --ark-font-display
+   is the honest alias; new rules should use that. */
+:root {
+  --ark-font-ui: "Nunito Sans", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --ark-font-display: "Fjalla One", "Haettenschweiler", "Arial Narrow", Impact, sans-serif;
+  --ark-font-serif: var(--ark-font-display);
+}
+
+/* ── Flag palette ────────────────────────────────────────────────────────
+   Blue, red and white, in the proportions that keep it reading as an
+   institution rather than as bunting: white carries the page, blue carries
+   every structural element, and red is reserved for marks that say "this
+   one" or "start here" — kicker rules, the active nav item, the active
+   filter, the footer edge. Roughly 70 / 25 / 5. Red used at parity with
+   blue is what makes a flag palette look like a fireworks flyer.
+
+   The two hues are the platform's own flag pair, already used together in
+   ngo-web's CommunityLens: #0A3161 and #B22234. --ark-red needed no change
+   — the canonical sheet was already carrying Old Glory Red.
+
+   App-local, like the typefaces. archivyn-tokens.css is shared verbatim
+   across repos and must not be forked. */
+:root {
+  /* Blue family */
+  --ark-navy-ink: #071B36;   /* deepest — footer ground */
+  --ark-navy: #0A3161;       /* Old Glory Blue — primary actions, ink */
+  --ark-blue: #14528F;       /* links and interactive text */
+  --ark-blue-deep: #082647;  /* primary hover */
+
+  /* Paper and ink, biased toward the flag blue rather than a generic slate */
+  --ark-bg: #F4F7FB;
+  --ark-surface: #FFFFFF;
+  --ark-surface-2: #EBF1F8;
+  --ark-border: #CFDCEC;
+  --ark-border-soft: #E3EBF4;
+  --ark-text: #0C1B30;
+  --ark-text-muted: #2C3E57;
+  --ark-text-faint: #5C6E85;
+
+  --ark-navy-soft: #E2EAF5;
+  --ark-info: #14528F;
+  --ark-info-strong: #0A3161;
+  --ark-info-soft: #E5EDF7;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,14 +62,46 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Offset anchored sections so the fixed navbar never overlaps headings */
+    scroll-padding-top: 5rem;
   }
-  
+
   body {
-    @apply text-gray-900 bg-white;
+    color: var(--ark-text);
+    background: var(--ark-surface);
     margin: 0;
-    font-family: 'Work Sans', sans-serif;
+    font-family: var(--ark-font-ui);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Anchored sections sit clear of the fixed navbar */
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  /* Form controls do not inherit font-family from their ancestors — browsers
+     substitute the system UI face. Every input, select and textarea on the
+     site was therefore rendering in Segoe UI rather than Nunito Sans: the
+     chat composer, the language picker, the publication search and the whole
+     contact form. */
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+
+  ::selection {
+    background: var(--ark-navy-soft);
+    color: var(--ark-navy-ink);
+  }
+
+  /* Keyboard focus is visible on every interactive element, not just the
+     ones that happen to carry a Tailwind ring utility. */
+  :focus-visible {
+    outline: 2px solid var(--ark-blue);
+    outline-offset: 2px;
   }
 }
 
@@ -20,13 +109,1068 @@
   .section-padding {
     @apply py-16 md:py-24;
   }
-  
+
   .container-padding {
     @apply px-4 sm:px-6 lg:px-8;
   }
+
+  /* ── Layout rhythm ───────────────────────────────────────────
+     One container and one vertical rhythm for every band. The page
+     previously mixed max-w-7xl with per-section py values, so no two
+     sections started on the same optical grid. */
+  .ark-container {
+    @apply mx-auto px-5 sm:px-8 lg:px-10;
+    max-width: var(--ark-width-content);
+  }
+
+  .ark-section { @apply py-16 md:py-24; }
+  .ark-section--tight { @apply py-12 md:py-16; }
+
+  /* Alternating grounds. A band is either paper or tint — never a
+     tinted band containing one giant white card containing more cards,
+     which is what made the old Publications / Teaching sections read as
+     three stacked surfaces. */
+  .ark-band { background: var(--ark-surface); }
+  .ark-band--tint { background: var(--ark-bg); }
+
+  /* ── Section header ──────────────────────────────────────────
+     Every section opens the same way: red kicker rule, uppercase
+     eyebrow, serif title, optional lead. Left-aligned everywhere —
+     centred headings inside cards were the single biggest source of
+     visual inconsistency on the page. */
+  .sec-head { @apply mb-10 md:mb-14; }
+
+  /* items-start on the cross axis so a trailing action keeps its intrinsic
+     width instead of stretching to full bleed when the row stacks. */
+  .sec-head__row {
+    @apply flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between;
+  }
+
+  .sec-eyebrow {
+    @apply inline-flex items-center gap-2.5;
+    margin: 0;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ark-text-faint);
+  }
+  /* The signature red, used as a kicker rule. Fenced to this and
+     .ark-stripe — it is never a section accent or a surface. */
+  .sec-eyebrow::before {
+    content: '';
+    width: 1.5rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--ark-red);
+    flex: none;
+  }
+
+  /* Fjalla One is condensed and already dark on the page, so it takes the
+     opposite treatment to the serif it replaces: weight 400 (the only one it
+     has), no negative tracking — tightening a condensed face closes the
+     counters — and a slightly larger size, because condensed glyphs read
+     smaller at equal point size. */
+  .sec-title,
+  .section-title {
+    font-family: var(--ark-font-display);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 3vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: 0.005em;
+    color: var(--ark-text);
+    margin: 0.6rem 0 0;
+  }
+
+  .sec-lead {
+    margin: 0.85rem 0 0;
+    max-width: 62ch;
+    font-size: 0.975rem;
+    line-height: 1.7;
+    color: var(--ark-text-muted);
+  }
+
+  /* Display face for titles, names and anything that should carry weight.
+     Weight is pinned to 400 because Fjalla One has no other cut — asking for
+     600 or 700 makes the browser smear a synthetic bold over it. */
+  .ark-display {
+    font-family: var(--ark-font-display);
+    font-weight: 400;
+    letter-spacing: 0.005em;
+  }
+
+  /* ── Surfaces ────────────────────────────────────────────────
+     Cards are a leaf-level treatment only. Soft border by default so a
+     grid of them reads as a set rather than a stack of boxes. */
+  .ark-card {
+    background: var(--ark-surface);
+    border: 1px solid var(--ark-border-soft);
+    border-radius: var(--ark-radius-card);
+    box-shadow: var(--ark-shadow-sm);
+  }
+
+  .ark-card--flat { box-shadow: none; }
+
+  .ark-card--lift {
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+  .ark-card--lift:hover {
+    border-color: var(--ark-border);
+    box-shadow: var(--ark-shadow-md);
+    transform: translateY(-2px);
+  }
+
+  /* A hairline-separated list. Replaces the "row of identical cards
+     with a heavy left rule" pattern in Ongoing Research and the
+     bordered blocks in Publications. */
+  .ark-list > * + * { border-top: 1px solid var(--ark-border-soft); }
+
+  /* ── Buttons ─────────────────────────────────────────────────
+     Three weights, one per level of intent. The page previously used
+     five different button treatments for actions of equal importance. */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-control
+      text-white text-sm font-semibold shadow-sm transition-all duration-200;
+    background: var(--ark-navy);
+  }
+  .btn-primary:hover {
+    background: var(--ark-blue-deep);
+    box-shadow: var(--ark-shadow-md);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-control
+      text-sm font-semibold transition-all duration-200;
+    background: var(--ark-surface);
+    color: var(--ark-navy);
+    border: 1px solid var(--ark-border);
+  }
+  .btn-secondary:hover {
+    background: var(--ark-surface-2);
+    border-color: var(--ark-navy);
+  }
+
+  /* Tertiary. Carries no ground until hovered, so three of these in a
+     row do not compete with each other or with a primary. */
+  .btn-quiet {
+    @apply inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-control
+      text-[0.8125rem] font-semibold transition-colors duration-200;
+    color: var(--ark-text-muted);
+    border: 1px solid var(--ark-border);
+    background: transparent;
+  }
+  .btn-quiet:hover {
+    color: var(--ark-navy);
+    border-color: var(--ark-navy);
+    background: var(--ark-surface-2);
+  }
+
+  .btn-lg { @apply px-6 py-3 text-[0.9375rem]; }
+
+  /* Inline text action with a nudging arrow. */
+  .link-cta {
+    @apply inline-flex items-center gap-1.5 text-sm font-semibold transition-colors;
+    color: var(--ark-blue);
+  }
+  .link-cta:hover { color: var(--ark-blue-deep); }
+  .link-cta svg { transition: transform 0.2s ease; }
+  .link-cta:hover svg { transform: translateX(2px); }
+
+  /* ── Small type ──────────────────────────────────────────────*/
+  .ark-kicker {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--ark-text-faint);
+  }
+
+  .ark-meta {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--ark-text-faint);
+  }
+
+  /* Status / category chip. One shape for every chip on the site. */
+  .ark-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--ark-surface-2);
+    color: var(--ark-text-muted);
+    border: 1px solid var(--ark-border-soft);
+  }
+  /* Research status is a state, not a success, so it takes the palette
+     rather than the green semantic — it was the only non-flag colour left
+     on the homepage. Genuine success states (a sent contact form) stay
+     green, where the convention carries real meaning. */
+  .ark-chip--active {
+    background: var(--ark-navy-soft);
+    color: var(--ark-navy);
+    border-color: transparent;
+  }
+
+  /* ── Segmented control ───────────────────────────────────────
+     Replaces the chunky icon pills in Publications and Teaching. The
+     icons there were decorative — four near-identical document glyphs
+     for four categories told the reader nothing. */
+  .seg {
+    @apply inline-flex flex-wrap items-center gap-1 rounded-control p-1;
+    background: var(--ark-surface-2);
+    border: 1px solid var(--ark-border-soft);
+  }
+  .seg__btn {
+    @apply relative rounded-lg px-3.5 py-2 text-[0.8125rem] font-semibold transition-all duration-200;
+    color: var(--ark-text-muted);
+  }
+  .seg__btn:hover { color: var(--ark-navy); }
+  .seg__btn--on {
+    background: var(--ark-surface);
+    color: var(--ark-navy);
+    box-shadow: var(--ark-shadow-sm);
+  }
+  /* Same red "you are here" mark as the navbar. */
+  .seg__btn--on::after {
+    content: '';
+    position: absolute;
+    left: 0.85rem;
+    right: 0.85rem;
+    bottom: 0.3rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--ark-red);
+  }
+  .seg__count {
+    margin-left: 0.4rem;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.55;
+  }
+
+  /* ── Field ───────────────────────────────────────────────────*/
+  .ark-field {
+    @apply block w-full rounded-control px-3.5 py-2.5 text-sm transition-colors;
+    background: var(--ark-surface);
+    color: var(--ark-text);
+    border: 1px solid var(--ark-border);
+  }
+  .ark-field::placeholder { color: var(--ark-text-faint); }
+  .ark-field:focus {
+    outline: none;
+    border-color: var(--ark-blue);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ark-blue) 18%, transparent);
+  }
+
+  .ark-label {
+    @apply mb-1.5 block text-[0.8125rem] font-semibold;
+    color: var(--ark-text-muted);
+  }
+
+  /* Archivyn signature: a 3px red rule on the top edge of a hero or modal
+     surface. Mirrors HeroSectionV2 / AiDisclosureModal in the profile app.
+     Red is fenced to this and nothing else. */
+  .ark-stripe {
+    position: relative;
+  }
+  .ark-stripe::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--ark-red);
+    z-index: 1;
+  }
+
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Comprehension check ─────────────────────────────────────
+   Lives inside a chat bubble, so it stays compact and inherits
+   the bubble's ground rather than introducing a new surface. */
+.cc-start {
+  margin-top: 0.6rem;
+  border: 1px solid var(--ark-border);
+  background: var(--ark-surface);
+  color: var(--ark-navy);
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.cc-start:hover { background: var(--ark-surface-2); border-color: var(--ark-navy); }
+
+.cc-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--ark-text-faint);
+}
+.cc-note a { color: var(--ark-blue); font-weight: 600; }
+.cc-note a:hover { text-decoration: underline; }
+
+.cc-quiz { margin-top: 0.7rem; display: grid; gap: 0.7rem; }
+
+.cc-quiz__label,
+.cc-moved__label {
+  margin: 0;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ark-text-faint);
+}
+
+.cc-q { border: 0; padding: 0; margin: 0; display: grid; gap: 0.3rem; }
+.cc-q legend { font-size: 0.78rem; font-weight: 700; color: var(--ark-text); margin-bottom: 0.25rem; }
+
+.cc-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--ark-border);
+  border-radius: var(--ark-radius-sm);
+  background: var(--ark-surface);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--ark-text-muted);
+  cursor: pointer;
+}
+.cc-opt:hover { border-color: var(--ark-navy); }
+.cc-opt--on { border-color: var(--ark-navy); background: var(--ark-navy-soft); color: var(--ark-text); }
+.cc-opt input { margin-top: 0.2rem; flex: none; accent-color: var(--ark-navy); }
+
+.cc-submit {
+  justify-self: start;
+  background: var(--ark-navy);
+  color: #fff;
+  border: 0;
+  border-radius: var(--ark-radius-control);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cc-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.cc-result { margin-top: 0.7rem; display: grid; gap: 0.6rem; }
+.cc-result__score { margin: 0; font-size: 0.85rem; font-weight: 800; color: var(--ark-navy); }
+.cc-result__list { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.35rem; }
+.cc-result__list li { display: flex; gap: 0.45rem; font-size: 0.75rem; line-height: 1.45; }
+.cc-ok span:first-child { color: var(--ark-success-strong); font-weight: 800; }
+.cc-no span:first-child { color: var(--ark-danger); font-weight: 800; }
+.cc-why { display: block; color: var(--ark-text-faint); font-style: normal; margin-top: 0.15rem; }
+
+.cc-moved {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--ark-radius-sm);
+  background: var(--ark-success-soft);
+}
+.cc-moved__row {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.74rem;
+  color: var(--ark-text-muted);
+}
+.cc-moved__row strong { color: var(--ark-success-strong); }
+
+.cc-cert { display: flex; align-items: center; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.35rem; }
+.cc-cert__label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ark-text-faint);
+  margin-right: 0.15rem;
+}
+.cc-cert__btn {
+  border: 1px solid var(--ark-border);
+  background: var(--ark-surface);
+  color: var(--ark-text-faint);
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.cc-cert__btn:hover { border-color: var(--ark-navy); color: var(--ark-navy); }
+.cc-cert__btn--on { background: var(--ark-navy); border-color: var(--ark-navy); color: #fff; }
+
+/* ── Hero ────────────────────────────────────────────────────
+   The old hero centred a text column against a much taller portrait,
+   which left a ~200px void under the buttons, and scattered four
+   outlined circles and diamonds behind it. Both are gone. The column
+   is anchored to the credential strip instead, so the two halves end
+   on the same line. */
+.hero {
+  position: relative;
+  /* The portrait plate is deliberately offset past the content column, so
+     the band has to clip it — without this the whole document gains a
+     horizontal scrollbar on narrow screens. */
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, var(--ark-surface) 0%, var(--ark-bg) 100%);
+  border-bottom: 1px solid var(--ark-border-soft);
+}
+
+/* A single restrained ground device replaces the loose geometry: a
+   faint navy hairline grid, masked so it fades out well before the
+   text. Reads as paper stock, not decoration. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--ark-border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ark-border) 1px, transparent 1px);
+  background-size: 76px 76px;
+  opacity: 0.5;
+  -webkit-mask-image: radial-gradient(75% 80% at 88% 30%, #000 0%, transparent 72%);
+  mask-image: radial-gradient(75% 80% at 88% 30%, #000 0%, transparent 72%);
+}
+
+/* Below the two-column breakpoint there is no empty right-hand field for the
+   grid to occupy, so it would sit under the headline. Drop it almost away. */
+@media (max-width: 767px) {
+  .hero::before { opacity: 0.22; }
+}
+
+.hero__rule {
+  display: block;
+  width: 3.75rem;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--ark-red);
+}
+
+/* Condensed, so the name can run a good deal larger than the serif did
+   without crowding the column — and must not be tracked in. */
+.hero__name {
+  font-family: var(--ark-font-display);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 5.4vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: 0.004em;
+  color: var(--ark-text);
+  margin: 0.85rem 0 0;
+}
+
+/* Fjalla One sets on a tight 1.04 line box, so the affiliation needs a little
+   more air beneath the name than a normal-leading face would. */
+.hero__affil {
+  margin: 1.15rem 0 0;
+  max-width: 34ch;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--ark-text-muted);
+}
+
+/* Research focus, read straight off the scholar record. It anchors the
+   bottom of the text column against the portrait and tells a first-time
+   reader what the work is about, without any figure being written into
+   the source by hand. */
+.hero__focus {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 2.25rem 0 0;
+  padding: 1.5rem 0 0;
+  max-width: 32rem;
+  border-top: 1px solid var(--ark-border);
+}
+
+.hero__focus li {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--ark-border);
+  background: var(--ark-surface);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ark-text-muted);
+  text-transform: capitalize;
+}
+
+/* Portrait: a plain frame over an offset plate. The old treatment
+   rotated a tinted panel 3deg behind the photo, which read as a
+   template flourish rather than a considered edge. */
+.hero__portrait { position: relative; }
+
+.hero__portrait::after {
+  content: '';
+  position: absolute;
+  inset: 1.25rem -1.25rem -1.25rem 1.25rem;
+  border-radius: var(--ark-radius-panel);
+  background: var(--ark-navy-soft);
+  z-index: 0;
+}
+
+.hero__frame {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: var(--ark-radius-panel);
+  border: 1px solid var(--ark-border);
+  background: var(--ark-surface);
+  box-shadow: var(--ark-shadow-lg);
+}
+
+/* ── Research domain tiles ───────────────────────────────────
+   The supplied artwork is mint/teal stock illustration sitting in a
+   navy palette. Rather than drop the assets, they are printed to the
+   brand: desaturated and tinted navy, with a touch of colour returning
+   on hover. */
+.domain__figure {
+  position: relative;
+  overflow: hidden;
+  background: var(--ark-navy-ink);
+}
+
+.domain__figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.08) brightness(0.96);
+  opacity: 0.72;
+  transition: transform 0.6s ease, opacity 0.4s ease, filter 0.4s ease;
+}
+
+.domain:hover .domain__figure img {
+  transform: scale(1.04);
+  opacity: 0.85;
+  filter: grayscale(0.55) contrast(1.05) brightness(0.98);
+}
+
+.domain__figure::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ark-navy) 35%, transparent) 0%,
+    color-mix(in srgb, var(--ark-navy-ink) 70%, transparent) 100%
+  );
+  mix-blend-mode: multiply;
+}
+
+.domain__index {
+  position: absolute;
+  left: 1.25rem;
+  bottom: 1rem;
+  z-index: 1;
+  font-family: var(--ark-font-display);
+  font-weight: 400;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Assistant panel · liquid glass ──────────────────────────
+   Three things separate real glass from a translucent white box:
+   the tint is low enough that you can still read the shapes behind it,
+   the rim carries a specular highlight that is bright where the light
+   would fall and dark where it would not, and the surface has its own
+   sheen independent of whatever it sits over.
+
+   The blur is applied once, on the shell. Nested backdrop-filters do not
+   compound — each opens its own backdrop root, so a blurred child inside
+   a blurred parent samples the parent rather than the page, loses the
+   effect, and costs a second full-surface filter pass per frame. Every
+   layer inside is therefore a plain alpha wash over the one blur. */
+.cb-launcher {
+  box-shadow: 0 6px 16px -6px rgba(7, 27, 54, 0.4), 0 18px 42px -18px rgba(7, 27, 54, 0.55);
+}
+
+.cb-panel {
+  --cb-radius: 30px;
+  /* No `position` here on purpose. The component carries Tailwind's `fixed`,
+     and this rule is emitted after the utilities, so declaring `position:
+     relative` for the rim pseudo-element silently beat it and dropped the
+     panel out of the viewport into page flow. `fixed` is already a
+     containing block for the absolutely-positioned rim. */
+  width: min(400px, calc(100vw - 2rem));
+  height: min(640px, calc(100vh - 6rem));
+  border-radius: var(--cb-radius);
+  /* Low tint. Anything above ~0.35 and the page behind stops reading as a
+     shape and the panel goes back to looking like frosted plastic. */
+  background: rgba(255, 255, 255, 0.24);
+  -webkit-backdrop-filter: blur(36px) saturate(170%) brightness(1.06);
+  backdrop-filter: blur(36px) saturate(170%) brightness(1.06);
+  border: 0;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.75),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.28),
+    0 2px 8px rgba(7, 27, 54, 0.06),
+    0 16px 34px -14px rgba(7, 27, 54, 0.24),
+    0 44px 88px -34px rgba(7, 27, 54, 0.42);
+}
+
+/* Specular rim. A gradient ring painted into a 1.5px border band by
+   masking the fill out of the middle — bright at the top-left where the
+   light lands, fading through the body, catching again at the lower
+   right. A flat 1px border cannot do this, and it is most of what makes
+   the edge read as an edge of glass rather than a stroke. */
+.cb-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.45) 18%,
+    rgba(255, 255, 255, 0.08) 42%,
+    rgba(255, 255, 255, 0.05) 62%,
+    rgba(255, 255, 255, 0.55) 88%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* ── Header ── */
+/* Solid, and deliberately the darkest surface on the site.
+   Held at full opacity while the body stays glass: a translucent header over
+   a light page washed out to a mid blue and lost the contrast the white name
+   and the red edge need. The composition is better for it — a dark bar
+   capping a glass body reads as a titlebar rather than as more glass. */
+.cb-head {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--ark-navy-ink) 88%, black) 0%,
+    var(--ark-navy-ink) 52%,
+    color-mix(in srgb, var(--ark-navy) 88%, black) 100%
+  );
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.cb-head::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--ark-red);
+}
+
+.cb-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
+}
+
+.cb-dot {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  /* Ring matches the header ground now that it is opaque. */
+  box-shadow: 0 0 0 2px var(--ark-navy-ink);
+}
+
+.cb-dot--on { background: #4ADE80; }
+.cb-dot--off { background: #94A3B8; }
+
+.cb-badge {
+  flex: none;
+  border-radius: 999px;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.cb-close {
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.cb-close:hover { color: #fff; background: rgba(255, 255, 255, 0.18); }
+
+/* ── Conversation ── */
+.cb-log {
+  position: relative;
+  /* Barely a wash, plus the surface's own sheen falling from the top-left.
+     The sheen belongs to the glass, not to the page behind it, so it stays
+     put while the backdrop moves. */
+  background:
+    radial-gradient(120% 70% at 8% 0%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.14) 34%, transparent 62%),
+    rgba(255, 255, 255, 0.1);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(12, 27, 48, 0.22) transparent;
+  overscroll-behavior: contain;
+}
+
+.cb-log::-webkit-scrollbar { width: 6px; }
+.cb-log::-webkit-scrollbar-track { background: transparent; }
+.cb-log::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(12, 27, 48, 0.18);
+}
+.cb-log:hover::-webkit-scrollbar-thumb { background: rgba(12, 27, 48, 0.32); }
+
+/* Bubbles are glass too, but they hold the text, so they keep enough tint
+   to stay legible over a dark backdrop and carry their own rim highlight
+   rather than a grey border. */
+.cb-bubble {
+  position: relative;
+  max-width: 86%;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.cb-bubble--bot {
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ark-text);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 1.1rem 1.1rem 1.1rem 0.3rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(7, 27, 54, 0.05),
+    0 8px 20px -12px rgba(7, 27, 54, 0.3);
+}
+
+.cb-bubble--me {
+  background: color-mix(in srgb, var(--ark-navy) 82%, transparent);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 1.1rem 1.1rem 0.3rem 1.1rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 1px 2px rgba(7, 27, 54, 0.12),
+    0 10px 22px -12px rgba(10, 49, 97, 0.65);
+}
+
+.cb-time {
+  margin-top: 0.25rem;
+  padding: 0 0.3rem;
+  font-size: 0.625rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ark-text-muted);
+  opacity: 0.8;
+}
+
+/* ── Typing ── */
+.cb-typing {
+  display: inline-flex;
+  gap: 0.28rem;
+  align-items: center;
+  padding: 0.7rem 0.9rem;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 1.1rem 1.1rem 1.1rem 0.3rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 8px 20px -12px rgba(7, 27, 54, 0.3);
+}
+
+.cb-typing span {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: var(--ark-text-faint);
+  animation: cbDot 1.3s ease-in-out infinite;
+}
+.cb-typing span:nth-child(2) { animation-delay: 0.16s; }
+.cb-typing span:nth-child(3) { animation-delay: 0.32s; }
+
+@keyframes cbDot {
+  0%, 65%, 100% { opacity: 0.28; transform: translateY(0); }
+  32%           { opacity: 1;    transform: translateY(-2.5px); }
+}
+
+/* ── Composer ── */
+.cb-composer {
+  position: relative;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 2px 0 rgba(255, 255, 255, 0.12);
+}
+
+.cb-reading-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.cb-reading-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ark-text-muted);
+}
+.cb-reading-picker { position: relative; flex: none; }
+.cb-reading-select {
+  appearance: none;
+  min-width: 94px;
+  min-height: 40px;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid var(--ark-border-soft);
+  border-radius: 10px;
+  background: var(--ark-surface);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ark-navy);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.cb-reading-select:hover { border-color: var(--ark-text-muted); }
+.cb-reading-select:focus-visible {
+  outline: 2px solid var(--ark-blue);
+  outline-offset: 2px;
+}
+.cb-reading-chevron {
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: var(--ark-text-muted);
+  pointer-events: none;
+}
+
+.cb-field {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.35rem 0.15rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cb-field:focus-within {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: var(--ark-blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ark-blue) 18%, transparent);
+}
+
+.cb-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0;
+  background: transparent;
+  border: 0;
+  font-size: 0.8125rem;
+  color: var(--ark-text);
+}
+.cb-input::placeholder { color: var(--ark-text-muted); opacity: 0.75; }
+.cb-input:focus { outline: none; }
+
+.cb-lang {
+  flex: none;
+  border: 0;
+  background: transparent;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ark-text-muted);
+  cursor: pointer;
+  padding: 0.2rem 0.15rem;
+}
+.cb-lang:focus { outline: none; }
+.cb-lang:hover { color: var(--ark-navy); }
+
+.cb-send {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.375rem;
+  height: 2.375rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ark-navy) 92%, transparent);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 4px 12px -4px rgba(10, 49, 97, 0.55);
+}
+.cb-send:hover:not(:disabled) {
+  background: var(--ark-blue-deep);
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 6px 16px -4px rgba(10, 49, 97, 0.6);
+}
+.cb-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Glass fallbacks.
+   Without backdrop-filter a 24%-opaque panel is not "less glassy", it is
+   unreadable — live text over raw page content. Same for a reader who has
+   asked the OS to cut transparency: that request is about legibility, not
+   taste. Both fall back to a solid surface. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .cb-panel { background: var(--ark-surface); }
+  .cb-panel::before { display: none; }
+  .cb-panel { border: 1px solid var(--ark-border-soft); }
+  .cb-log { background: var(--ark-bg); }
+  .cb-composer { background: var(--ark-surface); border-top: 1px solid var(--ark-border-soft); }
+  .cb-field { background: var(--ark-surface-2); border-color: transparent; }
+  .cb-head { background: linear-gradient(135deg, var(--ark-navy-ink) 0%, var(--ark-navy) 100%); }
+  .cb-bubble--bot { background: var(--ark-surface); border-color: var(--ark-border-soft); }
+  .cb-bubble--me { background: var(--ark-navy); }
+  .cb-send { background: var(--ark-navy); }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .cb-panel {
+    background: var(--ark-surface);
+    border: 1px solid var(--ark-border-soft);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .cb-panel::before { display: none; }
+  .cb-log { background: var(--ark-bg); }
+  .cb-composer { background: var(--ark-surface); border-top: 1px solid var(--ark-border-soft); }
+  .cb-field { background: var(--ark-surface-2); border-color: transparent; }
+  .cb-head { background: linear-gradient(135deg, var(--ark-navy-ink) 0%, var(--ark-navy) 100%); }
+  .cb-bubble--bot { background: var(--ark-surface); border-color: var(--ark-border-soft); }
+  .cb-bubble--me { background: var(--ark-navy); }
+  .cb-send { background: var(--ark-navy); }
+}
+
+/* ── Presentation viewer · print suppression ─────────────────
+   Intercepting the Ctrl+P keydown does not work here and never did. The
+   deck renders inside a cross-origin iframe, so once the reader clicks
+   into the viewer the key event fires in Google's document and never
+   reaches our listener. It also misses print invoked from the browser
+   menu, from the OS, or by script.
+
+   A print stylesheet is the one mechanism the page actually controls: it
+   applies however the print was triggered. The viewer is removed from the
+   printed output and a notice takes its place. */
+@media print {
+  .pv-shell {
+    position: static !important;
+    background: none !important;
+    padding: 0 !important;
+  }
+
+  .pv-shell * {
+    visibility: hidden !important;
+  }
+
+  .pv-shell::before {
+    content: 'This material is view-only and cannot be printed.';
+    visibility: visible !important;
+    display: block;
+    padding: 4rem 2rem;
+    text-align: center;
+    font-family: var(--ark-font-ui);
+    font-size: 12pt;
+    color: #000;
+  }
+
+  /* With the modal open, nothing else on the page should print either. */
+  body:has(.pv-shell) > *:not(:has(.pv-shell)) {
+    display: none !important;
+  }
+}
+
+/* ── Secure presentation viewer ──────────────────────────────
+   Pages are canvases, not a document. Nothing here is selectable and
+   there is no file for a context menu to offer. */
+.spv {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  background: var(--ark-surface-2);
+  border-radius: var(--ark-radius-card);
+  overscroll-behavior: contain;
+}
+
+.spv__state {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  background: var(--ark-surface);
+  z-index: 2;
+}
+
+.spv__pages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+}
+
+.spv__page {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(7, 27, 54, 0.08), 0 8px 22px -14px rgba(7, 27, 54, 0.35);
+  /* A canvas cannot be selected, but it can be dragged out as an image. */
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.spv__count {
+  position: sticky;
+  bottom: 0.5rem;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(7, 27, 54, 0.78);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
 }

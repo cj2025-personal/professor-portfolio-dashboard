@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+/* Split out: pdf.js is a large dependency and only needed once a deck is opened. */
+const SecurePdfViewer = lazy(() => import('./SecurePdfViewer'));
 
 const CoursePresentations = () => {
   const { courseId } = useParams();
@@ -164,9 +166,32 @@ const CoursePresentations = () => {
     }
   }, [showPresentation]);
 
-  const handleViewPresentation = (presentation) => {
+  /* The list response no longer carries a storage reference at all. Opening
+     a deck asks the API where to load it from, and the API answers with its
+     own relay endpoint — so the bucket URL never reaches this browser. Held
+     in state, not on the record, so it goes away when the modal closes. */
+  const [viewerUrl, setViewerUrl] = useState(null);
+  const [viewerKind, setViewerKind] = useState('other');
+  const [viewerError, setViewerError] = useState(null);
+
+  const handleViewPresentation = async (presentation) => {
     setSelectedPresentation(presentation);
     setShowPresentation(true);
+    setViewerUrl(null);
+    setViewerError(null);
+
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URI}/api/presentations/${presentation.pptId}/link`
+      );
+      const link = res.data?.data?.url;
+      if (!link) throw new Error('No link returned');
+      setViewerKind(res.data?.data?.kind || 'other');
+      setViewerUrl(link);
+    } catch (err) {
+      console.error('Could not open presentation:', err);
+      setViewerError('This presentation could not be opened. Please try again.');
+    }
     
     // Add event listeners to prevent right-click and keyboard shortcuts
     const preventDownload = (e) => {
@@ -212,17 +237,8 @@ const CoursePresentations = () => {
     
     setShowPresentation(false);
     setSelectedPresentation(null);
-  };
-
-  const getEmbedUrl = (pptPath) => {
-    // Use Microsoft Office Online Viewer for better read-only control
-    if (pptPath.includes('googleapis.com') || pptPath.includes('firebasestorage.app') || pptPath.includes('.pptx') || pptPath.includes('.ppt')) {
-      // For PowerPoint files, use Microsoft Office Online Viewer in read-only mode
-      // Additional parameters to ensure read-only: wdAr=1 (aspect ratio), wdStartOn=1 (start on first slide)
-      return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(pptPath)}&wdAr=1&wdStartOn=1&wdEmbedCode=0`;
-    }
-    // Fallback to Google Docs Viewer if not a PowerPoint file
-    return `https://docs.google.com/viewer?url=${encodeURIComponent(pptPath)}&embedded=true&rm=minimal`;
+    setViewerUrl(null);
+    setViewerError(null);
   };
 
   const getSecureEmbedUrl = (pptPath) => {
@@ -239,20 +255,20 @@ const CoursePresentations = () => {
   };
 
   return (
-    <section className="py-20 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="resource-page">
+      <div className="ark-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-8">
+          <div className="resource-layout">
+            <div className="resource-content">
               {/* Header */}
-              <div className="mb-8">
+              <div className="resource-header">
                 <Link
                   to="/#teaching"
-                  className="inline-flex items-center text-crimson-600 hover:text-crimson-700 mb-4"
+                  className="resource-back"
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -262,16 +278,16 @@ const CoursePresentations = () => {
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="resource-title">
                       Course {courseInfo?.courseId || courseId} Presentations
                     </h1>
-                    {courseInfo?.count && (
-                      <p className="text-lg text-gray-600 mt-2">Total Presentations: {courseInfo.count}</p>
+                    {courseInfo?.count > 0 && (
+                      <p className="resource-count">Total Presentations: {courseInfo.count}</p>
                     )}
                   </div>
                   <Link
                     to={`/course/${courseId}/discussions`}
-                    className="inline-flex items-center px-4 py-2 border border-crimson-300 text-sm font-medium rounded-md text-crimson-700 bg-white hover:bg-crimson-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimson-500"
+                    className="btn-secondary"
                   >
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -284,7 +300,7 @@ const CoursePresentations = () => {
               {/* Loading State */}
               {loading && (
                 <div className="text-center py-8">
-                  <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-crimson-600 hover:bg-crimson-500 transition ease-in-out duration-150 cursor-not-allowed">
+                  <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-brand-600 hover:bg-brand-500 transition ease-in-out duration-150 cursor-not-allowed">
                     <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -327,33 +343,33 @@ const CoursePresentations = () => {
                       <p className="mt-1 text-sm text-gray-500">No presentations have been uploaded for this course yet.</p>
                     </div>
                   ) : (
-                    <div className="grid gap-6">
+                    <div className="resource-list">
                       {presentations.map((presentation) => (
                         <div
                           key={presentation._id || presentation.id || Math.random()}
-                          className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
+                          className="resource-item"
                         >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
+                          <div className="resource-item__row">
+                            <div className="resource-item__copy">
                               <div className="mb-2">
-                                <span className="text-sm font-medium text-crimson-600 bg-crimson-50 px-2 py-1 rounded">
+                                <span className="resource-topic">
                                   {presentation.courseId || courseId}
                                 </span>
                               </div>
-                              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                              <h3 className="resource-item__title">
                                 {presentation.lectureName || presentation.title || 'Untitled Presentation'}
                               </h3>
-                              <p className="text-gray-600 mb-3">
+                              <p className="resource-description">
                                 {presentation.description || 'No description available'}
                               </p>
-                              <div className="flex items-center space-x-4 text-sm text-gray-500">
+                              <div className="resource-meta">
                                 <span>Created: {new Date(presentation.createdAt || presentation.uploadDate || new Date()).toLocaleDateString()}</span>
                               </div>
                             </div>
-                            <div className="ml-4">
+                            <div className="resource-item__actions">
                               <button
                                 onClick={() => handleViewPresentation(presentation)}
-                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-crimson-600 hover:bg-crimson-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimson-500"
+                                className="btn-primary"
                               >
                                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -376,33 +392,22 @@ const CoursePresentations = () => {
 
       {/* Presentation Modal */}
       {showPresentation && selectedPresentation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="pv-shell fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg w-full max-w-6xl h-full max-h-[90vh] flex flex-col">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <div>
-                <h3 className="text-lg font-medium text-gray-900">
+                <h3 className="type-dialog-title text-gray-900">
                   {selectedPresentation.lectureName || selectedPresentation.title}
                 </h3>
                 <div className="flex items-center space-x-2 mt-1">
                   <p className="text-sm text-gray-500">
                     {selectedPresentation.courseId || courseId}
                   </p>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                    View Only
-                  </span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                    </svg>
-                    Modal View
-                  </span>
                 </div>
               </div>
               <button
+                aria-label="Close presentation"
                 onClick={closePresentation}
                 className="text-gray-400 hover:text-gray-600"
               >
@@ -426,55 +431,40 @@ const CoursePresentations = () => {
                 }}
               />
               
-              {/* Warning message */}
-              <div className="absolute top-2 left-2 z-20 bg-yellow-100 border border-yellow-300 rounded px-3 py-1 text-xs text-yellow-800">
-                <svg className="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
-                View Only - No Downloads or Full Screen
-              </div>
-              
-              <iframe
-                src={getSecureEmbedUrl(selectedPresentation.pptPath)}
-                className="w-full h-full border-0"
-                title={selectedPresentation.lectureName || 'Presentation'}
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                referrerPolicy="no-referrer"
-                loading="lazy"
-                style={{
-                  pointerEvents: 'auto',
-                  userSelect: 'none',
-                  WebkitUserSelect: 'none',
-                  MozUserSelect: 'none',
-                  msUserSelect: 'none'
-                }}
-                onLoad={(e) => {
-                  // Additional security: try to disable context menu on iframe
-                  try {
-                    const iframe = e.target;
-                    if (iframe.contentDocument) {
-                      iframe.contentDocument.addEventListener('contextmenu', (e) => e.preventDefault());
-                      iframe.contentDocument.addEventListener('keydown', (e) => {
-                        if (e.ctrlKey || e.metaKey) {
-                          const key = e.key.toLowerCase();
-                          if (['s', 'd', 'p', 'o', 'c', 'v', 'x'].includes(key)) {
-                            e.preventDefault();
-                            return false;
-                          }
-                        }
-                        // Prevent F11 (full screen)
-                        if (e.key === 'F11') {
-                          e.preventDefault();
-                          return false;
-                        }
-                      });
-                    }
-                  } catch (error) {
-                    // Cross-origin restrictions may prevent this
-                    console.log('Security measures applied to iframe');
-                  }
-                }}
-              />
+
+              {/* The frame stays empty until the link arrives. Without this the
+                  reader sees a blank white rectangle for the round-trip. */}
+              {!viewerUrl && (
+                <div className="absolute inset-0 z-30 flex items-center justify-center bg-white">
+                  {viewerError ? (
+                    <p className="text-sm text-red-600">{viewerError}</p>
+                  ) : (
+                    <div className="text-center">
+                      <div className="mx-auto h-7 w-7 animate-spin rounded-full border-2 border-gray-200 border-t-brand-600"></div>
+                      <p className="mt-3 text-sm text-gray-500">Preparing secure view…</p>
+                    </div>
+                  )}
+                </div>
+              )}
+              {/* A PDF is painted onto canvases in this page: no document URL,
+                  nothing selectable, and the print stylesheet applies because
+                  the pages belong to us. PowerPoint cannot be rendered that way,
+                  so those few decks still go through the third-party viewer —
+                  re-save them as PDF to get the same treatment. */}
+              {viewerUrl && viewerKind === 'pdf' ? (
+                <Suspense fallback={<div className="flex h-full items-center justify-center text-sm text-gray-500">Loading viewer…</div>}>
+                  <SecurePdfViewer url={viewerUrl} />
+                </Suspense>
+              ) : viewerUrl ? (
+                <iframe
+                  src={getSecureEmbedUrl(viewerUrl)}
+                  className="w-full h-full border-0 rounded"
+                  title={selectedPresentation.lectureName || 'Presentation'}
+                  sandbox="allow-scripts allow-same-origin allow-forms"
+                  allow="fullscreen 'none'"
+                  referrerPolicy="no-referrer"
+                />
+              ) : null}
             </div>
           </div>
         </div>

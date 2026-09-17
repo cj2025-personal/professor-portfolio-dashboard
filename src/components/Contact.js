@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useScholar } from '../lib/useScholar';
 
 const Contact = () => {
+  const { scholar } = useScholar();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -47,110 +49,123 @@ const Contact = () => {
     }
   };
 
+  const details = [
+    {
+      label: 'Office',
+      value: (
+        <>
+          {scholar.department}
+          <br />
+          1315 E. 10th Street
+          <br />
+          Bloomington, IN 47405
+        </>
+      ),
+      icon: (
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+    },
+    {
+      label: 'Email',
+      value: (
+        <a href="mailto:crljohns@iu.edu" className="font-medium text-brand-600 hover:text-brand-700">
+          crljohns@iu.edu
+        </a>
+      ),
+      icon: (
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      ),
+    },
+    {
+      label: 'Telephone',
+      value: <a href="tel:+18128550742" className="hover:text-brand-600">812-855-0742</a>,
+      icon: (
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+        </svg>
+      ),
+    },
+  ];
+
   return (
-    <section id="contact" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="ark-band ark-section">
+      <div className="ark-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true, margin: '-80px' }}
+          className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2"
         >
           {/* Contact Information */}
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 font-section-title">Contact</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Feel free to reach out with any questions about my research, 
-                teaching, or potential collaborations.
+          <div>
+            <div className="sec-head">
+              <p className="sec-eyebrow">Get in touch</p>
+              <h2 className="sec-title">Contact</h2>
+              <p className="sec-lead">
+                Questions about the research, the courses, or a possible
+                collaboration are all welcome.
               </p>
             </div>
 
-            <div className="space-y-6">
-              <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  <svg className="h-6 w-6 text-crimson-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+            {/* One hairline register rather than three separate floating
+                cards — the details are a single block of information. */}
+            <dl className="ark-card ark-list overflow-hidden">
+              {details.map((item) => (
+                <div key={item.label} className="flex items-start gap-4 p-5">
+                  <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+                    {item.icon}
+                  </span>
+                  <div className="min-w-0">
+                    <dt className="ark-kicker">{item.label}</dt>
+                    <dd className="mt-1.5 text-sm leading-relaxed text-gray-600">{item.value}</dd>
+                  </div>
                 </div>
-                <div className="ml-3">
-                  <h3 className="text-lg font-medium text-gray-900">Office Location</h3>
-                  <p className="mt-1 text-gray-600">
-                    O'Neill School of Public and Environmental Affairs<br />
-                    1315 E. 10th Street<br />
-                    Bloomington, IN 47405
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  <svg className="h-6 w-6 text-crimson-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-lg font-medium text-gray-900">Email</h3>
-                  <a href="mailto:crljohns@iu.edu" className="mt-1 text-crimson-600 hover:text-crimson-700">
-                    crljohns@iu.edu
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  <svg className="h-6 w-6 text-crimson-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-lg font-medium text-gray-900">Phone</h3>
-                  <p className="mt-1 text-gray-600">812-855-0742</p>
-                </div>
-              </div>
-            </div>
+              ))}
+            </dl>
           </div>
 
           {/* Contact Form */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Send a Message</h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  required
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
-                />
+          <div className="ark-card p-5 md:p-6">
+            <h3 className="type-subheading text-gray-900">Send a message</h3>
+            <p className="ark-meta mt-1.5">All fields are required.</p>
+
+            <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="name" className="ark-label">Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    required
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="ark-field"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="ark-label">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="ark-field"
+                  />
+                </div>
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
-                  Subject
-                </label>
+                <label htmlFor="subject" className="ark-label">Subject</label>
                 <input
                   type="text"
                   name="subject"
@@ -158,31 +173,29 @@ const Contact = () => {
                   required
                   value={formData.subject}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                  className="ark-field"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                  Message
-                </label>
+                <label htmlFor="message" className="ark-label">Message</label>
                 <textarea
                   name="message"
                   id="message"
-                  rows={4}
+                  rows={5}
                   required
                   value={formData.message}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-crimson-500 focus:ring-crimson-500"
+                  className="ark-field"
                 />
               </div>
 
               <div>
-                <button
-                  type="submit"
-                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-crimson-600 hover:bg-crimson-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-crimson-500"
-                >
-                  Send Message
+                <button type="submit" className="btn-primary btn-lg w-full">
+                  Send message
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
                 </button>
               </div>
 

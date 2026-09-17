@@ -60,86 +60,95 @@ const OngoingResearch = () => {
 
   return (
     <>
-      <section id="ongoing-research" className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="ongoing-research" className="ark-band--tint ark-section">
+        <div className="ark-container">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true, margin: '-80px' }}
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-              Ongoing Research
-            </h2>
-            
+            <div className="sec-head">
+              <p className="sec-eyebrow">In progress</p>
+              <h2 className="sec-title">Ongoing research</h2>
+              <p className="sec-lead">
+                Current projects, with the presentation, working paper, and supporting
+                references for each.
+              </p>
+            </div>
+
             {loading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-crimson-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Loading ongoing research...</p>
+              <div className="py-10 text-center">
+                <div className="mx-auto h-7 w-7 animate-spin rounded-full border-2 border-gray-200 border-t-brand-600"></div>
+                <p className="ark-meta mt-4">Loading ongoing research…</p>
               </div>
             ) : error ? (
-              <div className="text-center py-8">
-                <p className="text-red-600">Error: {error}</p>
-                <button 
-                  onClick={fetchOngoingResearch}
-                  className="mt-4 px-4 py-2 bg-crimson-600 text-white rounded-lg hover:bg-crimson-700"
-                >
+              <div className="py-10 text-center">
+                <p className="text-sm text-red-600">Error: {error}</p>
+                <button onClick={fetchOngoingResearch} className="btn-secondary mt-4">
                   Retry
                 </button>
               </div>
             ) : ongoingResearch.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500">No ongoing research projects available.</p>
-              </div>
+              <p className="ark-meta py-10 text-center">No ongoing research projects available.</p>
             ) : (
-              <div className="space-y-6">
+              /* A hairline-separated register rather than a stack of cards
+                 each wearing a heavy navy left rule. The index numbers give
+                 the list a spine and let the eye count the work. */
+              <div className="ark-card ark-list overflow-hidden">
                 {ongoingResearch.map((research, index) => (
-                  <motion.div
+                  <motion.article
                     key={research.researchId}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 12 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    transition={{ duration: 0.45, delay: Math.min(index, 4) * 0.07 }}
                     viewport={{ once: true }}
-                    className="bg-crimson-50 rounded-xl shadow-sm border border-crimson-100 overflow-hidden"
+                    className="group flex gap-5 p-5 transition-colors hover:bg-gray-50 md:gap-6 md:p-5"
                   >
-                    <div className="p-8">
-                      <div className="flex items-start justify-between mb-4">
-                        <h3 className="text-xl font-semibold text-gray-900">
+                    <span className="ark-display hidden pt-0.5 text-lg tabular-nums text-gray-300 sm:block">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
+                        <h3 className="type-card-title max-w-3xl text-gray-900 transition-colors group-hover:text-brand-600">
                           {research.title}
                         </h3>
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium capitalize ${
-                          research.status === 'active' 
-                            ? 'bg-green-100 text-green-800'
-                            : research.status === 'completed'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
+                        <span
+                          className={`ark-chip ${research.status === 'active' ? 'ark-chip--active' : ''}`}
+                        >
                           {research.status}
                         </span>
                       </div>
-                      
-                      <div className="flex flex-wrap gap-4 mt-6">
+
+                      {/* One primary action per row; the two supporting
+                          documents step down to quiet buttons so the reader
+                          is not offered three equally-loud choices. */}
+                      <div className="mt-3 flex flex-wrap gap-2.5">
                         <button
                           onClick={() => handlePresentationClick(research.presentation?.fileUrl)}
-                          className="px-4 py-2 bg-crimson-600 text-white rounded-lg hover:bg-crimson-700 font-medium transition-colors"
+                          className="btn-primary"
                         >
                           Presentation
                         </button>
                         <button
                           onClick={() => handleResearchPaperClick(research.researchPaper?.fileUrl)}
-                          className="px-4 py-2 bg-gray-200 text-crimson-700 rounded-lg hover:bg-gray-300 font-medium transition-colors"
+                          className="btn-quiet"
                         >
-                          Research Paper
+                          Working paper
                         </button>
                         <button
                           onClick={() => openReferencesModal(research.references, research.title)}
-                          className="px-4 py-2 bg-gray-200 text-crimson-700 rounded-lg hover:bg-gray-300 font-medium transition-colors"
+                          className="btn-quiet"
                         >
                           References
+                          {research.references?.length > 0 && (
+                            <span className="tabular-nums opacity-60">{research.references.length}</span>
+                          )}
                         </button>
                       </div>
                     </div>
-                  </motion.div>
+                  </motion.article>
                 ))}
               </div>
             )}
@@ -158,7 +167,7 @@ const OngoingResearch = () => {
           >
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-gray-900">
+                <h3 className="type-dialog-title text-gray-900">
                   References: {referencesModal.title}
                 </h3>
                 <button
@@ -188,7 +197,7 @@ const OngoingResearch = () => {
                       className="bg-gray-50 rounded-lg p-4 border border-gray-200"
                     >
                       <div className="flex items-start space-x-3">
-                        <span className="text-crimson-600 font-semibold text-sm">
+                        <span className="text-brand-600 font-semibold text-sm">
                           {index + 1}.
                         </span>
                         <p className="text-gray-700 leading-relaxed">

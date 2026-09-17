@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -24,16 +24,7 @@ const DiscussionTopics = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
 
-  useEffect(() => {
-    fetchTopics();
-    // Check if user is already authenticated
-    const savedUser = localStorage.getItem('discussionUser');
-    if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
-    }
-  }, [courseId]);
-
-  const fetchTopics = async () => {
+  const fetchTopics = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -51,7 +42,16 @@ const DiscussionTopics = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [courseId]);
+
+  useEffect(() => {
+    fetchTopics();
+    // Check if user is already authenticated
+    const savedUser = localStorage.getItem('discussionUser');
+    if (savedUser) {
+      setCurrentUser(JSON.parse(savedUser));
+    }
+  }, [courseId, fetchTopics]);
 
   const validateAccessId = async (topicId) => {
     if (!accessId.trim()) {
@@ -113,13 +113,13 @@ const DiscussionTopics = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-20 pb-12">
+      <div className="resource-page discussion-page">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white p-6 rounded-lg shadow">
+                <div key={i} className="bg-white p-6 rounded-xl shadow">
                   <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
                   <div className="h-3 bg-gray-200 rounded w-1/2"></div>
                 </div>
@@ -132,7 +132,7 @@ const DiscussionTopics = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20 pb-12">
+    <div className="resource-page discussion-page">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -142,7 +142,7 @@ const DiscussionTopics = () => {
         >
           <Link
             to="/#teaching"
-            className="inline-flex items-center text-crimson-600 hover:text-crimson-700 mb-4"
+            className="inline-flex items-center text-brand-600 hover:text-brand-700 mb-4"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -152,7 +152,7 @@ const DiscussionTopics = () => {
           
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="resource-title text-gray-900 mb-2">
                 Course Discussions
               </h1>
               <p className="text-gray-600">
@@ -219,23 +219,27 @@ const DiscussionTopics = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-lg shadow hover:shadow-md transition-shadow"
+                className="bg-white rounded-xl shadow hover:shadow-md transition-shadow"
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="type-card-title text-gray-900">
                           {topic.title}
                         </h3>
                         {topic.requireAccessId && (
-                          <LockClosedIcon className="h-5 w-5 text-orange-500" title="Requires Access ID" />
+                          <LockClosedIcon
+                            className="h-5 w-5 text-orange-500 flex-none"
+                            role="img"
+                            aria-label="Requires an access ID"
+                          />
                         )}
                       </div>
                       <p className="text-gray-600 mb-4 line-clamp-2">
                         {topic.content}
                       </p>
-                      <div className="flex items-center space-x-6 text-sm text-gray-500">
+                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500">
                         <div className="flex items-center">
                           <ChatBubbleLeftRightIcon className="h-4 w-4 mr-1" />
                           <span>{topic.commentCount || 0} comments</span>
@@ -336,10 +340,10 @@ const DiscussionTopics = () => {
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+            className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4"
           >
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="type-card-title text-gray-900">
                 Join the Discussion
               </h3>
               <button

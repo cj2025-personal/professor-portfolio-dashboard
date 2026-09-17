@@ -10,8 +10,7 @@ import {
   FlagIcon,
   ArrowUturnLeftIcon,
   PaperAirplaneIcon,
-  LockClosedIcon,
-  KeyIcon
+  LockClosedIcon
 } from '@heroicons/react/24/outline';
 
 const DiscussionComments = () => {
@@ -39,6 +38,10 @@ const DiscussionComments = () => {
     if (savedUser) {
       setCurrentUser(JSON.parse(savedUser));
     }
+    // fetchTopicAndComments is defined below and closes over topicId/accessId,
+    // which are already the triggers here. Adding it would re-run the fetch on
+    // every render instead of only when the topic or access id changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topicId, accessId]);
 
   const fetchTopicAndComments = async () => {
@@ -204,7 +207,7 @@ const DiscussionComments = () => {
         key={comment._id || comment.id}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        className={`bg-white rounded-lg shadow-sm border-l-4 border-blue-500 ${level > 0 ? 'ml-8' : ''}`}
+        className={`bg-white rounded-xl shadow-sm border-l-4 border-blue-500 ${level > 0 ? 'ml-8' : ''}`}
       >
         <div className="p-4">
           <div className="flex items-start justify-between">
@@ -296,7 +299,7 @@ const DiscussionComments = () => {
   const topLevelComments = comments.filter(comment => !comment.parentId);
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20 pb-12">
+    <div className="resource-page discussion-page">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -312,19 +315,23 @@ const DiscussionComments = () => {
             Back to discussions
           </Link>
           
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-xl shadow p-6">
             <div className="flex items-center space-x-2 mb-2">
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="resource-title text-gray-900">
                 {loading ? 'Loading...' : (topic?.title || 'Topic not found')}
               </h1>
               {topic?.requireAccessId && (
-                <LockClosedIcon className="h-5 w-5 text-orange-500" title="Requires Access ID" />
+                <LockClosedIcon
+                  className="h-5 w-5 text-orange-500 flex-none"
+                  role="img"
+                  aria-label="Requires an access ID"
+                />
               )}
             </div>
             <p className="text-gray-600 mb-4">
               {loading ? 'Loading topic details...' : (topic?.content || '')}
             </p>
-            <div className="flex items-center space-x-6 text-sm text-gray-500">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500">
               <div className="flex items-center">
                 <ChatBubbleLeftRightIcon className="h-4 w-4 mr-1" />
                 <span>{comments.length} comments</span>
@@ -360,7 +367,7 @@ const DiscussionComments = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-12 bg-white rounded-lg shadow"
+              className="text-center py-12 bg-white rounded-xl shadow"
             >
               <ChatBubbleLeftRightIcon className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900">No comments yet</h3>
@@ -379,9 +386,9 @@ const DiscussionComments = () => {
          <motion.div
            initial={{ opacity: 0, y: 20 }}
            animate={{ opacity: 1, y: 0 }}
-           className="bg-white rounded-lg shadow p-6"
+           className="bg-white rounded-xl shadow p-6"
          >
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Add a comment</h3>
+            <h3 className="type-subheading text-gray-900 mb-4">Add a comment</h3>
             <form onSubmit={handleSubmitComment}>
               <div className="mb-4">
                 <textarea
