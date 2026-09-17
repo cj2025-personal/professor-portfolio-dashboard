@@ -1,0 +1,10 @@
+node_modules
+build
+.env
+.env.*
+.git
+.github
+artifacts
+npm-debug.log*
+README.md
+GOOGLE_OAUTH_SETUP.md

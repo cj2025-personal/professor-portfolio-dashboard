@@ -1,0 +1,95 @@
+# Build and deploy the professor portfolio dashboard to Cloud Run.
+#
+# The app is a Create React App build served by nginx. CRA inlines REACT_APP_*
+# at BUILD time, so those values are passed as Docker build args rather than
+# Cloud Run environment variables — setting them at run time would have no
+# effect on an already-compiled bundle.
+#
+# Neither build arg is a credential: a backend URL, and a Google OAuth client
+# id, which is public by design and already visible in the shipped JavaScript.
+# GOOGLE_CLIENT_SECRET is deliberately absent — no code reads it, and it is the
+# value that leaked through this repository's git history.
+#
+# Authentication is Workload Identity Federation; no long-lived key is stored
+# here. This workflow requires NO GitHub repository secrets.
+#
+# The branch is `master`, which is what this repository uses.
+
+name: 'Build and Deploy Dashboard to Cloud Run'
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+env:
+  SERVICE: 'professor-portfolio-dashboard'
+  REGION: 'us-central1'
+  PROJECT_ID: 'ngo-application-services'
+  ARTIFACT_REPO: 'professor-portfolio-dashboard'
+  WIF_PROVIDER: 'projects/77137640226/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+  DEPLOY_SA: 'github-deployer@ngo-application-services.iam.gserviceaccount.com'
+
+jobs:
+  deploy:
+    runs-on: 'ubuntu-latest'
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v4'
+
+      # CI=false because react-scripts treats warnings as errors when CI is
+      # set, which it is on every runner. The build is verified here so a
+      # compile failure surfaces before an image is pushed.
+      - name: 'Verify the build'
+        env:
+          CI: 'false'
+        run: |-
+          npm ci
+          npm run build
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: '${{ env.WIF_PROVIDER }}'
+          service_account: '${{ env.DEPLOY_SA }}'
+          token_format: 'access_token'
+          access_token_scopes: 'https://www.googleapis.com/auth/cloud-platform'
+
+      - name: 'Docker Auth'
+        uses: 'docker/login-action@v3'
+        with:
+          username: 'oauth2accesstoken'
+          password: '${{ steps.auth.outputs.access_token }}'
+          registry: '${{ env.REGION }}-docker.pkg.dev'
+
+      - name: 'Build and Push Container'
+        env:
+          BACKEND_URI: "${{ vars.REACT_APP_BACKEND_URI || 'https://professor-portfolio-api-77137640226.us-central1.run.app' }}"
+          GOOGLE_CLIENT_ID: "${{ vars.REACT_APP_GOOGLE_CLIENT_ID || '17983686650-sr1rhml8mroul4avfhjg6dcjhnpk58vv.apps.googleusercontent.com' }}"
+        run: |-
+          DOCKER_TAG="${REGION}-docker.pkg.dev/${PROJECT_ID}/${ARTIFACT_REPO}/${SERVICE}:${{ github.sha }}"
+          docker build \
+            --build-arg "REACT_APP_BACKEND_URI=${BACKEND_URI}" \
+            --build-arg "REACT_APP_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
+            --tag "${DOCKER_TAG}" .
+          docker push "${DOCKER_TAG}"
+
+      - id: 'deploy'
+        name: 'Deploy to Cloud Run'
+        uses: 'google-github-actions/deploy-cloudrun@v2'
+        with:
+          service: '${{ env.SERVICE }}'
+          region: '${{ env.REGION }}'
+          image: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.SERVICE }}:${{ github.sha }}'
+          flags: '--allow-unauthenticated --port=8080'
+
+      - name: 'Show deployed URL'
+        run: |-
+          echo "Dashboard deployed to ${{ steps.deploy.outputs.url }}"

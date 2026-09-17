@@ -1,0 +1,28 @@
+# Rendered at container start by nginx's envsubst entrypoint, so ${PORT} picks
+# up whatever Cloud Run injects.
+server {
+    listen       ${PORT};
+    server_name  _;
+    root         /usr/share/nginx/html;
+    index        index.html;
+
+    # Client-side routing: /proj-arch and friends have no file on disk, so any
+    # unmatched path falls back to the app shell instead of 404ing.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Fingerprinted build assets are immutable; index.html must never be cached
+    # or a deploy will not reach browsers holding the old shell.
+    location /static/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    location = /index.html {
+        add_header Cache-Control "no-store, must-revalidate";
+    }
+
+    gzip              on;
+    gzip_types        text/plain text/css application/javascript application/json image/svg+xml;
+    gzip_min_length   1024;
+}
