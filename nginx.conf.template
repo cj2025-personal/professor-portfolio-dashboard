@@ -46,6 +46,15 @@ server {
         add_header Cache-Control "public";
     }
 
+    # The page copy (Proj Arch text, the demo video's address) is fetched from a
+    # fixed URL and changes with deploys. Sent without Cache-Control, browsers
+    # guess a lifetime from Last-Modified and keep showing the previous deploy
+    # for hours, through ordinary reloads. no-cache makes them ask every time;
+    # the ETag turns that into a small 304 when nothing changed.
+    location /content/ {
+        add_header Cache-Control "no-cache";
+    }
+
     location = /index.html {
         add_header Cache-Control "no-store, must-revalidate";
     }
