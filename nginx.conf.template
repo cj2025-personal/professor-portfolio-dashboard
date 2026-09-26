@@ -39,6 +39,12 @@ server {
         expires 7d;
         add_header Cache-Control "public";
     }
+    # The demo video, same terms. Because it is cached for a week, a re-cut must
+    # ship under a new filename, or returning visitors keep the old one.
+    location /media/ {
+        expires 7d;
+        add_header Cache-Control "public";
+    }
 
     location = /index.html {
         add_header Cache-Control "no-store, must-revalidate";
