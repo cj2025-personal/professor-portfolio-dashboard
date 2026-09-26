@@ -75,26 +75,31 @@ function DemoPlayer({ video, onError }) {
     else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen();
   };
 
+  // The buttons are a sibling of the frame, not inside it: over the picture
+  // on wide screens, beneath it on phones, where they would cover the film.
   return (
     <>
-      <video
-        ref={videoRef}
-        src={video.src}
-        poster={video.poster || undefined}
-        loop
-        playsInline
-        preload="metadata"
-        aria-label={video.title}
-        onClick={togglePlay}
-        onPlay={() => { wantsPlay.current = true; setPlaying(true); }}
-        onPause={() => {
-          setPlaying(false);
-          if (pausedOffscreen.current) pausedOffscreen.current = false;
-          else wantsPlay.current = false;
-        }}
-        onVolumeChange={event => setMuted(event.currentTarget.muted)}
-        onError={onError}
-      />
+      <div className="portfolio-platform__video">
+        <video
+          ref={videoRef}
+          src={video.src}
+          poster={video.poster || undefined}
+          loop
+          playsInline
+          preload="metadata"
+          aria-label={video.title}
+          onClick={togglePlay}
+          onPlay={() => { wantsPlay.current = true; setPlaying(true); }}
+          onPause={() => {
+            setPlaying(false);
+            if (pausedOffscreen.current) pausedOffscreen.current = false;
+            else wantsPlay.current = false;
+          }}
+          onVolumeChange={event => setMuted(event.currentTarget.muted)}
+          onError={onError}
+        />
+        <span className="portfolio-platform__progress" aria-hidden="true"><span ref={progressRef} /></span>
+      </div>
       <div className="portfolio-platform__controls">
         <button type="button" className={playing ? '' : 'is-primary'} onClick={togglePlay} aria-label={playing ? 'Pause video' : 'Play video'}>
           {playing ? <PauseIcon aria-hidden="true" /> : <PlayIcon aria-hidden="true" />}
@@ -106,7 +111,6 @@ function DemoPlayer({ video, onError }) {
           <ArrowsPointingOutIcon aria-hidden="true" />
         </button>
       </div>
-      <span className="portfolio-platform__progress" aria-hidden="true"><span ref={progressRef} /></span>
     </>
   );
 }
@@ -121,19 +125,21 @@ export function DemoVideo({ video, className = '' }) {
 
   return (
     <figure className={`portfolio-platform__demo ${className}`.trim()}>
-      <div className="portfolio-platform__video">
-        {!video.src || failed ? <div className="portfolio-platform__video-placeholder">
-          <VideoCameraIcon aria-hidden="true" />
-          <p>{failed ? video.unavailableLabel : video.pendingLabel}</p>
-        </div> : video.type === 'embed' ? <iframe
-          src={video.src}
-          title={video.title}
-          loading="lazy"
-          allow="encrypted-media; picture-in-picture; fullscreen"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-        /> : <DemoPlayer video={video} onError={() => setFailed(true)} />}
-      </div>
+      {video.src && !failed && video.type !== 'embed'
+        ? <DemoPlayer video={video} onError={() => setFailed(true)} />
+        : <div className="portfolio-platform__video">
+          {!video.src || failed ? <div className="portfolio-platform__video-placeholder">
+            <VideoCameraIcon aria-hidden="true" />
+            <p>{failed ? video.unavailableLabel : video.pendingLabel}</p>
+          </div> : <iframe
+            src={video.src}
+            title={video.title}
+            loading="lazy"
+            allow="encrypted-media; picture-in-picture; fullscreen"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />}
+        </div>}
     </figure>
   );
 }

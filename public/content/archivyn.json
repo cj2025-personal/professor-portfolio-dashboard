@@ -186,6 +186,14 @@
     },
     "topLabel": "Back to top",
     "metadataTitle": "Research & learning",
-    "tagline": "from Archives to You, accelerated by AI"
+    "tagline": "from Archives to You, accelerated by AI",
+    "heroVideo": {
+      "src": "/media/proj-arch-film.mp4",
+      "type": "video",
+      "poster": "/media/proj-arch-film-poster.jpg",
+      "title": "Proj Arch: a scholar's paper crosses the arch and becomes a grade 5 reading, traced back to its source",
+      "pendingLabel": "Film coming soon",
+      "unavailableLabel": "The film is currently unavailable."
+    }
   }
 }

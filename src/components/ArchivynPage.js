@@ -102,7 +102,8 @@ export default function ArchivynPage() {
   if (!page) return <div className="resource-page"><div className="ark-container"><p role="status">{loading ? 'Loading…' : 'This page is currently unavailable.'}</p><Link to="/">Back to portfolio</Link></div></div>;
 
   const [lead, second, ...rest] = page.features;
-  const video = content.summary?.video;
+  // The header has its own film; the home page's demo stands in without one.
+  const video = page.heroVideo?.src ? page.heroVideo : content.summary?.video;
   const hasMedia = key => Boolean(page[key]?.media?.src);
   const media = key => <SectionMedia media={page[key]?.media} />;
   // Only a section with an asset splits into two columns; the rest run full

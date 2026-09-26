@@ -195,6 +195,12 @@ section[id] { scroll-margin-top: 88px; }
   .portfolio-platform__demo::before { top: -10px; right: -10px; width: 64px; height: 64px; }
   .portfolio-platform__controls { right: 10px; bottom: 12px; }
 }
+/* On a phone the picture is too short to carry buttons without covering it,
+   so they sit in a row beneath the frame, at full tap size. */
+@media (max-width: 640px) {
+  .portfolio-platform__controls { position: static; justify-content: flex-end; margin-top: 12px; }
+  .portfolio-platform__controls button { width: 40px; height: 40px; }
+}
 
 .writing-header { margin-bottom: 24px; }
 .writing-archive-link { display: inline-flex; align-items: center; gap: 14px; padding: 10px 0; flex-shrink: 0; border-bottom: 1px solid var(--ark-border); font-size: 12px; font-weight: 600; color: var(--ark-navy); }
