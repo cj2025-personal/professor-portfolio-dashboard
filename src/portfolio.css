@@ -149,13 +149,52 @@ section[id] { scroll-margin-top: 88px; }
 .portfolio-platform__link:hover { color: var(--ark-blue); border-color: var(--ark-blue); }
 .portfolio-platform__copy > .sec-eyebrow { margin: 0; font-size: 10px; line-height: 1.4; color: var(--ark-text-faint); }
 .portfolio-platform__copy > .portfolio-platform__link { margin-top: 16px; }
-.portfolio-platform__demo { min-width: 0; margin: 0; }
-.portfolio-platform__video { aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--ark-border); border-radius: 10px; background: var(--ark-navy-ink); }
+.portfolio-platform__demo { position: relative; min-width: 0; margin: 0; }
+/* The portrait's gold corner, so the page's two framed pieces read as a set. */
+.portfolio-platform__demo::before { content: ""; position: absolute; top: -14px; right: -14px; width: 96px; height: 96px; border-top: 1px solid #aa8051; border-right: 1px solid #aa8051; pointer-events: none; }
+/* Depth comes from layered shadow, not a border: a pale line around a dark
+   frame reads as a gap. The layers go from a tight contact shadow to a wide,
+   soft one, which is what makes it sit on the page rather than float.
+   isolation keeps Safari clipping the playing video to the rounded corners. */
+.portfolio-platform__video {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden; isolation: isolate;
+  border-radius: var(--ark-radius-card); background: var(--ark-navy-ink);
+  box-shadow: 0 1px 2px rgba(17, 45, 53, .08), 0 4px 10px -2px rgba(17, 45, 53, .08),
+              0 16px 32px -12px rgba(17, 45, 53, .18), 0 36px 72px -28px rgba(17, 45, 53, .38);
+}
+/* A hairline just inside the edge, drawn over the video, keeps the corners crisp. */
+.portfolio-platform__video::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); pointer-events: none; }
 .portfolio-platform__video > video, .portfolio-platform__video > iframe { display: block; width: 100%; height: 100%; border: 0; object-fit: contain; }
+.portfolio-platform__video > video { cursor: pointer; }
 .portfolio-platform__video-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; height: 100%; color: #b2c4c6; }
 .portfolio-platform__video-placeholder svg { height: 28px; width: 28px; stroke-width: 1.2; }
 .portfolio-platform__video-placeholder > p { margin: 0; font-size: 12px; color: #b2c4c6; }
-.portfolio-platform__demo figcaption { margin-top: 10px; font-size: 11px; color: var(--ark-text-faint); }
+/* Three ink glass buttons in place of the browser's control bar, dense
+   enough to read on the video's light scenes as well as its dark ones. Each
+   is 36px to look at and 44px to hit. Paused, Play turns gold as the one
+   thing to press. */
+.portfolio-platform__controls { position: absolute; right: 14px; bottom: 16px; z-index: 3; display: flex; gap: 8px; }
+.portfolio-platform__controls button {
+  position: relative; display: grid; place-items: center; width: 36px; height: 36px; padding: 0;
+  border: 1px solid rgba(255, 255, 255, .16); border-radius: 50%;
+  color: #fff; background: rgba(12, 33, 41, .72);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 6px 16px -6px rgba(0, 0, 0, .55);
+  transition: background .2s ease, border-color .2s ease;
+}
+.portfolio-platform__controls button::before { content: ""; position: absolute; inset: -4px; }
+.portfolio-platform__controls button svg { width: 16px; height: 16px; }
+.portfolio-platform__controls button:hover { background: rgba(12, 33, 41, .9); border-color: rgba(255, 255, 255, .3); }
+.portfolio-platform__controls button:focus-visible { outline: 2px solid #c89b4a; outline-offset: 2px; }
+.portfolio-platform__controls button.is-primary { color: #17333c; background: #c89b4a; border-color: #d9bd8d; }
+.portfolio-platform__controls button.is-primary:hover { background: #d9bd8d; }
+.portfolio-platform__controls button.is-primary svg { margin-left: 2px; }
+.portfolio-platform__progress { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; height: 3px; background: rgba(255, 255, 255, .1); pointer-events: none; }
+.portfolio-platform__progress > span { display: block; height: 100%; background: #c89b4a; transform: scaleX(0); transform-origin: left; }
+@media (max-width: 767px) {
+  .portfolio-platform__demo::before { top: -10px; right: -10px; width: 64px; height: 64px; }
+  .portfolio-platform__controls { right: 10px; bottom: 12px; }
+}
 
 .writing-header { margin-bottom: 24px; }
 .writing-archive-link { display: inline-flex; align-items: center; gap: 14px; padding: 10px 0; flex-shrink: 0; border-bottom: 1px solid var(--ark-border); font-size: 12px; font-weight: 600; color: var(--ark-navy); }
