@@ -27,11 +27,14 @@
   --pa-gold: #aa8051;
   --pa-gold-bright: #c89b4a;
   --pa-gold-soft: #d9bd8d;
+  /* Gold for small text on paper. The accent golds are 3.1-3.6:1 there,
+     so they are kept for rules, fills and large type. */
+  --pa-gold-ink: #86633a;
 
   /* Ink-on-paper */
   --pa-text: #182d35;
   --pa-text-muted: #526369;
-  --pa-text-faint: #6b797c;
+  --pa-text-faint: #5f6d70;      /* 5.4:1 on white, 4.7:1 on sage: passes AA as small text */
   --pa-line: #e2e5df;
   --pa-line-strong: #cfd6ce;
 
@@ -93,8 +96,8 @@
    section opens identically here and on the portfolio pages. */
 .pa-kicker {
   display: inline-flex; align-items: center; gap: 10px; margin: 0;
-  font-family: var(--ark-font-ui); font-size: 10px; font-weight: 700;
-  letter-spacing: .17em; text-transform: uppercase; color: var(--pa-text-faint);
+  font-family: var(--ark-font-ui); font-size: 12px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--pa-text-faint);
 }
 .pa-kicker::before {
   content: ''; width: 22px; height: 2px; border-radius: 2px;
@@ -129,9 +132,9 @@
 /* Lead, body, meta. */
 .pa-lead { margin: 18px 0 0; font-size: 14px; line-height: 1.7; color: var(--pa-text-muted); max-width: 64ch; }
 .pa-band--ink .pa-lead { color: var(--pa-on-ink); }
-.pa-body { margin: 12px 0 0; font-size: 13px; line-height: 1.8; color: var(--pa-text-muted); }
+.pa-body { margin: 12px 0 0; font-size: 15px; line-height: 1.75; color: var(--pa-text-muted); }
 .pa-band--ink .pa-body { color: var(--pa-on-ink); }
-.pa-meta { font-size: 11px; line-height: 1.6; color: var(--pa-text-faint); }
+.pa-meta { font-size: 12px; line-height: 1.6; color: var(--pa-text-faint); }
 
 /* ── Bands ───────────────────────────────────────────────────── */
 .pa-band { padding: clamp(56px, 7vw, 104px) 0; position: relative; }
@@ -186,7 +189,7 @@
 .pa-media__frame > img,
 .pa-media__frame > video,
 .pa-media__frame > iframe { display: block; width: 100%; height: 100%; border: 0; object-fit: cover; }
-.pa-media figcaption { margin-top: 12px; font-size: 11px; line-height: 1.6; color: var(--pa-text-faint); }
+.pa-media figcaption { margin-top: 12px; font-size: 12px; line-height: 1.6; color: var(--pa-text-faint); }
 /* On ink the slot has to sit on the band rather than punch a pale hole in it. */
 .pa-band--ink .pa-media__frame {
   background: rgba(255, 255, 255, .04); border-color: var(--pa-ink-line);
@@ -276,8 +279,8 @@
   border-top: 1px solid var(--pa-gold);
 }
 .pa-goal__label {
-  font-size: 10px; font-weight: 700; letter-spacing: .17em;
-  text-transform: uppercase; color: var(--pa-gold);
+  font-size: 12px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--pa-gold-ink);
 }
 /* The page's thesis, set at the section role: a display statement of the
    same weight as the headings around it. */
@@ -309,8 +312,8 @@
 .pa-feature:hover { transform: translateY(-4px); box-shadow: var(--pa-shadow-md); border-color: var(--pa-line-strong); }
 .pa-feature:hover::after { opacity: 1; }
 .pa-feature__num {
-  margin: 0; font-size: 10px; font-weight: 700; letter-spacing: .17em;
-  font-variant-numeric: tabular-nums; color: var(--pa-gold);
+  margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .14em;
+  font-variant-numeric: tabular-nums; color: var(--pa-gold-ink);
 }
 .pa-feature__icon {
   display: grid; place-items: center; width: 46px; height: 46px; margin: 18px 0 20px;
@@ -320,10 +323,10 @@
 /* Classes, not a bare `p`: an element selector would out-specify
    .pa-feature__label and kill the `margin-top: auto` that pins the label to
    the bottom of every card, so the labels stopped aligning across a row. */
-.pa-feature__copy { margin: 12px 0 0; font-size: 13px; line-height: 1.8; color: var(--pa-text-muted); }
+.pa-feature__copy { margin: 12px 0 0; font-size: 15px; line-height: 1.75; color: var(--pa-text-muted); }
 .pa-feature__label {
-  margin: auto 0 0; padding-top: 18px; font-size: 10px; font-weight: 700;
-  letter-spacing: .17em; text-transform: uppercase; color: var(--pa-text-faint);
+  margin: auto 0 0; padding-top: 18px; font-size: 12px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--pa-text-faint);
 }
 
 .pa-feature--lead {
@@ -370,7 +373,7 @@
   position: relative; z-index: 1; display: grid; place-items: center;
   width: 52px; height: 52px; border-radius: 50%; background: var(--pa-ink);
   border: 1px solid rgba(200, 155, 74, .45); color: var(--pa-gold-soft);
-  font-size: 10px; font-weight: 700; letter-spacing: .1em; font-variant-numeric: tabular-nums;
+  font-size: 12px; font-weight: 700; letter-spacing: .1em; font-variant-numeric: tabular-nums;
 }
 .pa-flow__steps .pa-card-title { color: #fff; }
 .pa-flow__steps .pa-body { color: var(--pa-on-ink); }
@@ -414,7 +417,7 @@
 .pa-rollout__chip {
   display: inline-flex; align-items: center; margin: 0;
   padding: 7px 14px; border-radius: 999px;
-  font-size: 10px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase;
+  font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
 }
 /* The first phase is the one in play, so it carries the accent and the
    second reads as queued behind it. */
@@ -497,11 +500,12 @@
 .pa-closing__inner { display: flex; flex-direction: column; align-items: center; }
 .pa-closing .pa-display { max-width: 20ch; margin-top: 0; }
 .pa-closing .pa-lead { max-width: 60ch; }
-.pa-footer { background: var(--pa-ink); padding: 0 0 40px; }
+/* The bottom padding keeps "Back to top" clear of the fixed chat launcher. */
+.pa-footer { background: var(--pa-ink); padding: 0 0 96px; }
 .pa-footer__inner {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
   gap: 16px; padding-top: 26px; border-top: 1px solid var(--pa-ink-line);
-  font-size: 11px; color: var(--pa-on-ink-faint);
+  font-size: 12px; color: var(--pa-on-ink-faint);
 }
 .pa-footer__brand { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; }
 .pa-footer__brand strong { color: #fff; letter-spacing: .01em; }

@@ -101,7 +101,7 @@ const About = () => {
                 {aboutBlocks.map((block) => (
                   <div key={block.label} className="about-block">
                     <p className="ark-kicker">{block.label}</p>
-                    <p className="mt-2.5 text-sm leading-relaxed text-gray-600">{block.body}</p>
+                    <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-gray-600">{block.body}</p>
                   </div>
                 ))}
               </div>
@@ -126,7 +126,7 @@ const About = () => {
                     <h4 className="type-card-title md:min-h-[3.375rem] text-gray-900">
                       {domain.title}
                     </h4>
-                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{domain.blurb}</p>
+                    <p className="mt-2 text-[0.9375rem] leading-relaxed text-gray-600">{domain.blurb}</p>
                   </div>
                 </article>
               ))}

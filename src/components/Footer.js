@@ -22,7 +22,9 @@ const Footer = () => {
     /* The signature red rule closes the page the same way it opens each
        section heading. */
     <footer className="ark-stripe bg-gray-900 text-gray-300">
-      <div className="ark-container py-10">
+      {/* pb-24 keeps the last line clear of the chat launcher, which is fixed
+          over the bottom corner once the page can scroll no further. */}
+      <div className="ark-container pt-10 pb-24">
         <div className="grid grid-cols-2 gap-7 lg:grid-cols-4">
           {/* Brand */}
           <div className="col-span-2">
@@ -46,7 +48,7 @@ const Footer = () => {
 
           {/* Quick links */}
           <div>
-            <h3 className="text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white">
+            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-white">
               Navigate
             </h3>
             <ul className="mt-4 space-y-2.5">
@@ -69,7 +71,7 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h3 className="text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white">
+            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-white">
               Contact
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm text-gray-400">

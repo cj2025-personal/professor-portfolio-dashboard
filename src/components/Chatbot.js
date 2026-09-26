@@ -83,6 +83,10 @@ const Chatbot = () => {
     return localStorage.getItem('chatbotReadingLevel') || 'g13_14';
   });
   const [isOpen, setIsOpen] = useState(false);
+  // The launcher introduces itself as a labelled pill at the top of the page,
+  // then shrinks to a circle once the visitor scrolls, so it covers as little
+  // of the content moving beneath it as possible.
+  const [compact, setCompact] = useState(false);
   const [messages, setMessages] = useState([]);
   const [originalMessages, setOriginalMessages] = useState([]); // Store original messages for translation
   const [inputMessage, setInputMessage] = useState('');
@@ -131,6 +135,39 @@ const Chatbot = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // The pill needs a clear corner. It shrinks once the page scrolls, and at
+  // the top too if a control or a video sits under it (the home page's demo
+  // player does at common desktop sizes). Content arrives after mount, so
+  // the check re-runs whenever the page's height changes.
+  useEffect(() => {
+    const PILL_W = 232, PILL_H = 56, INSET = 24;
+    const pillWouldCover = () => {
+      const right = window.innerWidth - INSET, bottom = window.innerHeight - INSET;
+      const left = right - PILL_W, top = bottom - PILL_H;
+      return [...document.querySelectorAll('a, button, input, textarea, select, video')].some(el => {
+        if (el.closest('.cb-launcher')) return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.right > left && r.left < right && r.bottom > top && r.top < bottom;
+      });
+    };
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => setCompact(window.scrollY > 160 || pillWouldCover()));
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    const observer = 'ResizeObserver' in window ? new ResizeObserver(update) : null;
+    observer?.observe(document.body);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+      observer?.disconnect();
+    };
+  }, []);
 
   // Initialize messages only on mount
   useEffect(() => {
@@ -371,7 +408,8 @@ const Chatbot = () => {
             exit={{ opacity: 0, scale: 0.8 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="cb-launcher fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-full bg-brand-600 py-3.5 pl-4 pr-5 text-white transition-colors hover:bg-brand-700"
+            title={compact ? 'Ask about the research' : undefined}
+            className={`cb-launcher${compact ? ' cb-launcher--compact' : ''} fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-full bg-brand-600 py-3.5 pl-4 pr-5 text-white transition-colors hover:bg-brand-700`}
           >
             <ChatBubbleLeftRightIcon className="h-5 w-5" aria-hidden />
             <span className="text-sm font-semibold">Ask about the research</span>

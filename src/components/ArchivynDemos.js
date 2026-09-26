@@ -10,7 +10,7 @@ import React from 'react';
  *   directory  → the scholar directory card (publications / h-index / topics)
  *   veri       → Veri AI answering the same question at three reading levels
  *   readers    → Evidence Hunt: highlight the words that prove the answer
- *   hubs       → Archivyn Media: waveform, transcript, grade-level delivery
+ *   hubs       → knowledge hub media: waveform, transcript, grade-level delivery
  *   community  → the community join surface and its shared questions
  *   adult      → the individual dashboard's library / following / feed tiles
  *   discovery  → search fanning one query across the catalog
@@ -104,9 +104,11 @@ const Readers = () => <Frame kind="readers" label="Evidence Hunt">
   </div>
 </Frame>;
 
-/* 04 — Archivyn Media: waveform, transcript, student delivery. */
+/* 04 — Knowledge hub media: waveform, transcript, student delivery. The
+   frame label is on screen, so it names the card's feature, never the
+   internal product name. */
 const BARS = [30, 62, 44, 88, 52, 74, 36, 94, 58, 40, 80, 48, 68, 34, 84, 56];
-const Hubs = () => <Frame kind="hubs" label="Archivyn Media">
+const Hubs = () => <Frame kind="hubs" label="Knowledge hub">
   <div className="pa-fx__player">
     <span className="pa-fx__play" />
     <div className="pa-fx__wave">

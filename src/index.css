@@ -278,9 +278,9 @@
 
   /* ── Small type ──────────────────────────────────────────────*/
   .ark-kicker {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.11em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ark-text-faint);
   }
@@ -294,7 +294,7 @@
   /* Status / category chip. One shape for every chip on the site. */
   .ark-chip {
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1;
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -708,7 +708,21 @@ code {
    effect, and costs a second full-surface filter pass per frame. Every
    layer inside is therefore a plain alpha wash over the one blur. */
 .cb-launcher {
-  box-shadow: 0 6px 16px -6px rgba(7, 27, 54, 0.4), 0 18px 42px -18px rgba(7, 27, 54, 0.55);
+  box-shadow: 0 6px 16px -6px rgba(17, 45, 53, 0.4), 0 18px 42px -18px rgba(17, 45, 53, 0.55);
+}
+/* Wider screens: the labelled pill shrinks to a 48px circle once the page
+   scrolls (Chatbot sets --compact). The label's max-width animates, so the
+   pill closes smoothly instead of jumping; phones already show the circle. */
+@media (min-width: 641px) {
+  .cb-launcher {
+    transition: padding .35s ease, gap .35s ease, background-color .15s ease;
+  }
+  .cb-launcher > span {
+    display: inline-block; max-width: 13rem; overflow: hidden; white-space: nowrap;
+    transition: max-width .35s ease, opacity .2s ease;
+  }
+  .cb-launcher--compact { padding: 14px; gap: 0; }
+  .cb-launcher--compact > span { max-width: 0; opacity: 0; }
 }
 
 .cb-panel {
