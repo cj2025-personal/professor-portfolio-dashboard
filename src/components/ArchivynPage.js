@@ -4,6 +4,7 @@ import { ArrowUpRightIcon, ArrowDownRightIcon, BookOpenIcon, AcademicCapIcon, Sp
 import useArchivynContent from '../lib/useArchivynContent';
 import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
+import HeroAnimation from './HeroAnimation';
 import ArchivynDemo, { MissionArch, WorkflowScene, initials } from './ArchivynDemos';
 import '../styles/proj-arch.css';
 import '../styles/proj-arch-demos.css';
@@ -102,8 +103,9 @@ export default function ArchivynPage() {
   if (!page) return <div className="resource-page"><div className="ark-container"><p role="status">{loading ? 'Loading…' : 'This page is currently unavailable.'}</p><Link to="/">Back to portfolio</Link></div></div>;
 
   const [lead, second, ...rest] = page.features;
-  // The header has its own film; the home page's demo stands in without one.
-  const video = page.heroVideo?.src ? page.heroVideo : content.summary?.video;
+  // The header has its own animation; the home page's demo stands in without one.
+  const art = page.heroAnimation?.src ? page.heroAnimation : null;
+  const video = art ? null : content.summary?.video;
   const hasMedia = key => Boolean(page[key]?.media?.src);
   const media = key => <SectionMedia media={page[key]?.media} />;
   // Only a section with an asset splits into two columns; the rest run full
@@ -114,7 +116,7 @@ export default function ArchivynPage() {
   return <article id="project-top" ref={root} className="proj-arch-page pa-motion">
     <header className="pa-band pa-band--ink pa-hero">
       <span className="pa-glow" aria-hidden="true" />
-      <div className={`ark-container pa-hero__inner${video?.src ? '' : ' pa-hero__inner--solo'}`}>
+      <div className={`ark-container pa-hero__inner${art || video?.src ? '' : ' pa-hero__inner--solo'}`}>
         <div className="pa-hero__copy" data-reveal>
           <h1 className="pa-hero__title">{content.brand}</h1>
           <p className="pa-subheading pa-hero__tagline">{page.tagline}</p>
@@ -124,6 +126,9 @@ export default function ArchivynPage() {
             <Link to="/#contact" className="pa-btn pa-btn--ghost">{page.closing.contactLabel}</Link>
           </div>
         </div>
+        {art && <div className="pa-hero__media" data-reveal style={{ '--pa-delay': '140ms' }}>
+          <HeroAnimation src={art.src} label={art.label} />
+        </div>}
         {/* Keyed on src so a new source clears DemoVideo's failed state. */}
         {video?.src && <div className="pa-hero__media" data-reveal style={{ '--pa-delay': '140ms' }}>
           <DemoVideo key={video.src} video={video} className="pa-demo" />
