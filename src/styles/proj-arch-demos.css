@@ -2,9 +2,8 @@
    Archivyn demo miniatures
 
    Each feature card carries a small animated reduction of the real
-   surface it describes. Drawn in the portfolio's teal/gold palette
-   rather than Archivyn's navy/red so they sit inside this page, but
-   the structures are the product's own.
+   surface it describes, drawn in greys with the page's one accent, the
+   portfolio's teal. The structures are the product's own.
 
    Animations stay paused until the card is revealed, and the
    reduced-motion block at the foot freezes every one of them on its
@@ -15,15 +14,14 @@
   --fx-line: #d7e0d9;
   --fx-line-soft: #e6ece7;
   --fx-sage: #edf2ee;
-  --fx-gold: #aa8051;
-  --fx-gold-bright: #c89b4a;
+  --fx-accent: #326776;
+  --fx-accent-soft: #cfe0e2;   /* the highlighter: marked evidence, a chosen chip */
   --fx-teal: #183e48;
   --fx-ease: cubic-bezier(.22, .61, .36, 1);
 
   position: relative; overflow: hidden; margin-bottom: 20px;
   border: 1px solid var(--fx-line); border-radius: 12px;
-  background: linear-gradient(180deg, #fff 0%, #fbfcfa 100%);
-  box-shadow: 0 1px 2px rgba(24, 62, 72, .04);
+  background: #fff;
 }
 /* Paused until the owning card is revealed. */
 .pa-fx * { animation-play-state: paused; }
@@ -66,7 +64,7 @@
 .pa-fx__person > div { flex: 1; display: grid; gap: 6px; }
 .pa-fx__avatar {
   display: grid; place-items: center; flex: none; width: 34px; height: 34px;
-  border-radius: 50%; background: linear-gradient(145deg, #234e5b, var(--fx-teal));
+  border-radius: 50%; background: var(--fx-teal);
   color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .04em;
   animation: pa-fx-pop 5.6s var(--fx-ease) infinite;
 }
@@ -134,7 +132,7 @@
 }
 .pa-fx__cite {
   align-self: flex-start; margin-top: auto; padding: 4px 10px; border-radius: 999px;
-  background: rgba(170, 128, 81, .12); color: var(--fx-gold);
+  background: #e7eeeb; color: var(--fx-teal);
   font-size: 8px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
 }
 
@@ -144,13 +142,13 @@
 .pa-fx__proof .pa-fx__line { animation: pa-fx-proof 5.6s var(--fx-ease) infinite; }
 @keyframes pa-fx-proof {
   0%, 22% { background: var(--fx-line); }
-  40%, 88% { background: var(--fx-gold-bright); }
+  40%, 88% { background: var(--fx-accent-soft); }
   100% { background: var(--fx-line); }
 }
 /* The marker sweeping across the words that prove the answer. */
 .pa-fx__swipe {
   position: absolute; top: -3px; left: 0; width: 82%; height: 13px;
-  border-radius: 4px; background: rgba(200, 155, 74, .28);
+  border-radius: 4px; background: var(--fx-accent-soft);
   transform-origin: left center;
   animation: pa-fx-swipe 5.6s var(--fx-ease) infinite;
 }
@@ -211,7 +209,7 @@
 }
 @keyframes pa-fx-caption {
   0%, 30%, 100% { background: transparent; }
-  6%, 26% { background: rgba(170, 128, 81, .16); }
+  6%, 26% { background: #e7eeeb; }
 }
 
 /* ── 05 Learning communities ─────────────────────────────────── */
@@ -224,18 +222,18 @@
 }
 @keyframes pa-fx-link {
   0%, 8% { stroke-dashoffset: 90; }
-  34%, 88% { stroke-dashoffset: 0; stroke: var(--fx-gold); }
+  34%, 88% { stroke-dashoffset: 0; stroke: var(--fx-accent); }
   100% { stroke-dashoffset: 90; }
 }
 .pa-fx__hub {
   position: absolute; top: 50%; left: 50%; width: 32px; height: 32px; margin: -16px 0 0 -16px;
-  border-radius: 50%; background: linear-gradient(145deg, #234e5b, var(--fx-teal));
+  border-radius: 50%; background: var(--fx-teal);
   box-shadow: 0 0 0 5px rgba(24, 62, 72, .07);
   animation: pa-fx-pulse 2.8s var(--fx-ease) infinite;
 }
 .pa-fx__member {
   position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%;
-  background: #fff; box-shadow: inset 0 0 0 1.5px var(--fx-gold);
+  background: #fff; box-shadow: inset 0 0 0 1.5px var(--fx-accent);
   animation: pa-fx-pop 5.6s var(--fx-ease) infinite;
   animation-delay: calc(var(--i) * 200ms + 500ms);
 }
@@ -283,7 +281,7 @@
 }
 @keyframes pa-fx-type { 0% { width: 0; } 34%, 88% { width: 6.6em; } 100% { width: 0; } }
 .pa-fx__caret {
-  width: 1.5px; height: 12px; margin-left: 2px; background: var(--fx-gold);
+  width: 1.5px; height: 12px; margin-left: 2px; background: var(--fx-accent);
   animation: pa-fx-caret .9s steps(1, end) infinite;
 }
 @keyframes pa-fx-caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
@@ -295,7 +293,7 @@
 }
 .pa-fx__results em {
   flex: none; width: 56px; font-style: normal; font-size: 8px; font-weight: 700;
-  letter-spacing: .08em; text-transform: uppercase; color: var(--fx-gold);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--fx-accent);
 }
 
 /* ── 08 Adapt to your learners ───────────────────────────────── */
@@ -310,7 +308,7 @@
 }
 .pa-fx__dials i::after {
   content: ''; position: absolute; top: 50%; width: 11px; height: 11px; margin-top: -5.5px;
-  border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px var(--fx-gold);
+  border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px var(--fx-accent);
   animation: pa-fx-dial 5.6s var(--fx-ease) infinite;
   animation-delay: calc(var(--i) * 240ms);
 }
@@ -333,17 +331,6 @@
 /* The two lead cards get a taller stage. */
 .pa-feature--lead .pa-fx__body,
 .pa-feature--wide .pa-fx__body { height: 176px; }
-.pa-feature--lead .pa-fx {
-  border-color: rgba(255, 255, 255, .14);
-  background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .03));
-}
-.pa-feature--lead .pa-fx__bar { background: rgba(255, 255, 255, .06); border-bottom-color: rgba(255, 255, 255, .1); }
-.pa-feature--lead .pa-fx__bar > span { background: rgba(255, 255, 255, .22); }
-.pa-feature--lead .pa-fx__bar > em { color: #8fa8ad; }
-.pa-feature--lead .pa-fx { --fx-ink: #fff; --fx-line: rgba(255, 255, 255, .22); --fx-line-soft: rgba(255, 255, 255, .12); --fx-sage: rgba(255, 255, 255, .08); }
-.pa-feature--lead .pa-fx__line--name { background: rgba(255, 255, 255, .4); }
-.pa-feature--lead .pa-fx__stats em,
-.pa-feature--lead .pa-fx__chips span { color: #b4c9cd; }
 
 @media (max-width: 640px) {
   .pa-fx__body { height: 138px; padding: 12px; }
@@ -364,8 +351,8 @@
   .pa-reel__col { transform: translateY(calc(var(--d) * -1em)); }
   .pa-fx__answer { opacity: 0; }
   .pa-fx__answer:first-child { opacity: 1; }
-  .pa-fx__links line { stroke-dashoffset: 0; stroke: var(--fx-gold); }
-  .pa-fx__proof .pa-fx__line { background: var(--fx-gold-bright); }
+  .pa-fx__links line { stroke-dashoffset: 0; stroke: var(--fx-accent); }
+  .pa-fx__proof .pa-fx__line { background: var(--fx-accent-soft); }
   .pa-fx__swipe { transform: scaleX(1); opacity: 1; }
   .pa-fx__streak > span { background: var(--fx-teal); }
   .pa-fx__typed { width: 6.6em; }
@@ -421,23 +408,13 @@
 }
 /* The keystone is the AI: it lands last and locks the span. */
 .pa-arch__stone--key {
-  fill: #c89b4a; stroke: #fff;
+  fill: #183e48; stroke: #fff;
   animation-name: pa-arch-key; animation-duration: .75s;
 }
 @keyframes pa-arch-key {
   0% { opacity: 0; transform: translateY(-26px) scale(.86); }
   70% { opacity: 1; transform: translateY(2px) scale(1.02); }
   100% { opacity: 1; transform: none; }
-}
-.pa-arch__glow {
-  opacity: 0;
-  animation: pa-arch-glow 1.6s ease-out both;
-  animation-delay: 1.5s;
-}
-@keyframes pa-arch-glow {
-  0% { opacity: 0; transform: scale(.5); }
-  35% { opacity: 1; transform: scale(1); }
-  100% { opacity: .45; transform: scale(1.04); }
 }
 
 /* What the learner can read, in the opening the arch just made. */
@@ -473,7 +450,7 @@
 }
 .pa-arch__key-label {
   font-size: 6.6px; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; fill: #3c2c14;
+  text-transform: uppercase; fill: #fff;
   animation: pa-arch-read .6s cubic-bezier(.22, .61, .36, 1) both;
   animation-delay: 1.42s;
 }
@@ -485,7 +462,7 @@
 }
 .pa-arch__foot {
   font-size: 7px; font-weight: 700; letter-spacing: .15em;
-  text-transform: uppercase; fill: #aa8051;
+  text-transform: uppercase; fill: #5f736f;
   animation: pa-arch-read .6s cubic-bezier(.22, .61, .36, 1) both;
   animation-delay: 2.26s;
 }
@@ -500,7 +477,6 @@
 @media (prefers-reduced-motion: reduce) {
   .pa-arch *, .is-revealed .pa-arch * { animation: none !important; }
   .pa-arch__ground { stroke-dashoffset: 0; }
-  .pa-arch__glow { opacity: .45; }
   .pa-arch__read { opacity: .82; }
   .pa-arch__span-label, .pa-arch__key-label, .pa-arch__read-label, .pa-arch__foot { opacity: 1; transform: none; }
 }
@@ -513,16 +489,17 @@
    instead of three loops drifting against each other.
    ============================================================ */
 .pa-sfx {
-  --sfx-line: rgba(255, 255, 255, .2);
-  --sfx-soft: rgba(255, 255, 255, .1);
-  --sfx-gold: #c89b4a;
+  --sfx-line: #dbe3e0;
+  --sfx-soft: #e4e9e6;
+  --sfx-accent: #326776;
+  --sfx-accent-soft: #cfe0e2;
   --sfx-ease: cubic-bezier(.22, .61, .36, 1);
   margin-top: 22px;
 }
 .pa-sfx__stage {
   position: relative; height: 92px; padding: 14px;
   border: 1px solid var(--sfx-soft); border-radius: 12px;
-  background: rgba(255, 255, 255, .035);
+  background: #fff;
   display: flex; flex-direction: column; justify-content: center; gap: 10px;
 }
 .pa-sfx em { display: block; height: 6px; border-radius: 3px; background: var(--sfx-line); width: var(--w, 100%); }
@@ -530,15 +507,15 @@
 /* 01 — search, then the record it finds. */
 .pa-sfx__search {
   display: flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px;
-  border-radius: 7px; background: rgba(255, 255, 255, .06);
+  border-radius: 7px; background: #f2f5f3;
 }
 .pa-sfx__caret {
-  width: 1.5px; height: 11px; background: var(--sfx-gold);
+  width: 1.5px; height: 11px; background: var(--sfx-accent);
   animation: pa-sfx-caret .8s steps(1, end) infinite both;
 }
 @keyframes pa-sfx-caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
 .pa-sfx__query {
-  height: 6px; border-radius: 3px; background: rgba(255, 255, 255, .34);
+  height: 6px; border-radius: 3px; background: #b9c5c2;
   animation: pa-sfx-query 9s var(--sfx-ease) infinite both;
   animation-delay: var(--pa-cue);
 }
@@ -547,14 +524,14 @@
 }
 .pa-sfx__card {
   display: flex; align-items: center; gap: 9px; padding: 9px 10px;
-  border-radius: 8px; background: rgba(255, 255, 255, .07);
+  border-radius: 8px; background: #f2f5f3;
   animation: pa-sfx-enter 9s var(--sfx-ease) infinite both;
   animation-delay: calc(var(--pa-cue) + 900ms);
 }
 .pa-sfx__card > b { flex: 1; display: grid; gap: 5px; }
 .pa-sfx__dot {
   flex: none; width: 20px; height: 20px; border-radius: 50%;
-  background: linear-gradient(145deg, #3d7686, #1d4551);
+  background: var(--sfx-accent);
 }
 @keyframes pa-sfx-enter {
   0%, 4% { opacity: 0; transform: translateY(8px); }
@@ -565,7 +542,7 @@
 /* 02 — a question, a reading level, an answer. */
 .pa-sfx__ask { display: flex; gap: 5px; }
 .pa-sfx__ask > i {
-  width: 6px; height: 6px; border-radius: 50%; background: var(--sfx-gold);
+  width: 6px; height: 6px; border-radius: 50%; background: var(--sfx-accent);
   animation: pa-sfx-think 9s var(--sfx-ease) infinite both;
   animation-delay: calc(var(--pa-cue) + var(--d, 0ms));
 }
@@ -578,12 +555,12 @@
 }
 .pa-sfx__levels {
   position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
-  padding: 3px; border-radius: 999px; background: rgba(255, 255, 255, .06);
+  padding: 3px; border-radius: 999px; background: #f2f5f3;
 }
-.pa-sfx__levels > b { height: 12px; border-radius: 999px; background: rgba(255, 255, 255, .14); }
+.pa-sfx__levels > b { height: 12px; border-radius: 999px; background: var(--sfx-line); }
 .pa-sfx__thumb {
   position: absolute; top: 3px; left: 3px; width: calc((100% - 6px) / 3); height: 12px;
-  border-radius: 999px; background: var(--sfx-gold);
+  border-radius: 999px; background: var(--sfx-accent);
   animation: pa-sfx-level 9s var(--sfx-ease) infinite both;
   animation-delay: calc(var(--pa-cue) + 600ms);
 }
@@ -613,22 +590,22 @@
 }
 @keyframes pa-sfx-mark {
   0%, 4% { background: var(--sfx-line); }
-  12%, 30% { background: var(--sfx-gold); }
+  12%, 30% { background: var(--sfx-accent-soft); }
   33%, 100% { background: var(--sfx-line); }
 }
 .pa-sfx__people { display: flex; gap: 8px; margin-top: 2px; }
 .pa-sfx__people > i {
   width: 16px; height: 16px; border-radius: 50%;
-  background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1.5px var(--sfx-gold);
+  background: #fff; box-shadow: inset 0 0 0 1.5px var(--sfx-accent);
   animation: pa-sfx-enter 9s var(--sfx-ease) infinite both;
   animation-delay: calc(var(--pa-cue) + 1.3s + var(--t) * 200ms);
 }
 
-/* The rail fills gold at the hand-off, and the node lights on its turn. */
+/* The rail fills at the hand-off, and the node lights on its turn. */
 .pa-flow__steps li::after {
   content: ''; position: absolute; left: 52px; top: 26px; height: 1px;
   width: calc(100% - 52px + var(--pa-flow-gap));
-  background: linear-gradient(90deg, var(--sfx-gold, #c89b4a), rgba(200, 155, 74, .25));
+  background: var(--sfx-accent, #326776);
   transform-origin: left center;
   animation: pa-flow-rail 9s linear infinite both;
   animation-delay: var(--pa-cue);
@@ -643,9 +620,9 @@
   animation-delay: var(--pa-cue);
 }
 @keyframes pa-flow-node {
-  0%, 1% { border-color: rgba(200, 155, 74, .45); box-shadow: none; }
-  6%, 30% { border-color: #c89b4a; box-shadow: 0 0 0 5px rgba(200, 155, 74, .12); }
-  34%, 100% { border-color: rgba(200, 155, 74, .45); box-shadow: none; }
+  0%, 1% { border-color: #cfd6ce; background: #fff; color: #183e48; }
+  6%, 30% { border-color: #183e48; background: #183e48; color: #fff; }
+  34%, 100% { border-color: #cfd6ce; background: #fff; color: #183e48; }
 }
 
 /* Hold the whole journey until the section is reached. */
@@ -653,13 +630,13 @@
 .pa-flow__steps.is-revealed * { animation-play-state: running; }
 
 
-/* Stacked, the timeline runs vertically, so the gold rail has to follow it
+/* Stacked, the timeline runs vertically, so the rail has to follow it
    down rather than stay a horizontal bar cutting across the copy. */
 @media (max-width: 860px) {
   .pa-flow__steps li::after {
     left: 25px; top: 52px; width: 1px; height: calc(100% - 52px);
     transform-origin: top center;
-    background: linear-gradient(180deg, #c89b4a, rgba(200, 155, 74, .25));
+    background: #326776;
     animation-name: pa-flow-rail-v;
   }
   @keyframes pa-flow-rail-v {
@@ -675,6 +652,6 @@
   .pa-sfx__query { width: 62%; }
   .pa-sfx__card, .pa-sfx__reply em, .pa-sfx__people > i { opacity: 1; transform: none; }
   .pa-sfx__thumb { transform: translateX(calc(200% + 8px)); }
-  .pa-sfx__mark { background: var(--sfx-gold); }
+  .pa-sfx__mark { background: var(--sfx-accent-soft); }
   .pa-flow__steps li::after { transform: none; }
 }

@@ -114,16 +114,15 @@ export default function ArchivynPage() {
     + (hasMedia(key) ? ` pa-split${reverse ? ' pa-split--reverse' : ''}` : '');
 
   return <article id="project-top" ref={root} className="proj-arch-page pa-motion">
-    <header className="pa-band pa-band--ink pa-hero">
-      <span className="pa-glow" aria-hidden="true" />
+    <header className="pa-band pa-band--tint pa-hero">
       <div className={`ark-container pa-hero__inner${art || video?.src ? '' : ' pa-hero__inner--solo'}`}>
         <div className="pa-hero__copy" data-reveal>
           <h1 className="pa-hero__title">{content.brand}</h1>
           <p className="pa-subheading pa-hero__tagline">{page.tagline}</p>
           <p className="pa-hero__lead">{page.description}</p>
           <div className="pa-hero__actions">
-            <a href="#project-product" className="pa-btn pa-btn--gold">{page.product.eyebrow}<ArrowDownRightIcon aria-hidden="true" /></a>
-            <Link to="/#contact" className="pa-btn pa-btn--ghost">{page.closing.contactLabel}</Link>
+            <a href="#project-product" className="pa-btn pa-btn--primary">{page.product.eyebrow}<ArrowDownRightIcon aria-hidden="true" /></a>
+            <Link to="/#contact" className="pa-btn pa-btn--secondary">{page.closing.contactLabel}</Link>
           </div>
         </div>
         {art && <div className="pa-hero__media" data-reveal style={{ '--pa-delay': '140ms' }}>
@@ -176,10 +175,10 @@ export default function ArchivynPage() {
       </div>
     </section>
 
-    <section className="pa-band pa-band--ink pa-flow" aria-labelledby="pa-flow-title">
+    <section className="pa-band pa-band--paper pa-flow" aria-labelledby="pa-flow-title">
       <div className={split('workflow')}>
         <div className="pa-split__text" data-reveal>
-          <p className="pa-kicker pa-kicker--light">{page.workflow.eyebrow}</p>
+          <p className="pa-kicker">{page.workflow.eyebrow}</p>
           <h2 id="pa-flow-title" className="pa-display">{page.workflow.title}</h2>
           <ol className="pa-flow__steps" data-reveal>
             {page.workflow.steps.map((step, index) => <li key={step.title} style={{ '--pa-cue': `${index * 3}s` }}>
@@ -194,7 +193,7 @@ export default function ArchivynPage() {
       </div>
     </section>
 
-    <section className="pa-band pa-band--paper" aria-labelledby="pa-audience-title">
+    <section className="pa-band pa-band--tint" aria-labelledby="pa-audience-title">
       <div className={split('audience', true)}>
         <div className="pa-split__text" data-reveal>
           <p className="pa-kicker">{page.audience.eyebrow}</p>
@@ -211,7 +210,7 @@ export default function ArchivynPage() {
       </div>
     </section>
 
-    {page.rollout && <section className="pa-band pa-band--tint" aria-labelledby="pa-rollout-title">
+    {page.rollout && <section className="pa-band pa-band--paper" aria-labelledby="pa-rollout-title">
       <div className={split('rollout')}>
         <div className="pa-split__text" data-reveal>
           <p className="pa-kicker">{page.rollout.eyebrow}</p>
@@ -231,7 +230,7 @@ export default function ArchivynPage() {
 
     {/* A roster, not a split: the lead sits on top with their photograph and
         the rest of the team follows beneath. */}
-    <section className="pa-band pa-band--paper pa-team" aria-labelledby="pa-team-title">
+    <section className="pa-band pa-band--tint pa-team" aria-labelledby="pa-team-title">
       <div className="ark-container">
         <div data-reveal>
           <p className="pa-kicker">{page.team.eyebrow}</p>
@@ -259,14 +258,13 @@ export default function ArchivynPage() {
       </div>
     </section>
 
-    <section className="pa-band pa-band--ink pa-closing" aria-labelledby="pa-closing-title">
-      <span className="pa-glow" aria-hidden="true" />
+    <section className="pa-band pa-band--paper pa-closing" aria-labelledby="pa-closing-title">
       <div className="ark-container pa-closing__inner" data-reveal>
         <h2 id="pa-closing-title" className="pa-display">{page.closing.title}</h2>
         {page.closing.description && <p className="pa-lead">{page.closing.description}</p>}
         <div className="pa-hero__actions pa-hero__actions--center">
-          <Link to="/" className="pa-btn pa-btn--gold">{page.closing.portfolioLabel}<ArrowUpRightIcon aria-hidden="true" /></Link>
-          <Link to="/#contact" className="pa-btn pa-btn--ghost">{page.closing.contactLabel}</Link>
+          <Link to="/" className="pa-btn pa-btn--primary">{page.closing.portfolioLabel}<ArrowUpRightIcon aria-hidden="true" /></Link>
+          <Link to="/#contact" className="pa-btn pa-btn--secondary">{page.closing.contactLabel}</Link>
         </div>
       </div>
     </section>

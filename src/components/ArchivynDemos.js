@@ -247,10 +247,6 @@ export function MissionArch() {
   return <figure className="pa-arch" aria-hidden="true" data-reveal style={{ '--pa-delay': '80ms' }}>
     <svg viewBox="14 12 312 282" role="presentation">
       <defs>
-        <radialGradient id="pa-arch-glow" cx="50%" cy="50%">
-          <stop offset="0%" stopColor="#c89b4a" stopOpacity=".45" />
-          <stop offset="100%" stopColor="#c89b4a" stopOpacity="0" />
-        </radialGradient>
         {/* The mission triad runs along the span itself. */}
         <path id="pa-arch-span" d={`M${sx.toFixed(2)} ${sy.toFixed(2)} A${inscribe} ${inscribe} 0 0 1 ${ex.toFixed(2)} ${ey.toFixed(2)}`} />
       </defs>
@@ -270,7 +266,6 @@ export function MissionArch() {
         </textPath>
       </text>
 
-      <circle className="pa-arch__glow" cx={cx} cy={cy - rInner - 26} r="58" fill="url(#pa-arch-glow)" />
       <text className="pa-arch__key-label" x={cx} y={cy - mid + 2}>Veri AI</text>
 
       {/* What the learner can read, in the opening the arch just made. */}

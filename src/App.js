@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from './components/Navbar';
 import PortfolioMetadata from './components/PortfolioMetadata';
 import Hero from './components/Hero';
-import Credentials from './components/Credentials';
 import PortfolioPlatform from './components/PortfolioPlatform';
 import ArchivynPage from './components/ArchivynPage';
 import About from './components/About';
@@ -39,7 +38,6 @@ function App() {
               <>
                 <Hero />
                 <PortfolioPlatform />
-                <Credentials />
                 <About />
                 <Blogs />
                 <OngoingResearch />

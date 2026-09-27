@@ -188,7 +188,7 @@
     "metadataTitle": "Research & learning",
     "tagline": "from Archives to You, accelerated by AI",
     "heroAnimation": {
-      "src": "/media/proj-arch-hero.json",
+      "src": "/media/proj-arch-hero-light.json",
       "label": "A scholar's research paper flows through an AI spark into a student's reading card, rewritten for grade 3, then grade 5, then grade 9, with the proof marked and a thread back to the verified scholar."
     }
   }

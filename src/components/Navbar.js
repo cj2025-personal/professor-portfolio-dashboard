@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { ArrowUpRightIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useScholar, initials } from '../lib/useScholar';
 
 /* Anchors into the one-page portfolio. */
 const sections = [
@@ -21,8 +20,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
-  const { scholar } = useScholar();
-  const name = (scholar.name || '').split(',')[0].trim();
 
   /* react-scroll can only reach a section that is mounted. Off the home route
      those sections do not exist, so the same links have to become router links
@@ -83,23 +80,6 @@ const Navbar = () => {
      the publication filter, so "you are here" reads identically everywhere. */
   const activeItem = 'text-brand-700 after:bg-signal-red';
 
-  /* Whose site this is, on every page: the footer's monogram and the name.
-     It is also the way home, so it scrolls to the top on the home page and
-     routes there from anywhere else. */
-  const brandInner = <>
-    <span className="nav-brand__mark ark-display" aria-hidden>{initials(scholar)}</span>
-    <span className="nav-brand__name ark-display">{name}</span>
-  </>;
-  const brandLabel = name ? `${name}, home` : 'Home';
-  const brand = onHome ? (
-    <ScrollLink to="home" href="#home" smooth={true} duration={500} offset={-88}
-      className="nav-brand cursor-pointer" aria-label={brandLabel} onClick={close}>
-      {brandInner}
-    </ScrollLink>
-  ) : (
-    <RouterLink to="/" className="nav-brand" aria-label={brandLabel} onClick={close}>{brandInner}</RouterLink>
-  );
-
   return (
     <nav aria-label="Main navigation"
       className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
@@ -110,10 +90,8 @@ const Navbar = () => {
     >
       <div className="ark-container">
         <div className="flex items-center justify-between h-16">
-          {brand}
-
-          {/* Desktop menu, grouped on the right with the CTA */}
-          <div className="hidden lg:flex items-center gap-1 ml-auto mr-5">
+          {/* Desktop menu */}
+          <div className="hidden lg:flex items-center gap-1">
             {sections.map((item) => sectionLink(item, desktopItem, activeItem))}
 
             <span className="mx-1.5 h-4 w-px bg-gray-200" aria-hidden />
