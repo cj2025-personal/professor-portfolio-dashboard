@@ -26,6 +26,7 @@ const Navbar = () => {
      to /#section and let the hash handler do the scrolling. Without this every
      nav item is inert on the standards and course pages. */
   const onHome = pathname === '/';
+  const onProjArch = pathname === '/proj-arch';
 
   // Add a subtle shadow / solid background once the page is scrolled.
   useEffect(() => {
@@ -129,6 +130,12 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
+          {onProjArch && (
+            <RouterLink to="/proj-arch" className="proj-arch-mobile-brand lg:hidden" aria-current="page">
+              <span>Proj Arch</span>
+              <small>Project brief</small>
+            </RouterLink>
+          )}
           <div className="ml-auto lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}

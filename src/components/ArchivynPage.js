@@ -108,6 +108,14 @@ export default function ArchivynPage() {
   const video = art ? null : content.summary?.video;
   const hasMedia = key => Boolean(page[key]?.media?.src);
   const media = key => <SectionMedia media={page[key]?.media} />;
+  const projectSections = [
+    ['project-mission', 'Purpose'],
+    ['project-product', 'Platform'],
+    ['project-workflow', 'Journey'],
+    ['project-audience', 'Audience'],
+    ['project-rollout', 'Rollout'],
+    ['project-team', 'Team'],
+  ];
   // Only a section with an asset splits into two columns; the rest run full
   // width rather than reserving an empty half.
   const split = (key, reverse) => 'ark-container'
@@ -117,6 +125,7 @@ export default function ArchivynPage() {
     <header className="pa-band pa-band--tint pa-hero">
       <div className={`ark-container pa-hero__inner${art || video?.src ? '' : ' pa-hero__inner--solo'}`}>
         <div className="pa-hero__copy" data-reveal>
+          <p className="pa-hero__eyebrow"><span>Portfolio project</span><span aria-hidden="true">/</span>{page.metadataTitle}</p>
           <h1 className="pa-hero__title">{content.brand}</h1>
           <p className="pa-subheading pa-hero__tagline">{page.tagline}</p>
           <p className="pa-hero__lead">{page.description}</p>
@@ -135,11 +144,28 @@ export default function ArchivynPage() {
       </div>
     </header>
 
+    <nav className="pa-project-nav" aria-label="Proj Arch sections">
+      <div className="ark-container pa-project-nav__inner">
+        <p><span aria-hidden="true">01</span> Project index</p>
+        <div>
+          {projectSections.map(([href, label]) => <a key={href} href={`#${href}`}>{label}</a>)}
+        </div>
+      </div>
+    </nav>
+
+    <aside className="pa-scope" aria-label="Project scope">
+      <div className="ark-container pa-scope__inner">
+        <p><strong>{String(page.features.length).padStart(2, '0')}</strong><span>Connected product experiences</span></p>
+        <p><strong>{String(page.workflow.steps.length).padStart(2, '0')}</strong><span>Steps in the learning journey</span></p>
+        <p><strong>{String(page.audience.items.length).padStart(2, '0')}</strong><span>Learner audiences</span></p>
+      </div>
+    </aside>
+
     {/* From here each band is a two-column split that flips side by side:
         copy left, then copy right, then left again. `--reverse` reorders the
         columns visually and the DOM keeps copy first, so a narrow screen and
         a screen reader both get the text before its image. */}
-    <section className="pa-band pa-band--paper" aria-labelledby="pa-mission-title">
+    <section id="project-mission" className="pa-band pa-band--paper" aria-labelledby="pa-mission-title">
       <div className="ark-container pa-split">
         <div className="pa-split__text" data-reveal>
           <p className="pa-kicker">{page.mission.eyebrow}</p>
@@ -175,7 +201,7 @@ export default function ArchivynPage() {
       </div>
     </section>
 
-    <section className="pa-band pa-band--paper pa-flow" aria-labelledby="pa-flow-title">
+    <section id="project-workflow" className="pa-band pa-band--paper pa-flow" aria-labelledby="pa-flow-title">
       <div className={split('workflow')}>
         <div className="pa-split__text" data-reveal>
           <p className="pa-kicker">{page.workflow.eyebrow}</p>
@@ -193,7 +219,7 @@ export default function ArchivynPage() {
       </div>
     </section>
 
-    <section className="pa-band pa-band--tint" aria-labelledby="pa-audience-title">
+    <section id="project-audience" className="pa-band pa-band--tint" aria-labelledby="pa-audience-title">
       <div className={split('audience', true)}>
         <div className="pa-split__text" data-reveal>
           <p className="pa-kicker">{page.audience.eyebrow}</p>
@@ -210,7 +236,7 @@ export default function ArchivynPage() {
       </div>
     </section>
 
-    {page.rollout && <section className="pa-band pa-band--paper" aria-labelledby="pa-rollout-title">
+    {page.rollout && <section id="project-rollout" className="pa-band pa-band--paper" aria-labelledby="pa-rollout-title">
       <div className={split('rollout')}>
         <div className="pa-split__text" data-reveal>
           <p className="pa-kicker">{page.rollout.eyebrow}</p>
@@ -230,7 +256,7 @@ export default function ArchivynPage() {
 
     {/* A roster, not a split: the lead sits on top with their photograph and
         the rest of the team follows beneath. */}
-    <section className="pa-band pa-band--tint pa-team" aria-labelledby="pa-team-title">
+    <section id="project-team" className="pa-band pa-band--tint pa-team" aria-labelledby="pa-team-title">
       <div className="ark-container">
         <div data-reveal>
           <p className="pa-kicker">{page.team.eyebrow}</p>

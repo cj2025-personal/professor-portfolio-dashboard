@@ -47,8 +47,9 @@
   background: var(--pa-paper);
   color: var(--pa-text);
   padding-top: 80px;
+  overflow: clip;
 }
-.proj-arch-page section[id], #project-top { scroll-margin-top: 96px; }
+.proj-arch-page section[id], #project-top { scroll-margin-top: 152px; }
 .proj-arch-page a:focus-visible,
 .proj-arch-page button:focus-visible { outline: 2px solid var(--pa-teal-mid); outline-offset: 3px; border-radius: 8px; }
 
@@ -132,6 +133,7 @@
 .pa-band { padding: clamp(56px, 7vw, 104px) 0; position: relative; }
 .pa-band--paper { background: var(--pa-paper); }
 .pa-band--tint { background: var(--pa-cream); }
+.pa-band + .pa-band { border-top: 1px solid rgba(207, 214, 206, .42); }
 
 /* ── Split: copy one side, media the other, alternating ───────
    `--reverse` flips the columns with `order` rather than by reordering the
@@ -174,7 +176,8 @@
 /* Solid teal for the one thing to do, an outline for the alternative. No
    gradients, no glow, no lift: the arrow moving is enough. */
 .pa-btn--primary { background: var(--pa-teal); color: #fff; }
-.pa-btn--primary:hover { background: var(--pa-teal-deep); }
+.pa-btn--primary { box-shadow: 0 10px 26px -18px rgba(24, 62, 72, .75); }
+.pa-btn--primary:hover { background: var(--pa-teal-deep); box-shadow: 0 15px 30px -18px rgba(24, 62, 72, .8); transform: translateY(-2px); }
 .pa-btn--secondary { background: var(--pa-paper); color: var(--pa-text); border-color: var(--pa-line-strong); }
 .pa-btn--secondary:hover { border-color: var(--pa-teal); color: var(--pa-teal); }
 .pa-btn:hover svg { transform: translate(2px, -2px); }
@@ -186,6 +189,12 @@
   gap: clamp(32px, 4.4vw, 64px); align-items: center;
 }
 .pa-hero__inner--solo { grid-template-columns: minmax(0, 1fr); }
+.pa-hero__eyebrow {
+  display: flex; align-items: center; gap: 9px; margin: 0 0 18px;
+  font-size: 11px; line-height: 1; font-weight: 700; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--pa-text-faint);
+}
+.pa-hero__eyebrow span:first-child { color: var(--pa-teal-mid); }
 .pa-hero__title {
   font-family: var(--ark-font-display); font-weight: 400;
   font-size: clamp(3.5rem, 11vw, 9.5rem); line-height: .95;
@@ -224,6 +233,49 @@
 .pa-hero__art { width: 100%; aspect-ratio: 640 / 520; }
 .pa-hero__art svg { display: block; }
 
+/* A compact index keeps the long-form case study easy to scan without
+   competing with the portfolio navigation above it. */
+.pa-project-nav {
+  position: sticky; top: 80px; z-index: 20;
+  background: rgba(255, 255, 255, .92); border-top: 1px solid var(--pa-line);
+  border-bottom: 1px solid var(--pa-line); backdrop-filter: blur(14px);
+}
+.pa-project-nav__inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 28px;
+  min-height: 58px;
+}
+.pa-project-nav__inner > p {
+  display: flex; align-items: center; gap: 10px; margin: 0; flex: none;
+  font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--pa-text-faint);
+}
+.pa-project-nav__inner > p span { color: var(--pa-gold); }
+.pa-project-nav__inner > div { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); }
+.pa-project-nav a {
+  position: relative; display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 12px; font-weight: 600; color: var(--pa-text-muted);
+  transition: color .2s var(--pa-ease);
+}
+.pa-project-nav a::after {
+  content: ''; position: absolute; left: 0; right: 100%; bottom: 5px; height: 1px;
+  background: var(--pa-gold); transition: right .25s var(--pa-ease);
+}
+.pa-project-nav a:hover { color: var(--pa-teal); }
+.pa-project-nav a:hover::after { right: 0; }
+
+.pa-scope { background: var(--pa-teal); color: #fff; }
+.pa-scope__inner { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pa-scope p {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center;
+  gap: 16px; min-height: 104px; margin: 0; padding: 20px clamp(20px, 3vw, 40px);
+}
+.pa-scope p + p { border-left: 1px solid rgba(255, 255, 255, .2); }
+.pa-scope strong {
+  font-family: var(--ark-font-display); font-size: 34px; line-height: 1; font-weight: 400;
+  letter-spacing: -.03em;
+}
+.pa-scope span { max-width: 22ch; font-size: 11px; line-height: 1.55; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
+
 /* ── Mission: centred manifesto + full-width pull quote ───────── */
 .pa-goal {
   margin: clamp(26px, 3vw, 36px) 0 0; padding: clamp(20px, 2.2vw, 26px) 0 0;
@@ -249,12 +301,18 @@
   grid-column: span 2; padding: clamp(22px, 2.2vw, 30px);
   background: var(--pa-paper); border: 1px solid var(--pa-line); border-radius: 16px;
   box-shadow: var(--pa-shadow-sm);
-  transition: box-shadow .3s var(--pa-ease), border-color .3s var(--pa-ease);
+  transition: transform .3s var(--pa-ease), box-shadow .3s var(--pa-ease), border-color .3s var(--pa-ease);
 }
 /* The two lead features take half a row each; the remaining six sit
    three-up beneath them, so the grid closes without an orphan. */
 .pa-feature--lead, .pa-feature--wide { grid-column: span 3; }
-.pa-feature:hover { box-shadow: var(--pa-shadow-md); border-color: var(--pa-line-strong); }
+.pa-feature::before {
+  content: ''; position: absolute; inset: 0 auto auto 0; width: 100%; height: 3px;
+  background: var(--pa-teal); transform: scaleX(0); transform-origin: left;
+  transition: transform .35s var(--pa-ease);
+}
+.pa-feature:hover { transform: translateY(-4px); box-shadow: var(--pa-shadow-md); border-color: var(--pa-line-strong); }
+.pa-feature:hover::before { transform: scaleX(1); }
 .pa-feature__num {
   margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .14em;
   font-variant-numeric: tabular-nums; color: var(--pa-teal-mid);
@@ -317,9 +375,9 @@
 .pa-audience article {
   display: flex; flex-direction: column; padding: clamp(22px, 2vw, 28px);
   background: var(--pa-paper); border: 1px solid var(--pa-line); border-radius: 16px;
-  transition: box-shadow .3s var(--pa-ease);
+  transition: transform .3s var(--pa-ease), box-shadow .3s var(--pa-ease), border-color .3s var(--pa-ease);
 }
-.pa-audience article:hover { box-shadow: var(--pa-shadow-md); }
+.pa-audience article:hover { transform: translateY(-3px); box-shadow: var(--pa-shadow-md); border-color: var(--pa-line-strong); }
 .pa-audience__icon {
   display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 20px;
   border-radius: 13px; background: var(--pa-teal-tint); color: var(--pa-teal);
@@ -364,7 +422,11 @@
 /* Centred and capped: across the full 1240px container the two reports sat
    ~620px apart, which is the empty-band problem again. */
 .pa-team > .ark-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.pa-org { width: 100%; max-width: 720px; margin-top: clamp(30px, 3.4vw, 44px); }
+.pa-org {
+  width: 100%; max-width: 760px; margin-top: clamp(30px, 3.4vw, 44px);
+  padding: clamp(30px, 4vw, 52px); background: var(--pa-paper);
+  border: 1px solid var(--pa-line); border-radius: 24px; box-shadow: var(--pa-shadow-sm);
+}
 .pa-org__node { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .pa-org__portrait {
   width: clamp(136px, 13.5vw, 176px); aspect-ratio: 1; margin-bottom: 18px;
@@ -428,8 +490,12 @@
 }
 
 /* ── Closing + footer ────────────────────────────────────────── */
-.pa-closing { padding-bottom: clamp(44px, 5vw, 76px); text-align: center; }
-.pa-closing__inner { display: flex; flex-direction: column; align-items: center; }
+.pa-closing { padding-bottom: clamp(56px, 7vw, 96px); text-align: center; }
+.pa-closing__inner {
+  display: flex; flex-direction: column; align-items: center;
+  max-width: 1120px; padding-top: clamp(42px, 5vw, 64px); padding-bottom: clamp(42px, 5vw, 64px);
+  background: var(--pa-cream); border: 1px solid var(--pa-line); border-radius: 24px;
+}
 .pa-closing .pa-display { max-width: 20ch; margin-top: 0; }
 .pa-closing .pa-lead { max-width: 60ch; }
 /* The bottom padding keeps "Back to top" clear of the fixed chat launcher. */
@@ -480,18 +546,30 @@
     grid-template-columns: minmax(0, 1fr); gap: 10px;
     justify-items: start; align-items: start;
   }
+  .pa-project-nav { position: relative; top: auto; }
+  .pa-project-nav__inner { align-items: flex-start; min-height: 0; padding-top: 14px; padding-bottom: 14px; }
+  .pa-project-nav__inner > div { gap: 20px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+  .pa-project-nav__inner > div::-webkit-scrollbar { display: none; }
+  .pa-project-nav__inner > p { display: none; }
 }
 @media (max-width: 640px) {
   .proj-arch-page { padding-top: 68px; }
+  .proj-arch-page section[id], #project-top { scroll-margin-top: 84px; }
   .pa-band { padding: clamp(44px, 9vw, 60px) 0; }
   .pa-hero { padding: 40px 0 52px; }
   .pa-hero__actions .pa-btn { flex: 1 1 100%; }
   .pa-features, .pa-audience { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .pa-org__row { gap: 14px; padding-top: 60px; }
+  .pa-org { padding: 28px 18px 30px; border-radius: 20px; }
   .pa-org__monogram { width: 54px; height: 54px; font-size: 1rem; }
   .pa-feature, .pa-feature--lead, .pa-feature--wide { grid-column: span 1; }
   .pa-closing__inner .pa-btn { flex: 1 1 100%; }
   .pa-footer { padding-bottom: 96px; }
+  .pa-scope__inner { grid-template-columns: minmax(0, 1fr); padding-top: 8px; padding-bottom: 8px; }
+  .pa-scope p { min-height: 76px; padding: 14px 0; }
+  .pa-scope p + p { border-left: 0; border-top: 1px solid rgba(255, 255, 255, .2); }
+  .pa-scope strong { font-size: 29px; }
+  .pa-closing__inner { width: calc(100% - 32px); padding-left: 20px; padding-right: 20px; border-radius: 20px; }
 }
 
 /* ── Reduced motion ──────────────────────────────────────────── */
@@ -499,5 +577,20 @@
   .pa-motion [data-reveal] { opacity: 1; transform: none; transition: none; }
   .pa-btn, .pa-btn svg, .pa-feature,
   .pa-audience article, .pa-footer a, .pa-footer svg { transition: none; }
-  .pa-btn:hover svg { transform: none; }
+  .pa-btn:hover, .pa-feature:hover, .pa-audience article:hover, .pa-btn:hover svg { transform: none; }
+}
+
+.proj-arch-mobile-brand {
+  display: none; flex-direction: column; align-items: flex-start; justify-content: center;
+  min-height: 52px; color: var(--pa-text, #182d35); text-decoration: none;
+}
+.proj-arch-mobile-brand > span {
+  font-family: var(--ark-font-display); font-size: 20px; line-height: 1.05; letter-spacing: -.02em;
+}
+.proj-arch-mobile-brand > small {
+  margin-top: 4px; font-size: 8px; line-height: 1; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: #5f6d70;
+}
+@media (max-width: 1023px) {
+  .proj-arch-mobile-brand { display: flex; }
 }
