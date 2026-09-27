@@ -381,6 +381,14 @@
   object-fit: cover; object-position: 50% 50%;
   transform: scale(1.2); transform-origin: 50% 42%;
 }
+/* Team members: a smaller circle than the lead's. Their photographs are
+   cropped square around head and shoulders before they reach the page, so
+   they need none of the zoom above. */
+.pa-org__portrait--member {
+  width: clamp(96px, 9vw, 116px); margin-bottom: 14px;
+  box-shadow: 0 0 0 1px var(--pa-line), var(--pa-shadow-sm);
+}
+.pa-org__portrait--member img { transform: none; }
 .pa-org__monogram {
   display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: 14px;
   border-radius: 50%; color: #fff; background: var(--pa-teal);

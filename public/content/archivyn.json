@@ -175,8 +175,8 @@
       "title": "Meet the team",
       "leadRole": "Innovator, CEO",
       "members": [
-        { "name": "Ram", "role": "Technology developer" },
-        { "name": "Nikhil Sai Jaddu", "role": "Technology developer" }
+        { "name": "Ram", "role": "Technology developer", "photo": "/images/ram.png" },
+        { "name": "Nikhil Sai Jaddu", "role": "Technology developer", "photo": "/images/nikhil.jpg" }
       ]
     },
     "closing": {

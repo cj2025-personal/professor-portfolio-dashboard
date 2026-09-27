@@ -249,7 +249,9 @@ export default function ArchivynPage() {
           </div>}
           {page.team.members?.length > 0 && <ul className="pa-org__row">
             {page.team.members.map(member => <li key={member.name} className="pa-org__node">
-              <span className="pa-org__monogram" aria-hidden="true">{initials(member.name)}</span>
+              {member.photo
+                ? <div className="pa-org__portrait pa-org__portrait--member"><img src={member.photo} alt={member.name} width="360" height="360" loading="lazy" /></div>
+                : <span className="pa-org__monogram" aria-hidden="true">{initials(member.name)}</span>}
               <p className="pa-card-title">{member.name}</p>
               <p className="pa-meta pa-org__role">{member.role}</p>
             </li>)}
