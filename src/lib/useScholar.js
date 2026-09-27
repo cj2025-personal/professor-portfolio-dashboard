@@ -31,6 +31,10 @@ const SKELETON = {
 };
 
 let cached = null;
+// The request in flight. The cache alone fills only when the response lands,
+// so components mounting together (nav, hero, About, footer, chat) each used
+// to start their own fetch; now they share this one.
+let request = null;
 
 export function useScholar() {
   const [scholar, setScholar] = useState(cached || SKELETON);
@@ -40,21 +44,21 @@ export function useScholar() {
     if (cached) return undefined;
     let cancelled = false;
 
-    (async () => {
-      try {
-        const res = await axios.get(`${API}/api/scholar/profile`);
-        const data = res.data?.data;
-        if (data && !cancelled) {
-          // One fetch per page load, shared across every component that asks.
-          cached = { ...SKELETON, ...data, about: { ...SKELETON.about, ...(data.about || {}) } };
-          setScholar(cached);
-        }
-      } catch (_) {
-        // Layout holds on the skeleton; nothing is invented.
-      } finally {
-        if (!cancelled) setLoaded(true);
-      }
-    })();
+    if (!request) {
+      request = axios.get(`${API}/api/scholar/profile`)
+        .then((res) => {
+          const data = res.data?.data;
+          if (data) cached = { ...SKELETON, ...data, about: { ...SKELETON.about, ...(data.about || {}) } };
+          return cached;
+        })
+        // Layout holds on the skeleton; nothing is invented. A later mount retries.
+        .catch(() => { request = null; return null; });
+    }
+    request.then((data) => {
+      if (cancelled) return;
+      if (data) setScholar(data);
+      setLoaded(true);
+    });
 
     return () => { cancelled = true; };
   }, []);

@@ -74,6 +74,9 @@ const Publications = () => {
   // before clicking. Unfiltered by search — a tab's size is a fact about
   // the bibliography, not about the current query.
   const countFor = (category) => allPublications.filter((pub) => pub.category === category).length;
+  // A category with nothing in it is not offered; "Other 0" read as a gap in
+  // the record. The active tab always stays, so nothing vanishes under a click.
+  const shownTabs = tabs.filter((category) => countFor(category) > 0 || category === activeCategory);
 
   // Handle synopsis modal
   const openSynopsisModal = (synopsis, title, isBookChapter = false, bookDetails = null) => {
@@ -111,7 +114,7 @@ const Publications = () => {
       <section id="publications" className="ark-band ark-section">
         <div className="ark-container">
           <div className="py-12 text-center">
-            <p className="mb-4 text-sm text-red-600">{error}</p>
+            <p className="mb-4 text-sm text-red-700">{error}</p>
             <button onClick={() => window.location.reload()} className="btn-secondary">
               Try again
             </button>
@@ -146,7 +149,7 @@ const Publications = () => {
                 repeated the active tab below it is gone. */}
             <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="seg" role="tablist" aria-label="Publication category">
-                {tabs.map((category) => (
+                {shownTabs.map((category) => (
                   <button
                     key={category}
                     role="tab"

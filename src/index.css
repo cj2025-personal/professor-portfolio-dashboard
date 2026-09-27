@@ -3,56 +3,65 @@
    archivyn-tokens.css in this repo — it is shared verbatim across all apps. */
 @import './archivyn-tokens.css';
 
-/* Typeface override, app-local.
-   Overridden here rather than in archivyn-tokens.css, which is shared
-   verbatim across repos and must not be forked.
+/* ── App theme ────────────────────────────────────────────────────────────
+   The portfolio's own palette and type, and the only place this app sets
+   them: teal ink, cream paper, bronze gold; DM Serif Display over Manrope.
+   Everything here overrides the canonical sheet imported above, which is
+   shared verbatim across the Archivyn repos and is never edited in this one.
 
-   --ark-font-serif is a misnomer now: the display slot holds Fjalla One, a
-   condensed grotesque, not a serif. The name is kept because the Tailwind
-   theme, styles/paris.css and .ark-display all resolve through it, and
-   renaming it in this app alone would fork the contract. --ark-font-display
-   is the honest alias; new rules should use that. */
+   This block replaces two earlier layers: a US-flag palette (navy #0A3161,
+   Old Glory red) and a Fjalla One / Nunito Sans type pair, both since
+   superseded by the teal theme but still leaking through wherever the teal
+   layer had not repeated a value: flag-blue tints on the contact and
+   reliability chips, a red edge on the chat header and the AI notice, and
+   navy-tinted shadows. */
 :root {
-  --ark-font-ui: "Nunito Sans", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
-  --ark-font-display: "Fjalla One", "Haettenschweiler", "Arial Narrow", Impact, sans-serif;
-  --ark-font-serif: var(--ark-font-display);
-}
+  --ark-font-ui: 'Manrope', 'Segoe UI', sans-serif;
+  --ark-font-display: 'DM Serif Display', Georgia, serif;
+  --ark-font-serif: var(--ark-font-display);   /* kept: the Tailwind theme resolves through it */
 
-/* ── Flag palette ────────────────────────────────────────────────────────
-   Blue, red and white, in the proportions that keep it reading as an
-   institution rather than as bunting: white carries the page, blue carries
-   every structural element, and red is reserved for marks that say "this
-   one" or "start here" — kicker rules, the active nav item, the active
-   filter, the footer edge. Roughly 70 / 25 / 5. Red used at parity with
-   blue is what makes a flag palette look like a fireworks flyer.
+  /* Ink family. The names are the shared contract's; the hues are teal. */
+  --ark-navy-ink: #112d35;    /* deepest: footer ground */
+  --ark-navy: #183e48;        /* primary actions, ink */
+  --ark-blue: #326776;        /* links and interactive text */
+  --ark-blue-deep: #102e37;   /* primary hover */
+  --ark-navy-soft: #e7eeeb;
 
-   The two hues are the platform's own flag pair, already used together in
-   ngo-web's CommunityLens: #0A3161 and #B22234. --ark-red needed no change
-   — the canonical sheet was already carrying Old Glory Red.
+  /* The signature mark (kicker rules, active item, stripes) is bronze, not
+     red. IU crimson appears once, on the affiliation line, and stays there. */
+  --ark-red: #aa8051;
 
-   App-local, like the typefaces. archivyn-tokens.css is shared verbatim
-   across repos and must not be forked. */
-:root {
-  /* Blue family */
-  --ark-navy-ink: #071B36;   /* deepest — footer ground */
-  --ark-navy: #0A3161;       /* Old Glory Blue — primary actions, ink */
-  --ark-blue: #14528F;       /* links and interactive text */
-  --ark-blue-deep: #082647;  /* primary hover */
+  /* Paper and ink */
+  --ark-bg: #f6f5f1;
+  --ark-surface: #ffffff;
+  --ark-surface-2: #eeefeb;
+  --ark-border: #d9dedb;
+  --ark-border-soft: #e4e7e2;
+  --ark-text: #182d35;
+  --ark-text-muted: #526369;
+  --ark-text-faint: #5f6d70;  /* 4.9:1 on cream: passes AA as small text */
 
-  /* Paper and ink, biased toward the flag blue rather than a generic slate */
-  --ark-bg: #F4F7FB;
-  --ark-surface: #FFFFFF;
-  --ark-surface-2: #EBF1F8;
-  --ark-border: #CFDCEC;
-  --ark-border-soft: #E3EBF4;
-  --ark-text: #0C1B30;
-  --ark-text-muted: #2C3E57;
-  --ark-text-faint: #5C6E85;
+  /* Informational tints follow the ink family rather than a separate blue. */
+  --ark-info: #326776;
+  --ark-info-strong: #183e48;
+  --ark-info-soft: #e7eeeb;
 
-  --ark-navy-soft: #E2EAF5;
-  --ark-info: #14528F;
-  --ark-info-strong: #0A3161;
-  --ark-info-soft: #E5EDF7;
+  /* Shape: 10px for anything you press or type into, 16px for surfaces. */
+  --ark-radius-control: 10px;
+  --ark-radius-card: 16px;
+  --ark-radius-panel: 16px;
+
+  /* Elevation, tinted with the teal ink instead of the canonical navy. */
+  --ark-shadow-sm: 0 1px 2px rgba(17, 45, 53, 0.05), 0 6px 18px -14px rgba(17, 45, 53, 0.14);
+  --ark-shadow-md: 0 2px 4px rgba(17, 45, 53, 0.06), 0 14px 34px -18px rgba(17, 45, 53, 0.25);
+  --ark-shadow-lg: 0 4px 8px rgba(17, 45, 53, 0.07), 0 28px 60px -24px rgba(17, 45, 53, 0.35);
+
+  /* Title scale */
+  --portfolio-title-page: clamp(2rem, 3.4vw, 2.75rem);
+  --portfolio-title-section: clamp(2rem, 3vw, 2.5rem);
+  --portfolio-title-subsection: clamp(1.375rem, 2vw, 1.5rem);
+  --portfolio-title-card: 1.25rem;
+  --portfolio-title-featured: clamp(1.5rem, 2.4vw, 1.75rem);
 }
 
 @tailwind base;
@@ -644,29 +653,23 @@ code {
 }
 
 /* ── Research domain tiles ───────────────────────────────────
-   The supplied artwork is mint/teal stock illustration sitting in a
-   navy palette. Rather than drop the assets, they are printed to the
-   brand: desaturated and tinted navy, with a touch of colour returning
-   on hover. */
+   The art is vector line work drawn in the palette (DomainArt), so it
+   needs no tinting; a slow zoom on hover is all the motion it takes. */
 .domain__figure {
   position: relative;
   overflow: hidden;
   background: var(--ark-navy-ink);
 }
 
-.domain__figure img {
+.domain-art {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.08) brightness(0.96);
-  opacity: 0.72;
-  transition: transform 0.6s ease, opacity 0.4s ease, filter 0.4s ease;
+  transition: transform 0.6s ease;
 }
 
-.domain:hover .domain__figure img {
+.domain:hover .domain-art {
   transform: scale(1.04);
-  opacity: 0.85;
-  filter: grayscale(0.55) contrast(1.05) brightness(0.98);
 }
 
 .domain__figure::after {
@@ -744,9 +747,9 @@ code {
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.75),
     inset 0 -1px 1px rgba(255, 255, 255, 0.28),
-    0 2px 8px rgba(7, 27, 54, 0.06),
-    0 16px 34px -14px rgba(7, 27, 54, 0.24),
-    0 44px 88px -34px rgba(7, 27, 54, 0.42);
+    0 2px 8px rgba(17, 45, 53, 0.06),
+    0 16px 34px -14px rgba(17, 45, 53, 0.24),
+    0 44px 88px -34px rgba(17, 45, 53, 0.42);
 }
 
 /* Specular rim. A gradient ring painted into a 1.5px border band by
@@ -888,8 +891,8 @@ code {
   border-radius: 1.1rem 1.1rem 1.1rem 0.3rem;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 1px 2px rgba(7, 27, 54, 0.05),
-    0 8px 20px -12px rgba(7, 27, 54, 0.3);
+    0 1px 2px rgba(17, 45, 53, 0.05),
+    0 8px 20px -12px rgba(17, 45, 53, 0.3);
 }
 
 .cb-bubble--me {
@@ -899,7 +902,7 @@ code {
   border-radius: 1.1rem 1.1rem 0.3rem 1.1rem;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 1px 2px rgba(7, 27, 54, 0.12),
+    0 1px 2px rgba(17, 45, 53, 0.12),
     0 10px 22px -12px rgba(10, 49, 97, 0.65);
 }
 
@@ -921,7 +924,7 @@ code {
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 1.1rem 1.1rem 1.1rem 0.3rem;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 8px 20px -12px rgba(7, 27, 54, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 8px 20px -12px rgba(17, 45, 53, 0.3);
 }
 
 .cb-typing span {
@@ -1169,7 +1172,7 @@ code {
   height: auto;
   border-radius: 4px;
   background: #fff;
-  box-shadow: 0 1px 2px rgba(7, 27, 54, 0.08), 0 8px 22px -14px rgba(7, 27, 54, 0.35);
+  box-shadow: 0 1px 2px rgba(17, 45, 53, 0.08), 0 8px 22px -14px rgba(17, 45, 53, 0.35);
   /* A canvas cannot be selected, but it can be dragged out as an image. */
   -webkit-user-drag: none;
   user-select: none;
@@ -1183,7 +1186,7 @@ code {
   margin: 0 auto;
   padding: 0.25rem 0.7rem;
   border-radius: 999px;
-  background: rgba(7, 27, 54, 0.78);
+  background: rgba(17, 45, 53, 0.78);
   color: #fff;
   font-size: 0.7rem;
   font-weight: 700;

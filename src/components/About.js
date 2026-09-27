@@ -2,22 +2,22 @@ import React from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { useScholar } from '../lib/useScholar';
+import DomainArt from './DomainArt';
 
-/* All three artworks are 1024x1024, so they crop identically to the 2:1 tile
-   and no per-item object-fit is needed. */
+/* Each tile's art is drawn in the site palette by DomainArt. */
 const researchDomains = [
   {
-    image: '/images/financial-market.webp',
+    art: 'budget',
     title: 'Public Finance & Financial Management',
     blurb: 'Budgeting, financial condition analysis, and the management of public resources.',
   },
   {
-    image: '/images/public-finance.webp',
+    art: 'yield',
     title: 'Financial Markets & Municipal Finance',
     blurb: 'State and local borrowing and the structure of the municipal securities market.',
   },
   {
-    image: '/images/tax-increments.webp',
+    art: 'tif',
     title: 'Tax Increment Finance & Economic Development',
     blurb: 'Development finance tools and their fiscal impact on communities.',
   },
@@ -119,7 +119,7 @@ const About = () => {
               {researchDomains.map((domain, i) => (
                 <article key={domain.title} className="domain ark-card ark-card--lift overflow-hidden">
                   <div className="domain__figure h-32">
-                    <img src={domain.image} alt="" loading="lazy" aria-hidden />
+                    <DomainArt kind={domain.art} />
                     <span className="domain__index">{String(i + 1).padStart(2, '0')}</span>
                   </div>
                   <div className="p-5">
