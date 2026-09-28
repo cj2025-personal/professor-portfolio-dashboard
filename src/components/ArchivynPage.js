@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRightIcon, ArrowDownRightIcon, BookOpenIcon, AcademicCapIcon, SparklesIcon, UsersIcon } from '@heroicons/react/24/outline';
+import { ArrowUpRightIcon, ArrowDownRightIcon, BookOpenIcon, AcademicCapIcon, SparklesIcon, UsersIcon, PauseIcon, PlayIcon } from '@heroicons/react/24/outline';
 import useArchivynContent from '../lib/useArchivynContent';
 import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
@@ -19,6 +19,73 @@ const ProjectIcon = ({ name }) => {
 // order the four groups are written in.
 const AUDIENCE_ICONS = ['reading', 'scholar', 'community', 'explanation'];
 const pad = index => String(index + 1).padStart(2, '0');
+
+// The initial Big Ten rollout visual. The institutional name remains visible
+// if a remote mark ever fails, and the fallback monogram keeps the rail from
+// collapsing while the image is loading.
+const BIG_TEN_UNIVERSITIES = [
+  { name: 'Illinois', fullName: 'University of Illinois Urbana-Champaign', mark: 'ILL', logo: '356' },
+  { name: 'Indiana', fullName: 'Indiana University Bloomington', mark: 'IU', logo: '84' },
+  { name: 'Iowa', fullName: 'University of Iowa', mark: 'IOWA', logo: '2294' },
+  { name: 'Maryland', fullName: 'University of Maryland, College Park', mark: 'UMD', logo: '120' },
+  { name: 'Michigan', fullName: 'University of Michigan', mark: 'M', logo: '130' },
+  { name: 'Michigan State', fullName: 'Michigan State University', mark: 'MSU', logo: '127' },
+  { name: 'Minnesota', fullName: 'University of Minnesota Twin Cities', mark: 'MINN', logo: '135' },
+  { name: 'Nebraska', fullName: 'University of Nebraska–Lincoln', mark: 'NEB', logo: '158' },
+  { name: 'Northwestern', fullName: 'Northwestern University', mark: 'NU', logo: '77' },
+  { name: 'Ohio State', fullName: 'The Ohio State University', mark: 'OSU', logo: '194' },
+  { name: 'Oregon', fullName: 'University of Oregon', mark: 'UO', logo: '2483' },
+  { name: 'Penn State', fullName: 'The Pennsylvania State University', mark: 'PSU', logo: '213' },
+  { name: 'Purdue', fullName: 'Purdue University', mark: 'PU', logo: '2509' },
+  { name: 'Rutgers', fullName: 'Rutgers University–New Brunswick', mark: 'RU', logo: '164' },
+  { name: 'UCLA', fullName: 'University of California, Los Angeles', mark: 'UCLA', logo: '26' },
+  { name: 'USC', fullName: 'University of Southern California', mark: 'USC', logo: '30' },
+  { name: 'Washington', fullName: 'University of Washington', mark: 'UW', logo: '264' },
+  { name: 'Wisconsin', fullName: 'University of Wisconsin–Madison', mark: 'WISC', logo: '275' },
+];
+
+function UniversityMark({ university }) {
+  return <li className="pa-university" title={university.fullName}>
+    <span className="pa-university__mark" aria-hidden="true">
+      <span>{university.mark}</span>
+      <img src={`https://a.espncdn.com/i/teamlogos/ncaa/500/${university.logo}.png`}
+        alt="" width="64" height="64" decoding="async"
+        referrerPolicy="no-referrer"
+        onError={event => event.currentTarget.classList.add('is-unavailable')} />
+    </span>
+    <span className="pa-university__name">{university.name}</span>
+  </li>;
+}
+
+function UniversityRail() {
+  const [paused, setPaused] = useState(false);
+  return <div className={`pa-universities${paused ? ' is-paused' : ''}`}>
+    <div className="pa-universities__head">
+      <div>
+        <p className="pa-kicker">Initial university network</p>
+        <h3 className="pa-subheading">Across the Big Ten</h3>
+      </div>
+      <div className="pa-universities__meta">
+        <p>18 member institutions in the first rollout footprint.</p>
+        <button type="button" onClick={() => setPaused(value => !value)} aria-pressed={paused}>
+          {paused ? <PlayIcon aria-hidden="true" /> : <PauseIcon aria-hidden="true" />}
+          {paused ? 'Resume motion' : 'Pause motion'}
+        </button>
+      </div>
+    </div>
+    <div className="pa-universities__viewport" role="region" aria-label="Big Ten member universities in the initial rollout">
+      <div className="pa-universities__track">
+        <ul className="pa-universities__group">
+          {BIG_TEN_UNIVERSITIES.map(university => <UniversityMark key={university.name} university={university} />)}
+        </ul>
+        <ul className="pa-universities__group" aria-hidden="true">
+          {BIG_TEN_UNIVERSITIES.map(university => <UniversityMark key={university.name} university={university} />)}
+        </ul>
+      </div>
+    </div>
+    <p className="pa-universities__note">Institutional marks identify the universities in the proposed starting network; they do not imply endorsement.</p>
+  </div>;
+}
 
 // Bands fade up as they enter the viewport. The hidden state lives behind the
 // `pa-motion` class, which this hook strips when it cannot animate, so a
@@ -249,6 +316,7 @@ export default function ArchivynPage() {
               <p className="pa-body pa-rollout__copy">{phase.description}</p>
             </li>)}
           </ol>
+          <UniversityRail />
         </div>
         {media('rollout')}
       </div>

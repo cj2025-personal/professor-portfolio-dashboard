@@ -414,6 +414,74 @@
 }
 .pa-rollout__copy { margin: 0; }
 
+/* University network: two identical groups form one continuous, seamless
+   rail. The second is hidden from assistive technology; the complete first
+   group remains the semantic list. */
+.pa-universities {
+  margin-top: clamp(42px, 5vw, 64px); padding-top: clamp(30px, 3.5vw, 44px);
+  border-top: 1px solid var(--pa-line-strong); overflow: hidden;
+}
+.pa-universities__head {
+  display: flex; align-items: end; justify-content: space-between; gap: 28px;
+  margin-bottom: 24px;
+}
+.pa-universities__head .pa-subheading { margin: 10px 0 0; color: var(--pa-text); }
+.pa-universities__meta { display: flex; align-items: center; gap: 18px; }
+.pa-universities__meta > p {
+  max-width: 34ch; margin: 0; text-align: right;
+  font-size: 12px; line-height: 1.65; color: var(--pa-text-faint);
+}
+.pa-universities__meta button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 44px; padding: 0 13px; flex: none;
+  border: 1px solid var(--pa-line-strong); border-radius: 10px;
+  background: var(--pa-paper); color: var(--pa-text-muted);
+  font-size: 11px; font-weight: 700;
+  transition: border-color .2s var(--pa-ease), color .2s var(--pa-ease);
+}
+.pa-universities__meta button:hover { border-color: var(--pa-teal); color: var(--pa-teal); }
+.pa-universities__meta button svg { width: 15px; height: 15px; }
+.pa-universities__viewport {
+  position: relative; overflow: hidden; width: 100%;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+}
+.pa-universities__track {
+  display: flex; gap: 14px; width: max-content; padding: 4px 0 8px;
+  animation: pa-university-scroll 54s linear infinite;
+  will-change: transform;
+}
+.pa-universities__viewport:hover .pa-universities__track { animation-play-state: paused; }
+.pa-universities.is-paused .pa-universities__track { animation-play-state: paused; }
+.pa-universities__group { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.pa-university {
+  display: flex; align-items: center; gap: 13px; flex: 0 0 190px;
+  min-height: 82px; padding: 12px 16px;
+  background: var(--pa-paper); border: 1px solid var(--pa-line); border-radius: 14px;
+  box-shadow: var(--pa-shadow-sm);
+}
+.pa-university__mark {
+  position: relative; display: grid; place-items: center; flex: 0 0 52px;
+  width: 52px; height: 52px; overflow: hidden; border-radius: 12px;
+  background: var(--pa-sage); color: var(--pa-teal); font-size: 9px;
+  font-weight: 800; letter-spacing: .04em;
+}
+.pa-university__mark img {
+  position: absolute; inset: 6px; width: 40px; height: 40px; object-fit: contain;
+  filter: grayscale(1) saturate(0) contrast(.82); opacity: .82;
+}
+.pa-university__mark img.is-unavailable { display: none; }
+.pa-university__name {
+  font-size: 12px; line-height: 1.35; font-weight: 700; color: var(--pa-text);
+}
+.pa-universities__note {
+  margin: 14px 0 0; font-size: 10px; line-height: 1.55;
+  color: var(--pa-text-faint); text-align: center;
+}
+@keyframes pa-university-scroll {
+  to { transform: translateX(calc(-50% - 7px)); }
+}
+
 /* ── Team: an org chart ──────────────────────────────────────
    No card grounds. The people are drawn as nodes joined by a connector, so
    the band carries the reporting shape instead of three mostly empty
@@ -570,6 +638,18 @@
   .pa-scope p + p { border-left: 0; border-top: 1px solid rgba(255, 255, 255, .2); }
   .pa-scope strong { font-size: 29px; }
   .pa-closing__inner { width: calc(100% - 32px); padding-left: 20px; padding-right: 20px; border-radius: 20px; }
+  .pa-universities__head { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .pa-universities__meta { width: 100%; justify-content: space-between; align-items: center; }
+  .pa-universities__meta > p { text-align: left; }
+  .pa-universities__viewport {
+    width: calc(100% + 40px); margin-left: -20px;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+  .pa-university { flex-basis: 164px; min-height: 74px; padding: 10px 12px; }
+  .pa-university__mark { flex-basis: 46px; width: 46px; height: 46px; }
+  .pa-university__mark img { inset: 6px; width: 34px; height: 34px; }
+  .pa-universities__track { animation-duration: 46s; }
 }
 
 /* ── Reduced motion ──────────────────────────────────────────── */
@@ -578,6 +658,10 @@
   .pa-btn, .pa-btn svg, .pa-feature,
   .pa-audience article, .pa-footer a, .pa-footer svg { transition: none; }
   .pa-btn:hover, .pa-feature:hover, .pa-audience article:hover, .pa-btn:hover svg { transform: none; }
+  .pa-universities__track { animation: none; }
+  .pa-universities__group[aria-hidden="true"] { display: none; }
+  .pa-universities__viewport { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .pa-universities__meta button { display: none; }
 }
 
 .proj-arch-mobile-brand {
