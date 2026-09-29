@@ -325,8 +325,14 @@
   transform: scaleX(0); transform-origin: left; animation: pa-showcase-progress 6s linear forwards;
 }
 @keyframes pa-showcase-progress { to { transform: scaleX(1); } }
-.pa-showcase__stage { min-width: 0; }
-.pa-showcase__panel { animation: pa-showcase-in .45s var(--pa-ease) both; }
+/* The stage sits at the list's mid-height. Inside it the scene is a modest
+   panel beside the copy, one media row, so the artwork reads as an accent
+   to the text rather than a billboard above it. */
+.pa-showcase__stage { min-width: 0; align-self: center; }
+.pa-showcase__panel {
+  display: grid; grid-template-columns: minmax(0, 292px) minmax(0, 1fr); gap: clamp(22px, 2.6vw, 36px);
+  align-items: center; animation: pa-showcase-in .45s var(--pa-ease) both;
+}
 @keyframes pa-showcase-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
@@ -334,16 +340,19 @@
 /* The scene is the animation's own 3:2 frame on a soft ground, sized before
    the Lottie arrives so nothing shifts. */
 .pa-showcase__scene {
-  aspect-ratio: 3 / 2; width: 100%; border-radius: 20px; overflow: hidden;
-  background: var(--pa-paper); border: 1px solid var(--pa-line);
+  aspect-ratio: 3 / 2; width: 100%; border-radius: 18px; overflow: hidden;
+  background: var(--pa-paper); border: 1px solid var(--pa-line); box-shadow: var(--pa-shadow-sm);
 }
 .pa-showcase__art { box-sizing: border-box; width: 100%; height: 100%; padding: 3% 4%; }
 .pa-showcase__art svg { display: block; width: 100%; height: 100%; }
-.pa-showcase__copy { max-width: 62ch; margin: 22px 0 0; font-size: 17px; line-height: 1.75; color: var(--pa-text-muted); }
+.pa-showcase__copy { max-width: 48ch; margin: 0; font-size: 16px; line-height: 1.75; color: var(--pa-text-muted); }
 .pa-showcase__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 /* Accordion: the stage opens under the active row. */
 .pa-showcase--accordion { grid-template-columns: minmax(0, 1fr); }
-.pa-showcase--accordion .pa-showcase__panel { padding: 4px 0 24px; border-bottom: 1px solid var(--pa-line); }
+.pa-showcase--accordion .pa-showcase__panel {
+  grid-template-columns: minmax(0, 1fr); gap: 0; padding: 4px 0 24px; border-bottom: 1px solid var(--pa-line);
+}
+.pa-showcase--accordion .pa-showcase__scene { max-width: 260px; }
 .pa-showcase--accordion .pa-showcase__tab.is-active { border-bottom-color: transparent; }
 .pa-showcase--accordion .pa-showcase__copy { margin-top: 16px; font-size: 15px; }
 
