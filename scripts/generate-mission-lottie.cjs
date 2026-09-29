@@ -1,389 +1,277 @@
 // Builds public/media/proj-arch-mission-characters.json, the Lottie shown
-// beside the mission copy on the Proj Arch page.
+// beside the mission copy on the Proj Arch page: "Make academic knowledge
+// part of everyday learning."
 //
 //   node scripts/generate-mission-lottie.cjs
 //
-// The scene: a scholar hands a dense research paper to Veri AI, which turns
-// it into a clear Grade 5 reading card that lands on a learner's tablet.
+// The scene is a living room, not a classroom. A learner sits cross-legged
+// on a floor cushion with a phone. Above them a thought bubble holds a dense
+// idea, which becomes, in turn, things they already care about: a football,
+// a guitar, a plant. On the last one a lightbulb lights, the learner grins,
+// and the cat on the rug looks up. The header animation above shows the
+// archive and the platform; this one shows the person.
 //
-// Everything is drawn from bezier paths rather than primitive circles and
-// boxes, in the flat "editorial character" idiom (no outlines, one shade
-// tone per fill for depth, oversized rounded hands, tapered limbs). Motion
-// uses ease-out-quint for travel, small overshoots for pops, curved spatial
-// paths for the flights, and idle breathing/blinks so nothing ever freezes.
-//
-// Coordinates: the canvas is 640x520 with the floor at y=440. Each character
-// is a small rig (parented layers) drawn in its own local space with the
-// origin on the floor under the character, x to the right, y upward being
-// negative, as in After Effects.
+// Drawn from bezier paths in the flat editorial idiom, with one shade tone
+// per fill for depth, no outlines, ease-out travel, breathing and blinks,
+// and a seamless 10 s loop. Coordinates: 640x520, floor at y=440.
 
 const path = require('path');
 const {
-  E, add, smooth, limb, curve, rect, ellipse, star, crescent, group, createDocument, at,
+  E, bez, smooth, limb, curve, rect, ellipse, star, crescent, group, createDocument,
 } = require('./lib/lottie.cjs');
 
 const END = 300;
 const FLOOR = 440;
 const { layer, oscillate, blink, write } = createDocument({
-  w: 640, h: 520, end: END, name: 'Proj Arch mission — scholar to learner character story',
+  w: 640, h: 520, end: END, name: 'Proj Arch mission — everyday learning at home',
   markers: [
-    { tm: 0, cm: 'research', dr: 0 },
-    { tm: 118, cm: 'adapt', dr: 0 },
-    { tm: 205, cm: 'understand', dr: 0 },
-    { tm: 250, cm: 'rest', dr: 0 },
+    { tm: 0, cm: 'idea', dr: 0 },
+    { tm: 70, cm: 'football', dr: 0 },
+    { tm: 130, cm: 'guitar', dr: 0 },
+    { tm: 190, cm: 'plant', dr: 0 },
+    { tm: 240, cm: 'lightbulb', dr: 0 },
+    { tm: 262, cm: 'rest', dr: 0 },
   ],
 });
 
-// ─── Colour ────────────────────────────────────────────────────────────────
 const C = {
   ink: '#183e48', teal: '#326776', tealSoft: '#5b8a95', tealTint: '#dfe9e6', sage: '#edf2ee',
   cream: '#f6f5f1', paper: '#ffffff', line: '#c7d2cd', lineSoft: '#e2e7e3',
   gold: '#aa8051', goldLight: '#d9b47b', yellow: '#efc66c', coral: '#e77757', coralShade: '#c95d40',
-  coat: '#f2ede3', coatShade: '#dcd4c4', trouser: '#2a4f5a', trouserShade: '#1f3d47',
-  skinA: '#c68a63', skinAShade: '#a9704c', skinB: '#7b4b33', skinBShade: '#5f3826',
-  hair: '#1d2a30', hairShine: '#2f3f47', sneaker: '#f7f5f0', stool: '#d3ddd7', stoolShade: '#b8c6bf',
+  wood: '#d9c7a7', woodShade: '#bfa985', rug: '#e3d9c8', rugShade: '#d3c6b0', cushion: '#5b8a95', cushionShade: '#4a7580',
+  skin: '#c68a63', skinShade: '#a9704c', hair: '#3a2418', hairShine: '#523425',
+  sweater: '#efc66c', sweaterShade: '#d9ac4f', jeans: '#2a4f5a', jeansShade: '#1f3d47', sock: '#f7f5f0',
+  cat: '#8f9aa0', catShade: '#727d83', catEar: '#e8b894', phone: '#1b2f37',
 };
+const overshoot = bez(0.34, 1.56, 0.64, 1);
 
-// ═══════════════════════════════════════════════════════════════════════════
-// Scene constants
-// ═══════════════════════════════════════════════════════════════════════════
-const SCHOLAR = [140, FLOOR];
-const LEARNER = [498, FLOOR];
-const ORB = [332, 200];
+// Frame plan: each thought holds for 60 frames, the bulb for the rest.
+const T = { idea: 0, football: 70, guitar: 130, plant: 190, bulb: 240, rest: 262, reset: 288 };
 
-// Frame plan (30fps, 10s loop)
-//   0–40    both idle; scholar looks at the paper
-//   40–70   scholar raises the paper toward Veri
-//   70–118  paper flies an arc into the orb, shrinking
-//   118–150 orb absorbs it: pulse, ring flare, orbit speeds up
-//   150–205 reading card emerges and arcs down to the learner's tablet
-//   205–240 learner lifts the tablet, spark of understanding, smile
-//   240–300 settle, card fades, paper returns to the scholar's hand for the loop
-const T = {
-  raise: 40, launch: 70, arrive: 118, emit: 150, land: 205, lift: 208, spark: 214, rest: 250, reset: 284,
+const pop = (t, { out, from = 0 } = {}) => {
+  const frames = [[0, [from, from], 'hold'], [t, [from, from], overshoot], [t + 14, [100, 100], 'hold']];
+  if (out !== undefined) frames.push([out, [100, 100], E.in], [out + 8, [from, from], 'hold']);
+  frames.push([END, [from, from]]);
+  return frames;
 };
+const popXYZ = (t, opts) => pop(t, opts).map(([f, v, e]) => [f, [v[0], v[1], 100], e]);
+
+const LEARNER = [330, FLOOR - 8];  // sitting on the cushion
+const BUBBLE = [438, 118];
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Background
+// The room
 // ═══════════════════════════════════════════════════════════════════════════
 layer('backdrop', [
-  group('scholar field', smooth([[30, 150], [120, 62], [230, 90], [262, 200], [236, 330], [150, 420], [50, 400], [6, 300]]), { fill: C.sage }),
-  group('learner field', smooth([[400, 120], [500, 58], [606, 96], [634, 210], [610, 330], [520, 410], [420, 392], [386, 280]]), { fill: C.yellow, opacity: 22 }),
-  group('centre glow', ellipse(ORB[0], ORB[1], 232, 232), { fill: C.cream, opacity: 92 }),
-  group('centre halo', ellipse(ORB[0], ORB[1], 168, 168), { fill: C.tealTint, opacity: 55 }),
+  group('wall wash', smooth([[30, 90], [170, 30], [470, 40], [610, 100], [630, 300], [560, 420], [200, 430], [30, 330]]), { fill: C.cream }),
+  group('window', rect(150, 150, 150, 130, 14), { fill: C.tealTint }),
+  group('window pane', rect(150, 150, 130, 110, 8), { fill: C.sage }),
+  group('window bar v', rect(150, 150, 4, 110, 2), { fill: C.tealTint }),
+  group('window bar h', rect(150, 150, 130, 4, 2), { fill: C.tealTint }),
+  group('sky hill', smooth([[85, 205], [120, 170], [170, 186], [215, 168], [215, 205, 0]]), { fill: C.tealSoft, opacity: 40 }),
+  group('sun', ellipse(190, 122, 24, 24), { fill: C.yellow, opacity: 80 }),
+  group('sill', rect(150, 218, 170, 10, 4), { fill: C.wood }),
+  group('sill pot', smooth([[112, 216, 0], [114, 194, 0], [138, 194, 0], [140, 216, 0]]), { fill: C.coral }),
+  group('sill leaf 1', smooth([[126, 194], [112, 172], [122, 152], [132, 174]]), { fill: C.teal }),
+  group('sill leaf 2', smooth([[126, 194], [140, 176], [146, 156], [130, 172]]), { fill: C.tealSoft }),
+  group('picture', rect(540, 130, 70, 56, 6), { fill: C.paper }),
+  group('picture inner', rect(540, 130, 56, 42, 3), { fill: C.tealTint }),
+  group('picture hill', smooth([[514, 148], [530, 128], [548, 140], [566, 122], [568, 148, 0]]), { fill: C.teal, opacity: 60 }),
+]);
+layer('floor', [
+  group('floor line', rect(320, FLOOR + 2, 620, 2, 1), { fill: C.lineSoft }),
+  group('rug', ellipse(330, FLOOR - 6, 420, 60), { fill: C.rug }),
+  group('rug ring', ellipse(330, FLOOR - 6, 380, 46), { stroke: C.rugShade, width: 3 }),
+  // side table with a mug and books
+  group('table top', rect(556, 330, 92, 10, 4), { fill: C.wood }),
+  group('table leg l', rect(524, 386, 8, 104, 3), { fill: C.woodShade }),
+  group('table leg r', rect(588, 386, 8, 104, 3), { fill: C.woodShade }),
+  group('book stack 1', rect(546, 318, 44, 8, 2), { fill: C.teal }),
+  group('book stack 2', rect(548, 310, 40, 8, 2), { fill: C.gold }),
+  group('book stack 3', rect(544, 302, 46, 8, 2), { fill: C.coral }),
+  group('mug', smooth([[576, 325, 0], [600, 325, 0], [597, 300, 0], [579, 300, 0]]), { fill: C.paper }),
+  group('mug handle', curve([[600, 305], [610, 308], [609, 318], [600, 320]]), { stroke: C.paper, width: 4 }),
+  group('mug band', rect(588, 318, 21, 4, 2), { fill: C.teal }),
+  // floor lamp on the left
+  group('lamp base', ellipse(70, FLOOR - 2, 56, 10), { fill: C.woodShade }),
+  group('lamp pole', rect(70, 300, 6, 280, 3), { fill: C.woodShade }),
+  group('lamp glow', ellipse(70, 150, 150, 110), { fill: C.yellow, opacity: 16 }),
+  group('lamp shade', smooth([[36, 176, 0], [104, 176, 0], [92, 130, 0], [48, 130, 0]]), { fill: C.gold }),
+  group('lamp shade rim', rect(70, 176, 70, 4, 2), { fill: C.goldLight }),
+  // floor cushion
+  group('cushion shade', ellipse(LEARNER[0], FLOOR - 2, 210, 30), { fill: C.cushionShade }),
+  group('cushion', ellipse(LEARNER[0], FLOOR - 14, 210, 42), { fill: C.cushion }),
+  group('cushion top', ellipse(LEARNER[0], FLOOR - 20, 180, 26), { fill: C.tealSoft, opacity: 60 }),
 ]);
 
-layer('floor', [
-  group('floor line', rect(320, FLOOR + 2, 560, 2, 1), { fill: C.lineSoft }),
-  group('scholar shadow', ellipse(SCHOLAR[0] + 6, FLOOR + 2, 150, 20), { fill: C.ink, opacity: 9 }),
-  group('learner shadow', ellipse(LEARNER[0] - 10, FLOOR + 2, 190, 22), { fill: C.ink, opacity: 9 }),
-  group('plant pot', smooth([[596, 442, 0], [600, 402, 0], [630, 402, 0], [634, 442, 0]]), { fill: C.tealTint }),
-  group('plant pot rim', rect(615, 402, 40, 8, 4), { fill: C.line }),
-  group('leaf 1', smooth([[615, 400], [598, 372], [604, 342], [622, 360], [626, 392]]), { fill: C.tealSoft }),
-  group('leaf 2', smooth([[617, 400], [640, 378], [646, 350], [628, 356], [620, 382]]), { fill: C.teal }),
-  group('leaf 3', smooth([[615, 398], [610, 366], [618, 336], [630, 366], [622, 392]]), { fill: C.teal }),
-], { p: [0, 0, 0] });
-
 // ═══════════════════════════════════════════════════════════════════════════
-// Veri AI orb at the centre of the exchange
-// ═══════════════════════════════════════════════════════════════════════════
-{
-  const pulse = [[0, [100, 100, 100], E.soft], [T.arrive - 6, [100, 100, 100], E.out], [T.arrive + 6, [90, 90, 100], E.out], [T.arrive + 20, [112, 112, 100], E.soft], [T.arrive + 34, [100, 100, 100], E.soft], [T.emit - 6, [104, 104, 100], E.out], [T.emit + 8, [96, 96, 100], E.soft], [T.emit + 22, [100, 100, 100], E.soft], [END, [100, 100, 100]]];
-  layer('veri orbit', [
-    group('orbit ring', ellipse(0, 0, 148, 148), { stroke: C.gold, width: 2, opacity: 45, dash: [3, 9] }),
-    group('orbit dot', ellipse(74, 0, 9, 9), { fill: C.gold }),
-    group('orbit dot 2', ellipse(-74, 0, 6, 6), { fill: C.goldLight }),
-  ], {
-    p: [ORB[0], ORB[1], 0],
-    r: [[0, 0, E.linear], [T.arrive, 120, E.inOut], [T.emit, 400, E.linear], [END, 720]],
-    s: [[0, [100, 100, 100], E.soft], [T.arrive, [100, 100, 100], E.out], [T.arrive + 14, [110, 110, 100], E.soft], [T.emit, [100, 100, 100], E.soft], [END, [100, 100, 100]]],
-  });
-  layer('veri flare', [
-    group('flare', ellipse(0, 0, 140, 140), { stroke: C.goldLight, width: 3, opacity: 80 }),
-  ], {
-    p: [ORB[0], ORB[1], 0],
-    s: [[0, [60, 60, 100], 'hold'], [T.arrive, [60, 60, 100], E.out], [T.arrive + 30, [150, 150, 100], 'hold'], [T.emit, [60, 60, 100], E.out], [T.emit + 30, [140, 140, 100], 'hold'], [END, [60, 60, 100]]],
-    o: [[0, 0, 'hold'], [T.arrive, 90, E.out], [T.arrive + 30, 0, 'hold'], [T.emit, 70, E.out], [T.emit + 30, 0, 'hold'], [END, 0]],
-  });
-  layer('veri core', [
-    group('outer', ellipse(0, 0, 112, 112), { fill: C.tealTint }),
-    group('mid', ellipse(0, 0, 92, 92), { fill: C.teal }),
-    group('inner', ellipse(0, 0, 74, 74), { fill: C.ink }),
-    group('inner shine', smooth([[-22, -22], [-4, -32], [14, -26, 0.5], [-8, -12, 0.5], [-26, -4]]), { fill: C.teal, opacity: 55 }),
-    group('spark', star(4, 22, 7), { fill: C.paper }),
-    group('spark core', ellipse(0, 0, 8, 8), { fill: C.gold }),
-  ], {
-    p: [ORB[0], ORB[1], 0],
-    s: pulse,
-    r: [[0, 0, E.soft], [T.arrive - 6, 0, E.out], [T.arrive + 34, 90, E.soft], [T.emit + 22, 90, 'hold'], [T.reset, 90, E.inOut], [END, 0]],
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Scholar (left, facing right)
-// ═══════════════════════════════════════════════════════════════════════════
-{
-  const O = SCHOLAR;
-  const bob = oscillate([O[0], O[1], 0], [O[0], O[1] - 3, 0], 100);
-  const root = layer('scholar', [
-    // legs and shoes
-    group('back leg', limb([-18, -112], [-14, -22], 30, 24), { fill: C.trouserShade }),
-    group('back shoe', smooth([[-30, -22, 0.4], [-20, -34], [4, -30], [16, -20], [16, -4, 0], [-30, -4, 0]]), { fill: C.trouserShade }),
-    group('front leg', limb([16, -112], [18, -22], 30, 24), { fill: C.trouser }),
-    group('front shoe', smooth([[2, -22, 0.4], [12, -34], [38, -30], [54, -18], [52, -4, 0], [2, -4, 0]]), { fill: C.ink }),
-    group('front shoe sole', rect(28, -6, 52, 6, 3), { fill: C.hair }),
-    // back arm, mostly hidden behind the coat
-    group('back sleeve', limb([-44, -212], [-52, -140], 26, 20), { fill: C.coatShade }),
-    group('back hand', ellipse(-54, -128, 20, 20), { fill: C.skinAShade }),
-    // coat body
-    group('coat', smooth([[-52, -222], [-56, -170], [-50, -104, 0.6], [50, -102, 0.6], [56, -172], [50, -224], [18, -238, 0.4], [-16, -238, 0.4]]), { fill: C.coat }),
-    group('coat shade', crescent([[-52, -222], [-56, -170], [-50, -104], [50, -102], [56, -172], [50, -224], [18, -238], [-16, -238]], 0, 2, [0, -170], 12), { fill: C.coatShade }),
-    group('coat hem', rect(0, -108, 100, 4, 2), { fill: C.coatShade, opacity: 60 }),
-    // shirt and lapels
-    group('shirt', smooth([[-18, -238, 0], [-6, -184], [6, -184], [18, -238, 0]]), { fill: C.teal }),
-    group('lapel left', smooth([[-20, -238, 0], [-8, -190, 0], [-22, -200, 0], [-30, -226, 0]]), { fill: C.coatShade }),
-    group('lapel right', smooth([[20, -238, 0], [8, -190, 0], [24, -198, 0], [32, -226, 0]]), { fill: C.coatShade }),
-    group('button', ellipse(4, -164, 5, 5), { fill: C.coatShade }),
-    group('pocket', rect(-26, -136, 26, 3, 1.5), { fill: C.coatShade }),
-    // neck
-    group('neck', rect(4, -240, 22, 26, 8), { fill: C.skinA }),
-    group('neck shade', ellipse(4, -232, 24, 12), { fill: C.skinAShade }),
-  ], { p: bob });
-
-  // Head, parented so a nod moves everything on it.
-  const headPoints = [[0, -318], [24, -312], [37, -292], [36, -268], [26, -246], [8, -236], [-14, -240], [-30, -256], [-36, -282], [-30, -306]];
-  const head = layer('scholar head', [
-    group('ear', ellipse(-34, -272, 14, 18), { fill: C.skinA }),
-    group('ear inner', ellipse(-33, -272, 7, 9), { fill: C.skinAShade }),
-    group('face', smooth(headPoints), { fill: C.skinA }),
-    group('face shade', crescent(headPoints, 6, 9, [0, -278], 9), { fill: C.skinAShade }),
-    group('blush', ellipse(28, -262, 14, 8), { fill: C.coral, opacity: 22 }),
-    group('brow left', curve([[-14, -290], [-6, -294], [2, -292]]), { stroke: C.hair, width: 2.6 }),
-    group('brow right', curve([[14, -292], [22, -295], [30, -291]]), { stroke: C.hair, width: 2.6 }),
-    group('eye left', ellipse(-6, -280, 4.6, 6), { fill: C.ink, transform: { a: [-6, -280], p: [-6, -280], s: blink([80, 214]) } }),
-    group('eye right', ellipse(22, -280, 4.6, 6), { fill: C.ink, transform: { a: [22, -280], p: [22, -280], s: blink([80, 214]) } }),
-    group('glasses', [ellipse(-6, -279, 24, 22), ellipse(22, -279, 24, 22)], { stroke: C.ink, width: 2.4 }),
-    group('bridge', curve([[6, -281], [8, -284], [10, -281]]), { stroke: C.ink, width: 2.2 }),
-    group('temple', curve([[-18, -281], [-26, -278], [-32, -274]]), { stroke: C.ink, width: 2.2 }),
-    group('nose', curve([[16, -270], [20, -262], [14, -258]]), { stroke: C.skinAShade, width: 2.2 }),
-    group('smile', curve([[2, -250], [12, -246], [22, -250]]), { stroke: C.skinAShade, width: 2.4 }),
-    group('hair', smooth([[-36, -268], [-38, -296], [-24, -318], [2, -328], [28, -320], [40, -300], [38, -292, 0.4], [26, -300], [10, -297], [-6, -304], [-20, -296], [-30, -280]]), { fill: C.hair }),
-    group('hair shine', curve([[-14, -312], [4, -318], [22, -312]]), { stroke: C.hairShine, width: 3 }),
-  ], {
-    a: [4, -236, 0], p: [4, -236, 0],
-    r: [[0, -2, E.soft], [T.raise, -2, E.out], [T.raise + 22, 4, E.soft], [T.arrive, 4, E.inOut], [T.arrive + 30, 1, E.soft], [T.land, 3, E.inOut], [T.rest, -1, E.soft], [END, -2]],
-  }, { parent: root });
-  void head;
-
-  // Front arm: pivots at the shoulder, presents and raises the paper.
-  const pivot = [40, -214];
-  const armRest = 18;
-  const armRaised = -36;
-  const arm = layer('scholar front arm', [
-    // A shade rim behind the sleeve separates it from the identical coat.
-    group('sleeve rim', limb([-2, 2], [12, 60], 36, 30), { fill: C.coatShade }),
-    group('forearm rim', limb([12, 60], [60, 38], 30, 26), { fill: C.coatShade }),
-    group('sleeve', limb([2, -2], [14, 56], 30, 24), { fill: C.coat }),
-    group('forearm', limb([14, 56], [60, 34], 24, 20), { fill: C.coat }),
-    group('sleeve fold', curve([[6, 34], [12, 40], [20, 40]]), { stroke: C.coatShade, width: 2.4 }),
-    group('cuff', limb([52, 38], [60, 34], 22, 20), { fill: C.coatShade }),
-    group('hand', smooth([[60, 18], [76, 16], [88, 28], [82, 48], [66, 52], [54, 40]]), { fill: C.skinA }),
-    group('hand shade', ellipse(66, 44, 14, 8), { fill: C.skinAShade, opacity: 60 }),
-  ], {
-    a: [0, 0, 0], p: [pivot[0], pivot[1], 0],
-    r: [[0, armRest, E.soft], [T.raise, armRest, E.out], [T.launch, armRaised, E.out], [T.launch + 12, armRaised + 4, E.soft], [T.arrive + 12, armRaised + 4, E.inOut], [T.arrive + 46, armRest, E.soft], [END, armRest]],
-  }, { parent: root });
-
-  // The paper in hand (a child of the arm) and its world-space twin that flies.
-  const paperShapes = [
-    group('sheet shadow', rect(2, 4, 92, 118, 8), { fill: C.ink, opacity: 8 }),
-    group('sheet', rect(0, 0, 92, 118, 8), { fill: C.paper }),
-    group('sheet edge', rect(0, 0, 92, 118, 8), { stroke: C.lineSoft, width: 1.5 }),
-    group('title', rect(-16, -44, 50, 7, 3.5), { fill: C.ink }),
-    group('byline', rect(-24, -32, 34, 4, 2), { fill: C.line }),
-    ...[-20, -12, -4, 4, 12, 20].map((y, k) => group(`dense line ${k + 1}`, rect(k % 2 ? -4 : -2, y, k % 2 ? 68 : 72, 3.6, 1.8), { fill: C.line })),
-    group('chart axis', rect(-4, 43, 72, 1.5, 0.75), { fill: C.line }),
-    group('bar 1', rect(-26, 36, 8, 12, 2), { fill: C.teal }),
-    group('bar 2', rect(-12, 32, 8, 20, 2), { fill: C.gold }),
-    group('bar 3', rect(2, 28, 8, 28, 2), { fill: C.ink }),
-    group('bar 4', rect(16, 34, 8, 16, 2), { fill: C.tealSoft }),
-  ];
-  const handLocal = [76, 22];  // where the paper sits in the arm's local space
-  const heldOpacity = [[0, 100, 'hold'], [T.launch - 1, 100, 'hold'], [T.launch, 0, 'hold'], [T.reset, 0, E.out], [T.reset + 12, 100, 'hold'], [END, 100]];
-  // The hand grips the paper's lower-left corner; the thumb lies over it.
-  const paperAnchor = [0, 44];
-  layer('scholar paper in hand', paperShapes, {
-    a: [paperAnchor[0], paperAnchor[1], 0], p: [handLocal[0], handLocal[1], 0], r: -8, s: [88, 88, 100], o: heldOpacity,
-  }, { parent: arm });
-  layer('scholar thumb', [
-    group('thumb', smooth([[70, 30], [74, 18], [82, 18], [84, 30], [76, 38]]), { fill: C.skinA }),
-    group('thumb crease', curve([[74, 36], [80, 32]]), { stroke: C.skinAShade, width: 1.8 }),
-  ], { o: heldOpacity }, { parent: arm });
-
-  // Where the hand is in world space once the arm has rotated to armRaised.
-  const rotate = ([x, y], deg) => {
-    const rad = (deg * Math.PI) / 180;
-    return [x * Math.cos(rad) - y * Math.sin(rad), x * Math.sin(rad) + y * Math.cos(rad)];
-  };
-  const launchAt = at(add(at(O, pivot), [0, -2]), rotate(handLocal, armRaised));
-  layer('flying paper', paperShapes, {
-    a: [paperAnchor[0], paperAnchor[1], 0],
-    p: [
-      [0, [launchAt[0], launchAt[1], 0], 'hold'],
-      [T.launch, [launchAt[0], launchAt[1], 0], E.inOut, { to: [30, -90], ti: [-40, -6] }],
-      [T.arrive, [ORB[0], ORB[1], 0], 'hold'],
-      [END, [ORB[0], ORB[1], 0]],
-    ],
-    r: [[0, armRaised - 8, 'hold'], [T.launch, armRaised - 8, E.inOut], [T.arrive, 12, 'hold'], [END, 12]],
-    s: [[0, [88, 88, 100], 'hold'], [T.launch, [88, 88, 100], E.in], [T.arrive, [18, 18, 100], 'hold'], [END, [18, 18, 100]]],
-    o: [[0, 0, 'hold'], [T.launch, 100, 'hold'], [T.arrive - 10, 100, E.in], [T.arrive, 0, 'hold'], [END, 0]],
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Learner (right, seated on a stool, facing left)
+// The learner, cross-legged, phone in both hands
 // ═══════════════════════════════════════════════════════════════════════════
 {
   const O = LEARNER;
-  const bob = oscillate([O[0], O[1], 0], [O[0], O[1] - 2, 0], 75, 1);
+  const bob = oscillate([O[0], O[1], 0], [O[0], O[1] - 3, 0], 100);
   const root = layer('learner', [
-    // stool
-    group('stool leg back', rect(30, -32, 10, 62, 4), { fill: C.stoolShade }),
-    group('stool leg front', rect(-30, -32, 10, 62, 4), { fill: C.stoolShade }),
-    group('stool seat', rect(0, -70, 112, 24, 12), { fill: C.stool }),
-    group('stool seat shade', rect(0, -62, 112, 8, 4), { fill: C.stoolShade }),
-    // back leg (farther from viewer)
-    group('back thigh', limb([14, -92], [-38, -86], 30, 26), { fill: C.trouserShade }),
-    group('back shin', limb([-38, -86], [-40, -20], 26, 22), { fill: C.trouserShade }),
-    group('back sneaker', smooth([[-28, -22, 0.4], [-40, -34], [-66, -30], [-80, -16], [-78, -4, 0], [-28, -4, 0]]), { fill: C.line }),
-    // hoodie body
-    group('hoodie', smooth([[-44, -176], [-50, -130], [-48, -84, 0.5], [50, -82, 0.5], [54, -130], [46, -178], [16, -190, 0.4], [-14, -190, 0.4]]), { fill: C.coral }),
-    group('hoodie shade', crescent([[-44, -176], [-50, -130], [-48, -84], [50, -82], [54, -130], [46, -178], [16, -190], [-14, -190]], 3, 5, [0, -130], 12), { fill: C.coralShade }),
-    group('pocket', smooth([[-32, -112, 0], [30, -110, 0], [26, -88, 0], [-28, -90, 0]]), { fill: C.coralShade, opacity: 60 }),
-    group('hood', smooth([[-22, -196], [0, -206], [24, -196], [30, -180], [4, -174], [-26, -180]]), { fill: C.coralShade }),
-    group('drawstring left', curve([[-8, -184], [-10, -170], [-8, -158]]), { stroke: C.cream, width: 2 }),
-    group('drawstring right', curve([[8, -184], [10, -172], [12, -160]]), { stroke: C.cream, width: 2 }),
-    // front leg
-    group('front thigh', limb([10, -96], [-46, -90], 32, 28), { fill: C.trouser }),
-    group('front shin', limb([-46, -90], [-52, -20], 28, 24), { fill: C.trouser }),
-    group('front sneaker', smooth([[-40, -22, 0.4], [-50, -36], [-78, -32], [-94, -16], [-92, -4, 0], [-40, -4, 0]]), { fill: C.sneaker }),
-    group('front sneaker sole', smooth([[-94, -12, 0], [-40, -10, 0], [-40, -4, 0], [-92, -4, 0]]), { fill: C.line }),
-    group('sneaker stripe', curve([[-84, -22], [-70, -24], [-56, -20]]), { stroke: C.coral, width: 3 }),
-    // neck
-    group('neck', rect(-2, -192, 22, 26, 8), { fill: C.skinB }),
-    group('neck shade', ellipse(-2, -184, 24, 12), { fill: C.skinBShade }),
-    // back arm (far side) reaching to the tablet
-    group('back sleeve', limb([36, -166], [4, -122], 28, 22), { fill: C.coralShade }),
-    group('back hand', ellipse(-6, -118, 22, 22), { fill: C.skinBShade }),
+    // crossed legs: back shin, both thighs, front shin, feet
+    group('back shin', limb([-60, -50], [26, -30], 28, 24), { fill: C.jeansShade }),
+    group('back sock', smooth([[16, -44, 0.4], [30, -50], [50, -42], [56, -28], [46, -16, 0], [18, -18, 0]]), { fill: C.sock }),
+    group('left thigh', limb([-16, -100], [-78, -56], 36, 30), { fill: C.jeans }),
+    group('right thigh', limb([18, -100], [80, -56], 36, 30), { fill: C.jeans }),
+    group('front shin', limb([80, -56], [-20, -28], 28, 24), { fill: C.jeans }),
+    group('front sock', smooth([[-10, -42, 0.4], [-26, -50], [-48, -42], [-56, -28], [-46, -16, 0], [-14, -18, 0]]), { fill: C.sock }),
+    group('front sock stripe', curve([[-46, -36], [-36, -40], [-24, -36]]), { stroke: C.coral, width: 3 }),
+    // torso: a chunky sweater
+    group('sweater', smooth([[-52, -216], [-58, -160], [-50, -96, 0.6], [50, -94, 0.6], [58, -162], [52, -218], [18, -232, 0.4], [-18, -232, 0.4]]), { fill: C.sweater }),
+    group('sweater shade', crescent([[-52, -216], [-58, -160], [-50, -96], [50, -94], [58, -162], [52, -218], [18, -232], [-18, -232]], 3, 5, [0, -160], 12), { fill: C.sweaterShade }),
+    group('sweater hem', rect(0, -100, 100, 6, 3), { fill: C.sweaterShade, opacity: 70 }),
+    group('collar', smooth([[-20, -232, 0.3], [0, -220], [20, -232, 0.3], [0, -238]]), { fill: C.sweaterShade }),
+    group('neck', rect(0, -236, 22, 24, 8), { fill: C.skin }),
+    group('neck shade', ellipse(0, -228, 24, 12), { fill: C.skinShade }),
   ], { p: bob });
 
-  // Head: tilted toward the centre while waiting, nods on understanding.
-  const headPoints = [[-4, -270], [-30, -262], [-40, -240], [-38, -216], [-26, -196], [-6, -188], [16, -192], [32, -208], [36, -232], [30, -256]];
-  // Curly crown: a base cap plus a ring of overlapping curls of varying size.
-  const crownCentre = [-2, -240];
-  const cap = smooth([[-44, -226], [-42, -262], [-24, -282], [-2, -288], [22, -282], [40, -262], [46, -226, 0.4], [30, -246], [-2, -256], [-36, -246, 0.4]]);
-  const curls = [];
-  [[186, 48, 24], [206, 50, 28], [228, 51, 32], [250, 52, 34], [272, 52, 36], [294, 51, 34], [316, 50, 32], [338, 48, 28], [356, 46, 24]].forEach(([deg, radius, size], k) => {
-    const rad = (deg * Math.PI) / 180;
-    curls.push(group(`curl ${k + 1}`, ellipse(crownCentre[0] + Math.cos(rad) * radius, crownCentre[1] + Math.sin(rad) * radius, size, size), { fill: C.hair }));
-  });
-  curls.push(group('curl side', ellipse(42, -230, 24, 26), { fill: C.hair }));
-  curls.push(group('curl nape', ellipse(36, -208, 16, 18), { fill: C.hair }));
+  const headPoints = [[0, -318], [26, -310], [38, -290], [36, -264], [26, -242], [6, -234], [-16, -238], [-32, -256], [-38, -282], [-30, -306]];
   layer('learner head', [
-    group('ear', ellipse(36, -228, 14, 18), { fill: C.skinB }),
-    group('ear inner', ellipse(35, -228, 7, 9), { fill: C.skinBShade }),
-    group('face', smooth(headPoints), { fill: C.skinB }),
-    group('face shade', crescent(headPoints, 6, 9, [-2, -230], 9), { fill: C.skinBShade }),
-    group('blush', ellipse(-28, -220, 14, 8), { fill: C.coral, opacity: 30 }),
-    group('brow left', curve([[-30, -240], [-22, -244], [-14, -241]]), { stroke: C.hair, width: 2.6 }),
-    group('brow right', curve([[-2, -242], [6, -246], [14, -242]]), { stroke: C.hair, width: 2.6 }),
-    group('eye left', ellipse(-22, -228, 5.2, 7), { fill: C.ink, transform: { a: [-22, -228], p: [-22, -228], s: blink([124, 232]) } }),
-    group('eye right', ellipse(6, -228, 5.2, 7), { fill: C.ink, transform: { a: [6, -228], p: [6, -228], s: blink([124, 232]) } }),
-    group('eye light left', ellipse(-20.5, -230, 1.8, 1.8), { fill: C.paper }),
-    group('eye light right', ellipse(7.5, -230, 1.8, 1.8), { fill: C.paper }),
-    group('nose', curve([[-16, -218], [-20, -210], [-14, -207]]), { stroke: C.skinBShade, width: 2.2 }),
-    group('smile', curve([[-22, -200], [-10, -196], [2, -200]]), {
-      stroke: C.skinBShade, width: 2.4,
-      transform: { o: [[0, 100, 'hold'], [T.spark, 100, 'hold'], [T.spark + 1, 0, 'hold'], [T.reset, 0, 'hold'], [T.reset + 1, 100, 'hold'], [END, 100]] },
-    }),
-    group('grin', smooth([[-24, -202, 0.5], [-10, -204], [4, -202, 0.5], [-4, -192], [-16, -192]]), {
-      fill: C.paper,
-      transform: { o: [[0, 0, 'hold'], [T.spark, 0, 'hold'], [T.spark + 1, 100, 'hold'], [T.reset, 100, 'hold'], [T.reset + 1, 0, 'hold'], [END, 0]] },
-    }),
-    group('grin lip', curve([[-24, -202], [-10, -204], [4, -202]]), {
-      stroke: C.skinBShade, width: 2,
-      transform: { o: [[0, 0, 'hold'], [T.spark, 0, 'hold'], [T.spark + 1, 100, 'hold'], [T.reset, 100, 'hold'], [T.reset + 1, 0, 'hold'], [END, 0]] },
-    }),
-    group('hair cap', cap, { fill: C.hair }),
-    ...curls,
-    group('hair shine 1', ellipse(-18, -286, 9, 9), { fill: C.hairShine }),
-    group('hair shine 2', ellipse(10, -292, 7, 7), { fill: C.hairShine }),
-    group('hair shine 3', ellipse(34, -270, 6, 6), { fill: C.hairShine }),
+    group('ear left', ellipse(-36, -274, 14, 18), { fill: C.skin }),
+    group('ear right', ellipse(36, -274, 14, 18), { fill: C.skin }),
+    group('face', smooth(headPoints), { fill: C.skin }),
+    group('face shade', crescent(headPoints, 6, 9, [0, -278], 9), { fill: C.skinShade }),
+    group('blush l', ellipse(-22, -262, 12, 7), { fill: C.coral, opacity: 26 }),
+    group('blush r', ellipse(24, -262, 12, 7), { fill: C.coral, opacity: 26 }),
+    group('brow left', curve([[-22, -292], [-14, -296], [-6, -293]]), { stroke: C.hair, width: 2.6 }),
+    group('brow right', curve([[8, -293], [16, -296], [24, -292]]), { stroke: C.hair, width: 2.6 }),
+    group('eye left', ellipse(-14, -280, 5, 7), { fill: C.ink, transform: { a: [-14, -280], p: [-14, -280], s: blink([90, 200]) } }),
+    group('eye right', ellipse(16, -280, 5, 7), { fill: C.ink, transform: { a: [16, -280], p: [16, -280], s: blink([90, 200]) } }),
+    group('eye light l', ellipse(-12.5, -282, 1.8, 1.8), { fill: C.paper }),
+    group('eye light r', ellipse(17.5, -282, 1.8, 1.8), { fill: C.paper }),
+    group('nose', curve([[2, -272], [4, -264], [-2, -261]]), { stroke: C.skinShade, width: 2.2 }),
+    group('smile', curve([[-10, -250], [1, -246], [12, -250]]), { stroke: C.skinShade, width: 2.4, transform: { o: [[0, 100, 'hold'], [T.bulb + 8, 100, 'hold'], [T.bulb + 9, 0, 'hold'], [T.reset, 0, 'hold'], [T.reset + 1, 100, 'hold'], [END, 100]] } }),
+    group('grin', smooth([[-13, -252, 0.5], [1, -254], [14, -252, 0.5], [7, -242], [-5, -242]]), { fill: C.paper, transform: { o: [[0, 0, 'hold'], [T.bulb + 8, 0, 'hold'], [T.bulb + 9, 100, 'hold'], [T.reset, 100, 'hold'], [T.reset + 1, 0, 'hold'], [END, 0]] } }),
+    group('grin lip', curve([[-13, -252], [1, -254], [14, -252]]), { stroke: C.skinShade, width: 2, transform: { o: [[0, 0, 'hold'], [T.bulb + 8, 0, 'hold'], [T.bulb + 9, 100, 'hold'], [T.reset, 100, 'hold'], [T.reset + 1, 0, 'hold'], [END, 0]] } }),
+    // hair: a soft cap with a bun on top
+    group('hair', smooth([[-38, -276], [-40, -302], [-26, -322], [0, -330], [26, -322], [40, -302], [38, -278, 0.4], [28, -294], [12, -302], [-6, -300], [-22, -294], [-32, -284]]), { fill: C.hair }),
+    group('bun', ellipse(6, -336, 40, 34), { fill: C.hair }),
+    group('bun shine', ellipse(-2, -344, 12, 8), { fill: C.hairShine }),
+    group('hair tie', rect(6, -322, 22, 5, 2.5), { fill: C.coral }),
   ], {
-    a: [-2, -190, 0], p: [-2, -190, 0],
-    r: [[0, 3, E.soft], [T.arrive, 3, E.inOut], [T.arrive + 24, -5, E.soft], [T.land, -5, E.out], [T.land + 8, 4, E.out], [T.spark + 20, -2, E.soft], [T.rest + 20, 2, E.soft], [END, 3]],
+    a: [0, -234, 0], p: [0, -234, 0],
+    r: [[0, -3, E.soft], [T.football, -3, E.inOut], [T.football + 20, 3, E.soft], [T.guitar, 3, E.inOut], [T.guitar + 20, -4, E.soft], [T.plant, -4, E.inOut], [T.plant + 20, 2, E.soft], [T.bulb, 2, E.out], [T.bulb + 10, -8, E.out], [T.bulb + 22, -2, E.soft], [END, -3]],
   }, { parent: root });
 
-  // Front arm and tablet share one layer so the lift moves both together.
-  const lift = [[0, [0, 0, 0], E.soft], [T.land, [0, 0, 0], E.out], [T.lift + 10, [4, -16, 0], E.out], [T.lift + 20, [3, -12, 0], E.soft], [T.rest + 20, [3, -12, 0], E.inOut], [T.reset, [0, 0, 0], 'hold'], [END, [0, 0, 0]]];
-  const tablet = layer('learner tablet arm', [
-    group('tablet shadow', rect(-40, -116, 94, 66, 8), { fill: C.ink, opacity: 10 }),
-    group('tablet', rect(-42, -120, 94, 66, 8), { fill: C.ink }),
-    group('screen', rect(-42, -120, 82, 54, 4), { fill: C.paper }),
-    group('screen tint', rect(-42, -120, 82, 54, 4), { fill: C.tealTint, opacity: 45 }),
-    group('front sleeve', limb([-40, -166], [-62, -126], 28, 22), { fill: C.coral }),
-    group('front sleeve fold', curve([[-58, -142], [-54, -136], [-48, -136]]), { stroke: C.coralShade, width: 2.2 }),
-    group('front hand', smooth([[-70, -128], [-58, -134], [-46, -126], [-48, -112], [-62, -108], [-72, -116]]), { fill: C.skinB }),
-    group('front thumb', ellipse(-52, -130, 9, 11), { fill: C.skinBShade }),
-  ], { p: lift }, { parent: root });
+  // Arms and the phone, one layer so they move together.
+  layer('learner arms', [
+    group('left sleeve', limb([-44, -206], [-30, -150], 30, 24), { fill: C.sweater }),
+    group('right sleeve', limb([44, -206], [30, -150], 30, 24), { fill: C.sweater }),
+    group('left fold', curve([[-42, -186], [-36, -180], [-30, -182]]), { stroke: C.sweaterShade, width: 2.2 }),
+    group('right fold', curve([[42, -186], [36, -180], [30, -182]]), { stroke: C.sweaterShade, width: 2.2 }),
+    group('phone', rect(0, -150, 62, 96, 10), { fill: C.phone }),
+    group('screen', rect(0, -150, 52, 84, 6), { fill: C.paper }),
+    group('screen bar', rect(0, -184, 40, 6, 3), { fill: C.sage }),
+    group('screen line 1', rect(-4, -166, 36, 4, 2), { fill: C.ink }),
+    group('screen line 2', rect(-6, -156, 32, 4, 2), { fill: C.line }),
+    group('screen line 3', rect(-2, -146, 40, 4, 2), { fill: C.line }),
+    group('screen mark', rect(-8, -134, 28, 6, 3), { fill: C.yellow }),
+    group('left hand', smooth([[-40, -160], [-26, -168], [-16, -160], [-18, -142], [-32, -138], [-42, -148]]), { fill: C.skin }),
+    group('right hand', smooth([[40, -160], [26, -168], [16, -160], [18, -142], [32, -138], [42, -148]]), { fill: C.skin }),
+    group('left thumb', ellipse(-20, -152, 9, 12), { fill: C.skinShade }),
+    group('right thumb', ellipse(20, -152, 9, 12), { fill: C.skinShade }),
+  ], { p: [[0, [0, 0, 0], E.soft], [T.bulb, [0, 0, 0], E.out], [T.bulb + 10, [0, -8, 0], E.out], [T.bulb + 20, [0, -5, 0], 'hold'], [T.reset, [0, -5, 0], E.inOut], [END, [0, 0, 0]]] }, { parent: root });
+}
 
-  // The reading card lands on the screen; it lives in world space so its
-  // flight can be one clean arc from the orb. After landing it follows the
-  // tablet lift via matching keyframes.
-  const landAt = at(O, [-44, -124]);
-  const cardShapes = [
-    group('card shadow', rect(2, 3, 78, 50, 6), { fill: C.ink, opacity: 10 }),
-    group('card', rect(0, 0, 78, 50, 6), { fill: C.paper }),
-    group('level pill', rect(-18, -16, 34, 10, 5), { fill: C.teal }),
-    group('level dot 1', ellipse(-27, -16, 3, 3), { fill: C.paper }),
-    group('level dot 2', ellipse(-21, -16, 3, 3), { fill: C.paper }),
-    group('level dot 3', ellipse(-15, -16, 3, 3), { fill: C.paper }),
-    group('line 1', rect(-2, -2, 62, 6, 3), { fill: C.ink }),
-    group('line 2', rect(-8, 9, 50, 6, 3), { fill: C.teal }),
-    group('highlight', rect(-16, 19, 34, 7, 3.5), { fill: C.yellow }),
-    group('check', curve([[18, 16], [23, 21], [32, 11]]), { stroke: C.teal, width: 2.6 }),
-  ];
-  layer('reading card', cardShapes, {
-    p: [
-      [0, [ORB[0], ORB[1], 0], 'hold'],
-      [T.emit, [ORB[0], ORB[1], 0], E.inOut, { to: [70, -80], ti: [-30, -30] }],
-      [T.land, [landAt[0], landAt[1], 0], E.out],
-      [T.lift + 10, [landAt[0] + 4, landAt[1] - 16, 0], E.out],
-      [T.lift + 20, [landAt[0] + 3, landAt[1] - 12, 0], E.soft],
-      [T.rest + 20, [landAt[0] + 3, landAt[1] - 12, 0], E.inOut],
-      [T.reset, [landAt[0], landAt[1], 0], 'hold'],
-      [END, [ORB[0], ORB[1], 0]],
-    ],
-    r: [[0, 24, 'hold'], [T.emit, 24, E.out], [T.land, -4, E.out], [T.lift + 10, -7, E.soft], [T.rest, -6, 'hold'], [END, -6]],
-    s: [[0, [16, 16, 100], 'hold'], [T.emit, [16, 16, 100], E.out], [T.land, [104, 104, 100], E.out], [T.land + 10, [100, 100, 100], 'hold'], [END, [100, 100, 100]]],
-    o: [[0, 0, 'hold'], [T.emit, 0, E.out], [T.emit + 10, 100, 'hold'], [T.rest + 24, 100, E.inOut], [T.reset, 0, 'hold'], [END, 0]],
-  });
-
-  // Spark of understanding above the learner.
-  const sparkAt = at(O, [-52, -300]);
-  layer('understanding spark', [
-    group('glow', ellipse(0, 0, 44, 44), { fill: C.yellow, opacity: 28 }),
-    group('star', star(4, 17, 6), { fill: C.yellow }),
-    group('star core', ellipse(0, 0, 6, 6), { fill: C.paper }),
-    group('dot 1', ellipse(22, -12, 5, 5), { fill: C.gold }),
-    group('dot 2', ellipse(-20, 12, 4, 4), { fill: C.goldLight }),
+// ═══════════════════════════════════════════════════════════════════════════
+// The cat on the rug, who looks up at the end
+// ═══════════════════════════════════════════════════════════════════════════
+{
+  const cx = 168;
+  const cy = FLOOR - 4;
+  layer('cat', [
+    group('tail', curve([[cx + 40, cy - 10], [cx + 70, cy - 20], [cx + 76, cy - 46]]), { stroke: C.cat, width: 10, transform: { a: [cx + 40, cy - 10], p: [cx + 40, cy - 10], r: [[0, 0, E.soft], [50, -8, E.soft], [100, 0, E.soft], [150, -8, E.soft], [200, 0, E.soft], [250, -8, E.soft], [END, 0]] } }),
+    group('body', smooth([[cx - 44, cy - 6], [cx - 40, cy - 34], [cx - 10, cy - 46], [cx + 30, cy - 40], [cx + 46, cy - 14], [cx + 36, cy, 0.3], [cx - 34, cy, 0.3]]), { fill: C.cat }),
+    group('body shade', smooth([[cx - 44, cy - 6], [cx - 20, cy - 14], [cx + 20, cy - 12], [cx + 46, cy - 14], [cx + 36, cy, 0.3], [cx - 34, cy, 0.3]]), { fill: C.catShade }),
+  ]);
+  layer('cat head', [
+    group('ear l', smooth([[-16, -16, 0], [-12, -34, 0], [-2, -20, 0]]), { fill: C.cat }),
+    group('ear r', smooth([[16, -16, 0], [12, -34, 0], [2, -20, 0]]), { fill: C.cat }),
+    group('ear l inner', smooth([[-13, -19, 0], [-11, -29, 0], [-5, -20, 0]]), { fill: C.catEar }),
+    group('ear r inner', smooth([[13, -19, 0], [11, -29, 0], [5, -20, 0]]), { fill: C.catEar }),
+    group('head', ellipse(0, -8, 38, 34), { fill: C.cat }),
+    group('eye l', ellipse(-8, -10, 4, 5), { fill: C.ink, transform: { a: [-8, -10], p: [-8, -10], s: [[0, [100, 12], 'hold'], [T.bulb + 6, [100, 12], E.out], [T.bulb + 14, [100, 100], 'hold'], [T.reset, [100, 100], E.in], [T.reset + 6, [100, 12], 'hold'], [END, [100, 12]]] } }),
+    group('eye r', ellipse(8, -10, 4, 5), { fill: C.ink, transform: { a: [8, -10], p: [8, -10], s: [[0, [100, 12], 'hold'], [T.bulb + 6, [100, 12], E.out], [T.bulb + 14, [100, 100], 'hold'], [T.reset, [100, 100], E.in], [T.reset + 6, [100, 12], 'hold'], [END, [100, 12]]] } }),
+    group('nose', smooth([[-3, -2, 0], [3, -2, 0], [0, 1, 0]]), { fill: C.catEar }),
+    group('whisker l', curve([[-12, -1], [-26, -3]]), { stroke: C.catShade, width: 1.4 }),
+    group('whisker r', curve([[12, -1], [26, -3]]), { stroke: C.catShade, width: 1.4 }),
   ], {
-    p: [[0, [sparkAt[0], sparkAt[1], 0], 'hold'], [T.spark, [sparkAt[0], sparkAt[1], 0], E.out], [T.spark + 20, [sparkAt[0], sparkAt[1] - 10, 0], E.soft], [T.rest + 10, [sparkAt[0], sparkAt[1] - 12, 0], E.inOut], [END, [sparkAt[0], sparkAt[1], 0]]],
-    s: [[0, [0, 0, 100], 'hold'], [T.spark, [0, 0, 100], E.out], [T.spark + 10, [118, 118, 100], E.out], [T.spark + 20, [100, 100, 100], E.soft], [T.rest + 10, [100, 100, 100], E.in], [T.rest + 26, [0, 0, 100], 'hold'], [END, [0, 0, 100]]],
-    r: [[0, 0, 'hold'], [T.spark, -30, E.out], [T.spark + 20, 12, E.soft], [T.rest + 26, 40, 'hold'], [END, 40]],
+    a: [0, 0, 0],
+    p: [[0, [cx - 26, cy - 28, 0], E.soft], [T.bulb, [cx - 26, cy - 28, 0], E.out], [T.bulb + 12, [cx - 22, cy - 44, 0], 'hold'], [T.reset, [cx - 22, cy - 44, 0], E.inOut], [END, [cx - 26, cy - 28, 0]]],
+    r: [[0, 14, E.soft], [T.bulb, 14, E.out], [T.bulb + 12, -6, 'hold'], [T.reset, -6, E.inOut], [END, 14]],
   });
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// The thought bubble and what fills it
+// ═══════════════════════════════════════════════════════════════════════════
+{
+  const [bx, by] = BUBBLE;
+  layer('bubble', [
+    group('trail 1', ellipse(bx - 74, by + 96, 12, 12), { fill: C.paper, transform: { a: [bx - 74, by + 96], p: [bx - 74, by + 96], s: oscillate([100, 100], [80, 80], 60) } }),
+    group('trail 2', ellipse(bx - 58, by + 74, 20, 20), { fill: C.paper, transform: { a: [bx - 58, by + 74], p: [bx - 58, by + 74], s: oscillate([100, 100], [86, 86], 60, 1) } }),
+    group('shadow', smooth([[bx - 70, by + 2], [bx - 50, by - 60], [bx + 10, by - 76], [bx + 74, by - 54], [bx + 84, by + 12], [bx + 46, by + 62], [bx - 30, by + 60]]), { fill: C.ink, opacity: 6, transform: { p: [3, 5] } }),
+    group('cloud', smooth([[bx - 70, by + 2], [bx - 50, by - 60], [bx + 10, by - 76], [bx + 74, by - 54], [bx + 84, by + 12], [bx + 46, by + 62], [bx - 30, by + 60]]), { fill: C.paper }),
+  ], { a: [bx, by, 0], p: [bx, by, 0], s: oscillate([100, 100, 100], [103, 103, 100], 100, 1) });
 
-// ─── Write ─────────────────────────────────────────────────────────────────
+  // 1. The dense idea: a tangle of lines, a formula-like row, question mark.
+  layer('thought idea', [
+    group('tangle', curve([[-40, -6], [-26, -30], [-4, 4], [14, -28], [34, -2], [20, 26], [-10, 12], [-34, 24]]), { stroke: C.line, width: 3 }),
+    group('row 1', rect(-6, -40, 60, 5, 2.5), { fill: C.ink }),
+    group('row 2', rect(-2, 38, 44, 5, 2.5), { fill: C.line }),
+    group('question', curve([[36, -34], [44, -42], [52, -34], [46, -26], [44, -20]]), { stroke: C.teal, width: 3.2 }),
+    group('question dot', ellipse(44, -12, 4, 4), { fill: C.teal }),
+  ], { p: [bx + 4, by - 6, 0], s: [[0, [100, 100, 100], 'hold'], [T.football - 8, [100, 100, 100], E.in], [T.football, [0, 0, 100], 'hold'], [T.reset, [0, 0, 100], E.out], [T.reset + 10, [100, 100, 100], 'hold'], [END, [100, 100, 100]]] });
+
+  // 2. A football.
+  layer('thought football', [
+    group('ball', ellipse(0, 0, 76, 76), { fill: C.paper }),
+    group('ball edge', ellipse(0, 0, 76, 76), { stroke: C.ink, width: 3 }),
+    group('pent', smooth([[0, -16, 0], [15, -5, 0], [9, 13, 0], [-9, 13, 0], [-15, -5, 0]]), { fill: C.ink }),
+    group('seam 1', curve([[0, -16], [0, -36]]), { stroke: C.ink, width: 2.5 }),
+    group('seam 2', curve([[15, -5], [34, -12]]), { stroke: C.ink, width: 2.5 }),
+    group('seam 3', curve([[9, 13], [22, 30]]), { stroke: C.ink, width: 2.5 }),
+    group('seam 4', curve([[-9, 13], [-22, 30]]), { stroke: C.ink, width: 2.5 }),
+    group('seam 5', curve([[-15, -5], [-34, -12]]), { stroke: C.ink, width: 2.5 }),
+  ], { p: [bx + 4, by - 6, 0], s: popXYZ(T.football, { out: T.guitar - 8 }), r: [[0, -20, 'hold'], [T.football, -20, E.out], [T.guitar, 12, 'hold'], [END, 12]] });
+
+  // 3. A guitar.
+  layer('thought guitar', [
+    group('neck', rect(24, -30, 12, 70, 3), { fill: C.gold, transform: { r: 30, a: [24, -30], p: [24, -30] } }),
+    group('head', rect(46, -68, 16, 20, 4), { fill: C.ink, transform: { r: 30, a: [46, -68], p: [46, -68] } }),
+    group('body', smooth([[-12, -4], [8, -16], [22, -2], [24, 18], [10, 34], [-14, 36], [-30, 22], [-30, 4]]), { fill: C.coral }),
+    group('body shade', smooth([[-14, 36], [-30, 22], [-30, 4], [-12, -4], [-8, 14]]), { fill: C.coralShade }),
+    group('hole', ellipse(0, 12, 16, 16), { fill: C.ink }),
+    group('string 1', curve([[-24, 24], [46, -66]]), { stroke: C.cream, width: 1.4 }),
+    group('string 2', curve([[-18, 30], [52, -60]]), { stroke: C.cream, width: 1.4 }),
+  ], { p: [bx + 2, by - 4, 0], s: popXYZ(T.guitar, { out: T.plant - 8 }), r: [[0, 0, 'hold'], [T.guitar, -10, E.out], [T.plant, 4, 'hold'], [END, 4]] });
+
+  // 4. A plant.
+  layer('thought plant', [
+    group('pot', smooth([[-22, 36, 0], [22, 36, 0], [17, 8, 0], [-17, 8, 0]]), { fill: C.coral }),
+    group('pot rim', rect(0, 8, 46, 8, 4), { fill: C.coralShade }),
+    group('stem', curve([[0, 8], [0, -30]]), { stroke: C.teal, width: 3 }),
+    group('leaf 1', smooth([[0, -8], [-22, -20], [-30, -44], [-8, -34]]), { fill: C.teal }),
+    group('leaf 2', smooth([[0, -16], [22, -28], [30, -52], [8, -40]]), { fill: C.tealSoft }),
+    group('leaf 3', smooth([[0, -30], [-10, -48], [0, -62], [10, -48]]), { fill: C.teal }),
+  ], { p: [bx + 4, by, 0], s: popXYZ(T.plant, { out: T.bulb - 8 }), r: [[0, 0, 'hold'], [T.plant, 8, E.out], [T.bulb, -4, 'hold'], [END, -4]] });
+
+  // 5. The lightbulb.
+  layer('thought bulb', [
+    group('glow', ellipse(0, -8, 110, 110), { fill: C.yellow, opacity: 30 }),
+    group('bulb', smooth([[0, -46], [26, -34], [30, -6], [16, 12], [-16, 12], [-30, -6], [-26, -34]]), { fill: C.yellow }),
+    group('bulb shine', smooth([[-14, -30], [-6, -40], [2, -36, 0.5], [-8, -22, 0.5], [-18, -18]]), { fill: C.paper, opacity: 70 }),
+    group('base', rect(0, 20, 26, 12, 4), { fill: C.ink }),
+    group('base 2', rect(0, 30, 18, 6, 3), { fill: C.teal }),
+    group('filament', curve([[-8, 8], [-4, -4], [0, 4], [4, -4], [8, 8]]), { stroke: C.gold, width: 2 }),
+    group('ray 1', curve([[-44, -40], [-56, -50]]), { stroke: C.gold, width: 3 }),
+    group('ray 2', curve([[44, -40], [56, -50]]), { stroke: C.gold, width: 3 }),
+    group('ray 3', curve([[0, -60], [0, -74]]), { stroke: C.gold, width: 3 }),
+    group('spark', star(4, 9, 3), { fill: C.gold, transform: { p: [50, -12], r: [[0, 0, E.linear], [END, 180]] } }),
+  ], { p: [bx + 4, by - 2, 0], s: popXYZ(T.bulb, { out: T.reset - 4 }) });
+}
+
 console.log('Wrote ' + write(path.join(__dirname, '..', 'public', 'media', 'proj-arch-mission-characters.json')));

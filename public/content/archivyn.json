@@ -42,8 +42,8 @@
     "mission": {
       "media": { "type": "image", "src": "", "alt": "", "caption": "" },
       "animation": {
-        "src": "/media/proj-arch-mission-characters.json?v=20260929-2",
-        "label": "A scholar shares a dense research paper with Veri AI, which turns it into a clear Grade 5 reading card for a learner."
+        "src": "/media/proj-arch-mission-characters.json?v=20260929-3",
+        "label": "A learner sits cross-legged at home with a phone. A thought bubble turns a dense idea into a football, a guitar and a plant, then a lightbulb lights and they grin."
       },
       "eyebrow": "Why we’re building this",
       "title": "Make academic knowledge part of everyday learning.",
@@ -151,8 +151,8 @@
     "metadataTitle": "Research & learning",
     "tagline": "from Archives to You, accelerated by AI",
     "heroAnimation": {
-      "src": "/media/proj-arch-hero-light.json?v=20260929-3",
-      "label": "A scholar's research paper flows through an AI spark into a student's reading card, rewritten for grade 3, then grade 5, then grade 9, with the proof marked and a thread back to the verified scholar."
+      "src": "/media/proj-arch-hero-light.json?v=20260929-4",
+      "label": "An archive wall of shelves and drawers. A drawer opens, a record lifts out and passes through Veri AI, and a clear reading card lands on a phone held at the right."
     }
   }
 }
