@@ -189,12 +189,6 @@
   gap: clamp(32px, 4.4vw, 64px); align-items: center;
 }
 .pa-hero__inner--solo { grid-template-columns: minmax(0, 1fr); }
-.pa-hero__eyebrow {
-  display: flex; align-items: center; gap: 9px; margin: 0 0 18px;
-  font-size: 11px; line-height: 1; font-weight: 700; letter-spacing: .13em;
-  text-transform: uppercase; color: var(--pa-text-faint);
-}
-.pa-hero__eyebrow span:first-child { color: var(--pa-teal-mid); }
 .pa-hero__title {
   font-family: var(--ark-font-display); font-weight: 400;
   font-size: clamp(3.5rem, 11vw, 9.5rem); line-height: .95;

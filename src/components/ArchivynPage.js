@@ -192,7 +192,6 @@ export default function ArchivynPage() {
     <header className="pa-band pa-band--tint pa-hero">
       <div className={`ark-container pa-hero__inner${art || video?.src ? '' : ' pa-hero__inner--solo'}`}>
         <div className="pa-hero__copy" data-reveal>
-          <p className="pa-hero__eyebrow"><span>Portfolio project</span><span aria-hidden="true">/</span>{page.metadataTitle}</p>
           <h1 className="pa-hero__title">{content.brand}</h1>
           <p className="pa-subheading pa-hero__tagline">{page.tagline}</p>
           <p className="pa-hero__lead">{page.description}</p>
