@@ -1,4 +1,4 @@
-// Builds the eight spot illustrations on the Proj Arch feature cards,
+// Builds the seven spot illustrations on the Proj Arch feature cards,
 // public/media/feature-<name>.json, one per entry in page.features.
 //
 //   node scripts/generate-feature-lotties.cjs
@@ -14,7 +14,6 @@
 //   readers    a magnifier finds the sentence that proves the answer
 //   hubs       a scholar's hub with podcast, video and materials in orbit
 //   community  learners gathering around a shared question
-//   adult      a laptop feed refreshing beside a cooling coffee
 //   discovery  a search fanning out into scholars, courses, labs, podcasts
 //   schools    grade, language and depth dials reflowing a passage
 
@@ -338,70 +337,7 @@ scene('community', [], ({ layer }) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// 06 Adult Hub: a feed refreshing beside a cooling coffee.
-// ═══════════════════════════════════════════════════════════════════════════
-scene('adult', [], ({ layer }) => {
-  layer('backdrop', [backdrop([[14, 50], [108, 14], [224, 30], [236, 104], [190, 154], [60, 152], [8, 114]], C.cream)]);
-  // Laptop
-  layer('laptop', [
-    group('shadow', ellipse(104, 142, 200, 12), { fill: C.ink, opacity: 8 }),
-    group('lid', rect(104, 82, 148, 100, 10), { fill: C.ink }),
-    group('screen', rect(104, 80, 134, 86, 5), { fill: C.paper }),
-    group('screen bar', rect(104, 44, 134, 14, 5), { fill: C.sage }),
-    group('screen bar dot', ellipse(45, 44, 5, 5), { fill: C.teal }),
-    group('base', smooth([[10, 132, 0], [198, 132, 0], [206, 142, 0], [2, 142, 0]]), { fill: C.teal }),
-    group('base lip', rect(104, 134, 40, 3, 1.5), { fill: C.ink }),
-  ]);
-  // Feed: three posts scroll up; the row that leaves the top is the one that
-  // re-enters at the bottom, so the loop is continuous.
-  const rowH = 22;
-  const post = (k, tone) => [
-    group(`avatar ${k}`, ellipse(-46, 0, 14, 14), { fill: tone }),
-    group(`title ${k}`, rect(-8, -5, 56, 5, 2.5), { fill: C.ink }),
-    group(`body ${k}`, rect(-14, 5, 44, 4, 2), { fill: C.line }),
-  ];
-  const tones = [C.coral, C.teal, C.gold, C.tealSoft];
-  tones.forEach((tone, k) => {
-    // Each post enters at slot 3 (below the screen) and rises one slot every
-    // 45 frames; four posts, four slots, one 180-frame loop.
-    const y0 = 66;
-    // y at each 45-frame boundary moves up one row with ease-out.
-    const keys = [];
-    for (let step = 0; step <= 4; step += 1) {
-      const t = step * 45;
-      const slot = (k - step + 4) % 4;
-      keys.push([t, [104, y0 + slot * rowH, 0], 'hold']);
-      if (t + 45 <= END) keys.push([t + 30, [104, y0 + slot * rowH, 0], E.out]);
-    }
-    const opacityKeys = keys.map(([t, v, e]) => [t, v[1] > 118 ? 0 : 100, e]);
-    layer(`post ${k + 1}`, post(k + 1, tone), { p: keys.map(([t, v, e]) => [t, v, e]), o: opacityKeys });
-  });
-  // Notification badge on the screen corner.
-  layer('notification', [
-    group('badge', ellipse(0, 0, 14, 14), { fill: C.coral }),
-    group('badge ring', ellipse(0, 0, 18, 18), { stroke: C.paper, width: 2 }),
-    group('count', rect(0, 0, 6, 2.5, 1.2), { fill: C.paper }),
-  ], { p: [168, 44, 0], s: popXYZ(40, { out: 150 }) });
-  // Coffee mug with rising steam.
-  layer('mug', [
-    group('saucer', ellipse(218, 138, 40, 8), { fill: C.line }),
-    group('handle', curve([[232, 112], [242, 116], [240, 128], [230, 130]]), { stroke: C.coral, width: 5 }),
-    group('body', smooth([[202, 106, 0], [234, 106, 0], [230, 138, 0], [206, 138, 0]]), { fill: C.coral }),
-    group('body shade', smooth([[222, 106, 0], [234, 106, 0], [230, 138, 0], [220, 138, 0]]), { fill: C.coralShade }),
-    group('rim', ellipse(218, 106, 32, 8), { fill: C.coral }),
-    group('coffee', ellipse(218, 106, 24, 5), { fill: C.hairBrown }),
-  ]);
-  [0, 1, 2].forEach(k => {
-    const x = 210 + k * 8;
-    layer(`steam ${k + 1}`, [group('wisp', curve([[x, 98], [x - 4, 90], [x + 4, 82], [x, 74]]), { stroke: C.line, width: 2.2 })], {
-      p: [[0, [0, 0, 0], E.soft], [90, [0, -8, 0], E.soft], [END, [0, 0, 0]]],
-      o: [[0, 0, E.soft], [30 + k * 14, 80, E.soft], [90 + k * 14, 0, 'hold'], [END, 0]],
-    });
-  });
-});
-
-// ═══════════════════════════════════════════════════════════════════════════
-// 07 AI-assisted discovery: a question fans out across the catalog.
+// 06 AI-assisted discovery: a question fans out across the catalog.
 // ═══════════════════════════════════════════════════════════════════════════
 scene('discovery', [{ tm: 44, cm: 'results', dr: 0 }], ({ layer }) => {
   const OUT = 160;
@@ -435,7 +371,7 @@ scene('discovery', [{ tm: 44, cm: 'results', dr: 0 }], ({ layer }) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// 08 Schools: grade, language and depth dials reflow a passage.
+// 07 Schools: grade, language and depth dials reflow a passage.
 // ═══════════════════════════════════════════════════════════════════════════
 scene('schools', [], ({ layer }) => {
   layer('backdrop', [backdrop([[18, 46], [110, 12], [224, 30], [236, 102], [196, 154], [66, 152], [8, 112]], C.cream)]);

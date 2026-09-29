@@ -76,8 +76,8 @@ function UniversityRail() {
   </div>;
 }
 const UNIVERSITY_NOTE = 'Big Ten and the B1G logo are trademarks of the Big Ten Conference, Inc. University names and '
-  + 'marks belong to their respective institutions and are shown only to identify the planned rollout. Proj Arch is '
-  + 'not affiliated with, sponsored by, or endorsed by the Big Ten Conference or any of these universities.';
+  + 'marks belong to their respective institutions and identify the planned rollout only. Proj Arch is not affiliated '
+  + 'with, sponsored by, or endorsed by the Big Ten Conference or these universities.';
 
 // Bands fade up as they enter the viewport. The hidden state lives behind the
 // `pa-motion` class, which this hook strips when it cannot animate, so a
@@ -141,9 +141,8 @@ function SectionMedia({ media }) {
 
 // Each card carries the spot illustration named by `animation` in the content
 // file, falling back to the plain icon when a feature has no miniature yet.
-function Feature({ feature, index, variant, delay }) {
-  return <article className={`pa-feature${variant ? ` pa-feature--${variant}` : ''}`}
-    data-reveal style={delay ? { '--pa-delay': delay } : undefined}>
+function Feature({ feature, index }) {
+  return <li className="pa-feature">
     <p className="pa-feature__num">{pad(index)}</p>
     {feature.animation?.src
       ? <HeroAnimation src={feature.animation.src} label={feature.animation.label} className="pa-feature__art" />
@@ -151,7 +150,7 @@ function Feature({ feature, index, variant, delay }) {
     <h3 className="pa-card-title">{feature.title}</h3>
     <p className="pa-feature__copy">{feature.description}</p>
     <p className="pa-feature__label">{feature.label}</p>
-  </article>;
+  </li>;
 }
 
 export default function ArchivynPage() {
@@ -161,7 +160,6 @@ export default function ArchivynPage() {
   const root = useReveal(Boolean(page));
   if (!page) return <div className="resource-page"><div className="ark-container"><p role="status">{loading ? 'Loading…' : 'This page is currently unavailable.'}</p><Link to="/">Back to portfolio</Link></div></div>;
 
-  const [lead, second, ...rest] = page.features;
   // The header has its own animation; the home page's demo stands in without one.
   const art = page.heroAnimation?.src ? page.heroAnimation : null;
   const video = art ? null : content.summary?.video;
@@ -249,13 +247,22 @@ export default function ArchivynPage() {
           </div>
           {media('product')}
         </div>
-        {/* Eight cards need the full container, so the grid runs beneath the
-            split instead of inside one of its columns. */}
-        <div className="pa-features pa-split__below">
-          <Feature feature={lead} index={0} variant="lead" />
-          <Feature feature={second} index={1} variant="wide" delay="80ms" />
-          {rest.map((feature, index) => <Feature key={feature.label} feature={feature}
-            index={index + 2} delay={`${index * 60}ms`} />)}
+        {/* The cards run as a continuous rail beneath the split, the same
+            mechanism as the university rail: two copies of the list, the
+            second hidden from assistive technology, scrolling by half the
+            track's width; hovering pauses it, and reduced motion swaps in a
+            plain horizontal scroller. */}
+        <div className="pa-features pa-split__below" data-reveal style={{ '--pa-delay': '80ms' }}>
+          <div className="pa-features__viewport" role="region" aria-label="Connected product experiences">
+            <div className="pa-features__track">
+              <ul className="pa-features__group">
+                {page.features.map((feature, index) => <Feature key={feature.label} feature={feature} index={index} />)}
+              </ul>
+              <ul className="pa-features__group" aria-hidden="true">
+                {page.features.map((feature, index) => <Feature key={feature.label} feature={feature} index={index} />)}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -93,13 +93,6 @@
         "description": "Discover research circles, interest groups, and labs through scholar details. Open and closed groups provide spaces to share updates, discuss papers, comment on ideas, and organize course materials, meetings, and resources."
       },
       {
-        "animation": { "src": "/media/feature-adult.json?v=20260929-1", "label": "A laptop feed refreshes with new posts while a coffee cools beside it." },
-        "icon": "community",
-        "label": "Adult Hub",
-        "title": "Continue learning beyond the classroom.",
-        "description": "An adult-focused space brings profiles, courses, community news, and social updates together. It gives learners a place to explore academic interests and follow conversations across research, professional learning, and community life."
-      },
-      {
         "animation": { "src": "/media/feature-discovery.json?v=20260929-1", "label": "A question typed into search fans out into scholars, courses, labs and podcasts." },
         "icon": "explanation",
         "label": "AI-assisted discovery",

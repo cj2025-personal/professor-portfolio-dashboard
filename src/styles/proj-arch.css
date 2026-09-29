@@ -291,18 +291,33 @@
   letter-spacing: -.02em; color: var(--pa-text); text-wrap: balance;
 }
 
-/* ── Features: bento grid ────────────────────────────────────── */
-.pa-features { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
+/* ── Features: a rail ────────────────────────────────────────
+   Seven uniform cards on a continuous track, built exactly like the
+   university rail below: two copies of the list, the track slides by half
+   its width and loops, hover pauses it, and the viewport fades both edges. */
+.pa-features__viewport {
+  position: relative; overflow: hidden; width: 100%;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+}
+.pa-features__track {
+  display: flex; gap: 20px; width: max-content; padding: 6px 0 14px;
+  animation: pa-feature-scroll 84s linear infinite;
+  will-change: transform;
+}
+.pa-features__viewport:hover .pa-features__track,
+.pa-features__viewport:focus-within .pa-features__track { animation-play-state: paused; }
+.pa-features__group { display: flex; gap: 20px; margin: 0; padding: 0; list-style: none; }
+@keyframes pa-feature-scroll {
+  to { transform: translateX(calc(-50% - 10px)); }
+}
 .pa-feature {
   position: relative; display: flex; flex-direction: column; overflow: hidden;
-  grid-column: span 2; padding: clamp(22px, 2.2vw, 30px);
+  flex: 0 0 340px; padding: clamp(22px, 2.2vw, 30px);
   background: var(--pa-paper); border: 1px solid var(--pa-line); border-radius: 16px;
   box-shadow: var(--pa-shadow-sm);
   transition: transform .3s var(--pa-ease), box-shadow .3s var(--pa-ease), border-color .3s var(--pa-ease);
 }
-/* The two lead features take half a row each; the remaining six sit
-   three-up beneath them, so the grid closes without an orphan. */
-.pa-feature--lead, .pa-feature--wide { grid-column: span 3; }
 .pa-feature::before {
   content: ''; position: absolute; inset: 0 auto auto 0; width: 100%; height: 3px;
   background: var(--pa-teal); transform: scaleX(0); transform-origin: left;
@@ -323,8 +338,6 @@
    arrives so the card never shifts. Small on purpose: the copy is the card. */
 .pa-feature__art { width: 174px; height: 116px; margin: 18px 0 14px; }
 .pa-feature__art svg { display: block; width: 100%; height: 100%; }
-.pa-feature--lead .pa-feature__art,
-.pa-feature--wide .pa-feature__art { width: 210px; height: 140px; }
 /* Classes, not a bare `p`: an element selector would out-specify
    .pa-feature__label and kill the `margin-top: auto` that pins the label to
    the bottom of every card, so the labels stopped aligning across a row. */
@@ -334,8 +347,6 @@
   letter-spacing: .14em; text-transform: uppercase; color: var(--pa-text-faint);
 }
 
-.pa-feature--lead .pa-card-title,
-.pa-feature--wide .pa-card-title { font-size: var(--portfolio-title-featured); line-height: 1.25; }
 
 /* ── Workflow: horizontal timeline ───────────────────────────── */
 .pa-flow__steps {
@@ -390,7 +401,9 @@
 /* University network: two identical groups form one continuous, seamless
    rail. The second is hidden from assistive technology; the complete first
    group remains the semantic list. */
-.pa-universities { overflow: hidden; }
+/* Not overflow: hidden. The viewport clips the track; the wrapper stays
+   open so the trademark tooltip can hang below the heading uncut. */
+.pa-universities { position: relative; }
 .pa-universities__title {
   margin: 0 0 clamp(28px, 3vw, 40px); text-align: center;
 }
@@ -413,7 +426,7 @@
 .pa-universities__info-btn:hover,
 .pa-universities__info-btn:focus-visible { color: var(--pa-teal); background: var(--pa-teal-tint); }
 .pa-universities__tooltip {
-  position: absolute; top: calc(100% + 26px); right: -8px; z-index: 5; width: min(340px, 78vw);
+  position: absolute; top: calc(100% + 16px); right: -10px; z-index: 20; width: min(400px, 82vw);
   padding: 12px 14px; border: 1px solid var(--pa-line); border-radius: 12px;
   background: var(--pa-paper); box-shadow: var(--pa-shadow-md);
   font-family: var(--ark-font-ui); font-size: 12.5px; font-weight: 400;
@@ -583,9 +596,6 @@
 
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 1100px) {
-  .pa-features { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .pa-feature { grid-column: span 2; }
-  .pa-feature--lead, .pa-feature--wide { grid-column: span 4; }
 }
 @media (max-width: 860px) {
   /* The hero holds its two columns down to here: at 900 to 1100 the split
@@ -620,11 +630,17 @@
   .pa-band { padding: clamp(44px, 9vw, 60px) 0; }
   .pa-hero { padding: 40px 0 52px; }
   .pa-hero__actions .pa-btn { flex: 1 1 100%; }
-  .pa-features, .pa-audience { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .pa-audience { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .pa-features__viewport {
+    width: calc(100% + 40px); margin-left: -20px;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .pa-features__track { animation-duration: 70s; }
+  .pa-feature { flex-basis: 296px; }
   .pa-org__row { gap: 14px; padding-top: 60px; }
   .pa-org { padding: 28px 18px 30px; border-radius: 20px; }
   .pa-org__monogram { width: 54px; height: 54px; font-size: 1rem; }
-  .pa-feature, .pa-feature--lead, .pa-feature--wide { grid-column: span 1; }
   .pa-closing__inner .pa-btn { flex: 1 1 100%; }
   .pa-footer { padding-bottom: 96px; }
   .pa-scope__inner { grid-template-columns: minmax(0, 1fr); padding-top: 8px; padding-bottom: 8px; }
@@ -651,9 +667,9 @@
   .pa-audience article, .pa-footer a, .pa-footer svg { transition: none; }
   .pa-btn:hover, .pa-feature:hover, .pa-university:hover,
   .pa-audience article:hover, .pa-btn:hover svg { transform: none; }
-  .pa-universities__track { animation: none; }
-  .pa-universities__group[aria-hidden="true"] { display: none; }
-  .pa-universities__viewport { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .pa-universities__track, .pa-features__track { animation: none; }
+  .pa-universities__group[aria-hidden="true"], .pa-features__group[aria-hidden="true"] { display: none; }
+  .pa-universities__viewport, .pa-features__viewport { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
 }
 
 .proj-arch-mobile-brand {
