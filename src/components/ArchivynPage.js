@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRightIcon, ArrowDownRightIcon, BookOpenIcon, AcademicCapIcon, SparklesIcon, UsersIcon } from '@heroicons/react/24/outline';
+import { ArrowUpRightIcon, ArrowDownRightIcon, BookOpenIcon, AcademicCapIcon, SparklesIcon, UsersIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import useArchivynContent from '../lib/useArchivynContent';
 import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
@@ -51,6 +51,17 @@ function UniversityRail() {
         affiliation. Alt text keeps the heading readable as "Big Ten". */}
     <h2 className="pa-display pa-universities__title">
       Starting with <img className="pa-universities__logo" src="/images/big-ten.svg" alt="Big Ten" width="444" height="169" decoding="async" /> universities
+      {/* The trademark notice lives in a tooltip on this icon. It is a button
+          so keyboards and touch can open it, and aria-describedby hands the
+          text to screen readers whether or not the tooltip is visible. */}
+      <span className="pa-universities__info">
+        <button type="button" className="pa-universities__info-btn" aria-label="Trademark notice" aria-describedby="pa-universities-note">
+          <InformationCircleIcon aria-hidden="true" />
+        </button>
+        <span role="tooltip" id="pa-universities-note" className="pa-universities__tooltip">
+          {UNIVERSITY_NOTE}
+        </span>
+      </span>
     </h2>
     <div className="pa-universities__viewport" role="region" aria-label="Big Ten member universities in the initial rollout">
       <div className="pa-universities__track">
@@ -62,13 +73,11 @@ function UniversityRail() {
         </ul>
       </div>
     </div>
-    <p className="pa-universities__note">
-      Big Ten and the B1G logo are trademarks of the Big Ten Conference, Inc. University names and marks belong to
-      their respective institutions and are shown only to identify the planned rollout. Proj Arch is not affiliated
-      with, sponsored by, or endorsed by the Big Ten Conference or any of these universities.
-    </p>
   </div>;
 }
+const UNIVERSITY_NOTE = 'Big Ten and the B1G logo are trademarks of the Big Ten Conference, Inc. University names and '
+  + 'marks belong to their respective institutions and are shown only to identify the planned rollout. Proj Arch is '
+  + 'not affiliated with, sponsored by, or endorsed by the Big Ten Conference or any of these universities.';
 
 // Bands fade up as they enter the viewport. The hidden state lives behind the
 // `pa-motion` class, which this hook strips when it cannot animate, so a

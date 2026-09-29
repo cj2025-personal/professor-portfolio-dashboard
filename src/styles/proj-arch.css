@@ -398,10 +398,38 @@
 .pa-universities__logo {
   display: inline-block; height: .74em; width: auto; vertical-align: -.02em; margin: 0 .1em;
 }
-/* Trademark attribution: small, quiet, and centred under the rail. */
-.pa-universities__note {
-  max-width: 68ch; margin: clamp(18px, 2vw, 26px) auto 0; text-align: center;
-  font-size: 12px; line-height: 1.65; color: var(--pa-text-faint);
+/* Trademark notice: an info icon at the heading's top-right corner, with the
+   text in a tooltip that opens on hover, keyboard focus or a tap. */
+.pa-universities__info {
+  position: relative; display: inline-block; vertical-align: top;
+  margin: .08em 0 0 .18em; line-height: 1;
+}
+.pa-universities__info-btn {
+  display: grid; place-items: center; width: 22px; height: 22px; padding: 0;
+  border: 0; border-radius: 50%; background: transparent; color: var(--pa-text-faint);
+  cursor: pointer; transition: color .2s var(--pa-ease), background-color .2s var(--pa-ease);
+}
+.pa-universities__info-btn svg { width: 22px; height: 22px; stroke-width: 1.6; }
+.pa-universities__info-btn:hover,
+.pa-universities__info-btn:focus-visible { color: var(--pa-teal); background: var(--pa-teal-tint); }
+.pa-universities__tooltip {
+  position: absolute; top: calc(100% + 26px); right: -8px; z-index: 5; width: min(340px, 78vw);
+  padding: 12px 14px; border: 1px solid var(--pa-line); border-radius: 12px;
+  background: var(--pa-paper); box-shadow: var(--pa-shadow-md);
+  font-family: var(--ark-font-ui); font-size: 12.5px; font-weight: 400;
+  line-height: 1.6; letter-spacing: 0; text-align: left; color: var(--pa-text-muted);
+  opacity: 0; visibility: hidden; transform: translateY(-4px);
+  transition: opacity .2s var(--pa-ease), transform .2s var(--pa-ease), visibility 0s linear .2s;
+}
+.pa-universities__tooltip::before {
+  content: ''; position: absolute; top: -6px; right: 14px; width: 10px; height: 10px;
+  background: var(--pa-paper); border-left: 1px solid var(--pa-line); border-top: 1px solid var(--pa-line);
+  transform: rotate(45deg);
+}
+.pa-universities__info:hover .pa-universities__tooltip,
+.pa-universities__info:focus-within .pa-universities__tooltip,
+.pa-universities__tooltip:target {
+  opacity: 1; visibility: visible; transform: none; transition-delay: 0s;
 }
 .pa-universities__viewport {
   position: relative; overflow: hidden; width: 100%;
