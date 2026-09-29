@@ -230,23 +230,8 @@
 .pa-demo { margin: 0; min-width: 0; }
 /* The header animation floats on the band with no frame. Its box is sized
    before the Lottie arrives, so nothing shifts when it does. */
-.pa-hero__animation { position: relative; }
 .pa-hero__art { width: 100%; aspect-ratio: 640 / 520; }
 .pa-hero__art svg { display: block; }
-.pa-hero__animation-control {
-  position: absolute; right: 8px; bottom: 8px; z-index: 2;
-  display: grid; place-items: center; width: 40px; height: 40px; padding: 0;
-  border: 1px solid var(--pa-line-strong); border-radius: 50%;
-  color: var(--pa-teal); background: rgba(255, 255, 255, .9);
-  box-shadow: 0 8px 22px -14px rgba(24, 62, 72, .7);
-  backdrop-filter: blur(8px); transition: color .2s var(--pa-ease),
-    border-color .2s var(--pa-ease), background .2s var(--pa-ease);
-}
-.pa-hero__animation-control:hover { color: var(--pa-paper); border-color: var(--pa-teal); background: var(--pa-teal); }
-.pa-hero__animation-control:focus-visible { outline: 2px solid var(--pa-gold); outline-offset: 3px; }
-.pa-hero__animation-control:disabled { visibility: hidden; }
-.pa-hero__animation-control svg { width: 17px; height: 17px; }
-.pa-hero__animation-control svg[data-slot="icon"] { pointer-events: none; }
 
 /* A compact index keeps the long-form case study easy to scan without
    competing with the portfolio navigation above it. */
