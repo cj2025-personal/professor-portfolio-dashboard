@@ -173,6 +173,7 @@
     "team": {
       "eyebrow": "The people behind the project",
       "title": "Meet the team",
+      "leadName": "Craig L. Johnson, Ph.D.",
       "leadRole": "Innovator, CEO",
       "leadPhoto": "/images/cj.png",
       "members": [
