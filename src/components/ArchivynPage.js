@@ -6,6 +6,7 @@ import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
 import HeroAnimation from './HeroAnimation';
 import { initials } from './ArchivynDemos';
+import UNIVERSITIES from '../lib/universities';
 import '../styles/proj-arch.css';
 import '../styles/proj-arch-demos.css';
 
@@ -20,38 +21,22 @@ const ProjectIcon = ({ name }) => {
 const AUDIENCE_ICONS = ['reading', 'scholar', 'community', 'explanation'];
 const pad = index => String(index + 1).padStart(2, '0');
 
-// The initial Big Ten rollout visual. The institutional name remains visible
-// if a remote mark ever fails, and the fallback monogram keeps the rail from
-// collapsing while the image is loading.
-const BIG_TEN_UNIVERSITIES = [
-  { name: 'Illinois', fullName: 'University of Illinois Urbana-Champaign', mark: 'ILL', logo: '356' },
-  { name: 'Indiana', fullName: 'Indiana University Bloomington', mark: 'IU', logo: '84' },
-  { name: 'Iowa', fullName: 'University of Iowa', mark: 'IOWA', logo: '2294' },
-  { name: 'Maryland', fullName: 'University of Maryland, College Park', mark: 'UMD', logo: '120' },
-  { name: 'Michigan', fullName: 'University of Michigan', mark: 'M', logo: '130' },
-  { name: 'Michigan State', fullName: 'Michigan State University', mark: 'MSU', logo: '127' },
-  { name: 'Minnesota', fullName: 'University of Minnesota Twin Cities', mark: 'MINN', logo: '135' },
-  { name: 'Nebraska', fullName: 'University of Nebraska–Lincoln', mark: 'NEB', logo: '158' },
-  { name: 'Northwestern', fullName: 'Northwestern University', mark: 'NU', logo: '77' },
-  { name: 'Ohio State', fullName: 'The Ohio State University', mark: 'OSU', logo: '194' },
-  { name: 'Oregon', fullName: 'University of Oregon', mark: 'UO', logo: '2483' },
-  { name: 'Penn State', fullName: 'The Pennsylvania State University', mark: 'PSU', logo: '213' },
-  { name: 'Purdue', fullName: 'Purdue University', mark: 'PU', logo: '2509' },
-  { name: 'Rutgers', fullName: 'Rutgers University–New Brunswick', mark: 'RU', logo: '164' },
-  { name: 'UCLA', fullName: 'University of California, Los Angeles', mark: 'UCLA', logo: '26' },
-  { name: 'USC', fullName: 'University of Southern California', mark: 'USC', logo: '30' },
-  { name: 'Washington', fullName: 'University of Washington', mark: 'UW', logo: '264' },
-  { name: 'Wisconsin', fullName: 'University of Wisconsin–Madison', mark: 'WISC', logo: '275' },
-];
-
+// The initial Big Ten rollout visual. A university's official logo appears
+// only once its brand office has given written permission and supplied the
+// file, which is then hosted here; until then the card shows the typographic
+// monogram and the name. The manifest in lib/universities.js records each
+// school's state, and docs/university-marks.md describes the request. Marks
+// are used nominatively, never to suggest affiliation; the note under the
+// rail says so. The B1G wordmark in public/images/big-ten.svg is the
+// text-only conference logo (below the threshold of originality for
+// copyright, trademark rights untouched), in its official colours, unaltered.
 function UniversityMark({ university }) {
   return <li className="pa-university" title={university.fullName}>
     <span className="pa-university__mark" aria-hidden="true">
       <span>{university.mark}</span>
-      <img src={`https://a.espncdn.com/i/teamlogos/ncaa/500/${university.logo}.png`}
-        alt="" width="64" height="64" decoding="async"
-        referrerPolicy="no-referrer"
-        onError={event => event.currentTarget.classList.add('is-unavailable')} />
+      {university.permission === 'granted' && university.logo && <img src={university.logo}
+        alt="" width="64" height="64" decoding="async" loading="lazy"
+        onError={event => event.currentTarget.classList.add('is-unavailable')} />}
     </span>
     <span className="pa-university__name">{university.name}</span>
   </li>;
@@ -59,17 +44,29 @@ function UniversityMark({ university }) {
 
 function UniversityRail() {
   return <div className="pa-universities">
-    <h2 className="pa-display pa-universities__title">Starting with Big 10 universities</h2>
+    {/* The conference wordmark stands in for the words "Big Ten". It is used
+        nominatively, to name the conference, and unaltered: the SVG is the
+        text-only mark (below the threshold of originality, so public domain
+        as artwork) and the trademark note beneath the rail disclaims any
+        affiliation. Alt text keeps the heading readable as "Big Ten". */}
+    <h2 className="pa-display pa-universities__title">
+      Starting with <img className="pa-universities__logo" src="/images/big-ten.svg" alt="Big Ten" width="444" height="169" decoding="async" /> universities
+    </h2>
     <div className="pa-universities__viewport" role="region" aria-label="Big Ten member universities in the initial rollout">
       <div className="pa-universities__track">
         <ul className="pa-universities__group">
-          {BIG_TEN_UNIVERSITIES.map(university => <UniversityMark key={university.name} university={university} />)}
+          {UNIVERSITIES.map(university => <UniversityMark key={university.name} university={university} />)}
         </ul>
         <ul className="pa-universities__group" aria-hidden="true">
-          {BIG_TEN_UNIVERSITIES.map(university => <UniversityMark key={university.name} university={university} />)}
+          {UNIVERSITIES.map(university => <UniversityMark key={university.name} university={university} />)}
         </ul>
       </div>
     </div>
+    <p className="pa-universities__note">
+      Big Ten and the B1G logo are trademarks of the Big Ten Conference, Inc. University names and marks belong to
+      their respective institutions and are shown only to identify the planned rollout. Proj Arch is not affiliated
+      with, sponsored by, or endorsed by the Big Ten Conference or any of these universities.
+    </p>
   </div>;
 }
 
