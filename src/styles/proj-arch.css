@@ -278,26 +278,47 @@
   letter-spacing: -.02em; color: var(--pa-text); text-wrap: balance;
 }
 
-/* ── Features: a rail ────────────────────────────────────────
-   Seven uniform cards on a continuous track, built exactly like the
-   university rail below: two copies of the list, the track slides by half
-   its width and loops, hover pauses it, and the viewport fades both edges. */
-.pa-features__viewport {
-  position: relative; overflow: hidden; width: 100%;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+/* ── Rails ───────────────────────────────────────────────────
+   One mechanism for the feature cards and the university marks (see
+   components/Rail.js). The viewport is a native scroll container with the
+   scrollbar hidden and both edges faded; arrows sit over the edges. Feature
+   cards snap; the university rail drifts and wraps. */
+.pa-rail { position: relative; }
+.pa-rail__viewport {
+  position: relative; overflow-x: auto; overflow-y: hidden; width: 100%;
+  scrollbar-width: none; -ms-overflow-style: none; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; cursor: grab;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
 }
-.pa-features__track {
-  display: flex; gap: 20px; width: max-content; padding: 6px 0 14px;
-  animation: pa-feature-scroll 84s linear infinite;
-  will-change: transform;
+.pa-rail__viewport::-webkit-scrollbar { display: none; }
+.pa-rail__viewport.is-dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; }
+.pa-rail__viewport.is-dragging * { pointer-events: none; }
+.pa-rail__viewport:focus-visible { outline: 2px solid var(--pa-teal-mid); outline-offset: 4px; border-radius: 16px; }
+.pa-rail--auto .pa-rail__viewport { scroll-snap-type: none; }
+.pa-rail__track { display: flex; width: max-content; }
+.pa-rail__group { display: flex; margin: 0; padding: 0; list-style: none; }
+.pa-rail__group > li { scroll-snap-align: start; }
+/* Padding on the group, not the viewport, so the fade masks the padding too
+   and the first card can scroll fully into the clear zone. */
+.pa-features__rail .pa-rail__track, .pa-features__rail .pa-rail__group { gap: 20px; padding: 6px 0 14px; }
+.pa-features__rail .pa-rail__group { padding-left: 24px; padding-right: 24px; }
+/* Snap points sit inside the faded edge, so a snapped card is never cut. */
+.pa-features__rail .pa-rail__viewport { scroll-padding-inline: 24px; }
+.pa-universities__rail .pa-rail__track, .pa-universities__rail .pa-rail__group { gap: 14px; padding: 4px 0 8px; }
+.pa-rail__arrow {
+  position: absolute; top: 50%; z-index: 3; display: grid; place-items: center;
+  width: 42px; height: 42px; margin-top: -21px; padding: 0; border-radius: 50%;
+  border: 1px solid var(--pa-line); background: var(--pa-paper); color: var(--pa-teal);
+  box-shadow: var(--pa-shadow-sm); cursor: pointer;
+  transition: transform .2s var(--pa-ease), box-shadow .2s var(--pa-ease), opacity .2s var(--pa-ease), border-color .2s var(--pa-ease);
 }
-.pa-features__viewport:hover .pa-features__track,
-.pa-features__viewport:focus-within .pa-features__track { animation-play-state: paused; }
-.pa-features__group { display: flex; gap: 20px; margin: 0; padding: 0; list-style: none; }
-@keyframes pa-feature-scroll {
-  to { transform: translateX(calc(-50% - 10px)); }
-}
+.pa-rail__arrow svg { width: 20px; height: 20px; stroke-width: 1.8; }
+.pa-rail__arrow--prev { left: -8px; }
+.pa-rail__arrow--next { right: -8px; }
+.pa-rail__arrow:hover { transform: translateY(-1px); box-shadow: var(--pa-shadow-md); border-color: var(--pa-line-strong); }
+.pa-rail__arrow:disabled { opacity: 0; pointer-events: none; }
+.pa-rail__arrow:focus-visible { outline: 2px solid var(--pa-teal-mid); outline-offset: 3px; }
 .pa-feature {
   position: relative; display: flex; flex-direction: column; overflow: hidden;
   flex: 0 0 340px; padding: clamp(22px, 2.2vw, 30px);
@@ -431,18 +452,6 @@
 .pa-universities__tooltip:target {
   opacity: 1; visibility: visible; transform: none; transition-delay: 0s;
 }
-.pa-universities__viewport {
-  position: relative; overflow: hidden; width: 100%;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
-}
-.pa-universities__track {
-  display: flex; gap: 14px; width: max-content; padding: 4px 0 8px;
-  animation: pa-university-scroll 54s linear infinite;
-  will-change: transform;
-}
-.pa-universities__viewport:hover .pa-universities__track { animation-play-state: paused; }
-.pa-universities__group { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; }
 .pa-university {
   display: flex; align-items: center; gap: 13px; flex: 0 0 190px;
   min-height: 82px; padding: 12px 16px;
@@ -475,9 +484,6 @@
 .pa-university:hover .pa-university__mark { background: #fff; }
 .pa-university:hover .pa-university__mark img { filter: none; opacity: 1; transform: scale(1.04); }
 .pa-university:hover .pa-university__name { color: #111; }
-@keyframes pa-university-scroll {
-  to { transform: translateX(calc(-50% - 7px)); }
-}
 
 /* ── Team: an org chart ──────────────────────────────────────
    No card grounds. The people are drawn as nodes joined by a connector, so
@@ -618,12 +624,15 @@
   .pa-hero { padding: 40px 0 52px; }
   .pa-hero__actions .pa-btn { flex: 1 1 100%; }
   .pa-audience { grid-template-columns: minmax(0, 1fr); gap: 14px; }
-  .pa-features__viewport {
-    width: calc(100% + 40px); margin-left: -20px;
+  .pa-rail { width: calc(100% + 40px); margin-left: -20px; }
+  .pa-rail__viewport {
     -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
     mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
   }
-  .pa-features__track { animation-duration: 70s; }
+  .pa-rail__arrow--prev { left: 6px; }
+  .pa-rail__arrow--next { right: 6px; }
+  .pa-features__rail .pa-rail__group { padding-left: 20px; padding-right: 20px; }
+  .pa-features__rail .pa-rail__viewport { scroll-padding-inline: 20px; }
   .pa-feature { flex-basis: 296px; }
   .pa-org__row { gap: 14px; padding-top: 60px; }
   .pa-org { padding: 28px 18px 30px; border-radius: 20px; }
@@ -631,15 +640,9 @@
   .pa-closing__inner .pa-btn { flex: 1 1 100%; }
   .pa-footer { padding-bottom: 96px; }
   .pa-closing__inner { width: calc(100% - 32px); padding-left: 20px; padding-right: 20px; border-radius: 20px; }
-  .pa-universities__viewport {
-    width: calc(100% + 40px); margin-left: -20px;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-  }
   .pa-university { flex-basis: 164px; min-height: 74px; padding: 10px 12px; }
   .pa-university__mark { flex-basis: 46px; width: 46px; height: 46px; }
   .pa-university__mark img { inset: 6px; width: 34px; height: 34px; }
-  .pa-universities__track { animation-duration: 46s; }
 }
 
 /* ── Reduced motion ──────────────────────────────────────────── */
@@ -650,9 +653,9 @@
   .pa-audience article, .pa-footer a, .pa-footer svg { transition: none; }
   .pa-btn:hover, .pa-feature:hover, .pa-university:hover,
   .pa-audience article:hover, .pa-btn:hover svg { transform: none; }
-  .pa-universities__track, .pa-features__track { animation: none; }
-  .pa-universities__group[aria-hidden="true"], .pa-features__group[aria-hidden="true"] { display: none; }
-  .pa-universities__viewport, .pa-features__viewport { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  /* Rails: no drift (Rail.js also checks), no smooth scrolling, no fades. */
+  .pa-rail__viewport { scroll-behavior: auto; -webkit-mask-image: none; mask-image: none; }
+  .pa-rail__arrow { transition: none; }
 }
 
 .proj-arch-mobile-brand {

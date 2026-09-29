@@ -5,6 +5,7 @@ import useArchivynContent from '../lib/useArchivynContent';
 import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
 import HeroAnimation from './HeroAnimation';
+import Rail from './Rail';
 import { initials } from './ArchivynDemos';
 import UNIVERSITIES from '../lib/universities';
 import '../styles/proj-arch.css';
@@ -63,16 +64,10 @@ function UniversityRail() {
         </span>
       </span>
     </h2>
-    <div className="pa-universities__viewport" role="region" aria-label="Big Ten member universities in the initial rollout">
-      <div className="pa-universities__track">
-        <ul className="pa-universities__group">
-          {UNIVERSITIES.map(university => <UniversityMark key={university.name} university={university} />)}
-        </ul>
-        <ul className="pa-universities__group" aria-hidden="true">
-          {UNIVERSITIES.map(university => <UniversityMark key={university.name} university={university} />)}
-        </ul>
-      </div>
-    </div>
+    {/* A slow marquee with real controls: arrows, drag, swipe, keyboard. */}
+    <Rail auto label="Big Ten member universities in the initial rollout" className="pa-universities__rail">
+      {UNIVERSITIES.map(university => <UniversityMark key={university.name} university={university} />)}
+    </Rail>
   </div>;
 }
 const UNIVERSITY_NOTE = 'Big Ten and the B1G logo are trademarks of the Big Ten Conference, Inc. University names and '
@@ -184,9 +179,11 @@ export default function ArchivynPage() {
           <h1 className="pa-hero__title">{content.brand}</h1>
           <p className="pa-subheading pa-hero__tagline">{page.tagline}</p>
           <p className="pa-hero__lead">{page.description}</p>
+          {/* One action here. The header already offers "Get in touch" and the
+              closing band repeats the contact call, so the hero only points
+              the reader into the page. */}
           <div className="pa-hero__actions">
             <a href="#project-product" className="pa-btn pa-btn--primary">{page.product.eyebrow}<ArrowDownRightIcon aria-hidden="true" /></a>
-            <Link to="/#contact" className="pa-btn pa-btn--secondary">{page.closing.contactLabel}</Link>
           </div>
         </div>
         {art && <div className="pa-hero__media" data-reveal style={{ '--pa-delay': '140ms' }}>
@@ -240,22 +237,13 @@ export default function ArchivynPage() {
           </div>
           {media('product')}
         </div>
-        {/* The cards run as a continuous rail beneath the split, the same
-            mechanism as the university rail: two copies of the list, the
-            second hidden from assistive technology, scrolling by half the
-            track's width; hovering pauses it, and reduced motion swaps in a
-            plain horizontal scroller. */}
+        {/* The cards sit still on a rail beneath the split until the reader
+            moves them: arrows step one card, the mouse drags, touch swipes,
+            and the cards snap into place. */}
         <div className="pa-features pa-split__below" data-reveal style={{ '--pa-delay': '80ms' }}>
-          <div className="pa-features__viewport" role="region" aria-label="Connected product experiences">
-            <div className="pa-features__track">
-              <ul className="pa-features__group">
-                {page.features.map((feature, index) => <Feature key={feature.label} feature={feature} index={index} />)}
-              </ul>
-              <ul className="pa-features__group" aria-hidden="true">
-                {page.features.map((feature, index) => <Feature key={feature.label} feature={feature} index={index} />)}
-              </ul>
-            </div>
-          </div>
+          <Rail label="Connected product experiences" className="pa-features__rail">
+            {page.features.map((feature, index) => <Feature key={feature.label} feature={feature} index={index} />)}
+          </Rail>
         </div>
       </div>
     </section>
