@@ -118,7 +118,8 @@ section[id] { scroll-margin-top: 88px; }
 .hero-topics li { padding: 4px 10px; border: 1px solid var(--ark-border); border-radius: 999px; font-size: 12px; color: var(--ark-text-muted); text-transform: capitalize; }
 
 .portfolio-platform { background: var(--ark-surface); padding: 48px 0; border-bottom: 1px solid var(--ark-border-soft); }
-.portfolio-platform__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 32px; }
+.portfolio-platform__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "demo copy"; align-items: start; gap: 32px; }
+.portfolio-platform__copy { grid-area: copy; }
 .portfolio-platform h2 { margin-top: 14px; max-width: 22ch; font-family: var(--ark-font-display); font-weight: 400; font-size: clamp(28px, 3vw, 38px); line-height: 1.2; letter-spacing: -.02em; }
 .portfolio-platform p { max-width: 68ch; margin-top: 10px; font-size: 15px; line-height: 1.75; color: var(--ark-text-muted); }
 .portfolio-platform__link { display: inline-flex; align-items: center; gap: 16px; flex-shrink: 0; font-size: 12px; font-weight: 600; color: var(--ark-navy); padding: 10px 0; border-bottom: 1px solid var(--ark-border); }
@@ -126,7 +127,7 @@ section[id] { scroll-margin-top: 88px; }
 .portfolio-platform__link:hover { color: var(--ark-blue); border-color: var(--ark-blue); }
 .portfolio-platform__copy > .sec-eyebrow { margin: 0; font-size: 12px; line-height: 1.4; color: var(--ark-text-faint); }
 .portfolio-platform__copy > .portfolio-platform__link { margin-top: 16px; }
-.portfolio-platform__demo { position: relative; min-width: 0; margin: 0; }
+.portfolio-platform__demo { grid-area: demo; position: relative; min-width: 0; margin: 0; }
 /* The portrait's gold corner, so the page's two framed pieces read as a set. */
 .portfolio-platform__demo::before { content: ""; position: absolute; top: -14px; right: -14px; width: 96px; height: 96px; border-top: 1px solid #aa8051; border-right: 1px solid #aa8051; pointer-events: none; }
 /* Depth comes from layered shadow, not a border: a pale line around a dark
@@ -257,7 +258,7 @@ section[id] { scroll-margin-top: 88px; }
 .archivyn-page__closing > div { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
 @media (max-width: 767px) {
   .portfolio-platform { padding: 32px 0; }
-  .portfolio-platform__inner { grid-template-columns: 1fr; gap: 24px; }
+  .portfolio-platform__inner { grid-template-columns: 1fr; grid-template-areas: "copy" "demo"; gap: 24px; }
   .archivyn-page { padding: 96px 0 110px; }
   .archivyn-page__intro { grid-template-columns: 1fr; gap: 32px; padding: 32px 0; }
   .archivyn-page__grid { grid-template-columns: 1fr; gap: 24px; }
