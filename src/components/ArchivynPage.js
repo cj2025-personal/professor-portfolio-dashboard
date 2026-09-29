@@ -59,6 +59,7 @@ function UniversityMark({ university }) {
 
 function UniversityRail() {
   return <div className="pa-universities">
+    <h2 className="pa-display pa-universities__title">Starting with Big 10 universities</h2>
     <div className="pa-universities__viewport" role="region" aria-label="Big Ten member universities in the initial rollout">
       <div className="pa-universities__track">
         <ul className="pa-universities__group">
