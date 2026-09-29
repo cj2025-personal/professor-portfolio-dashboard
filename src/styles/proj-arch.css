@@ -378,63 +378,10 @@
 }
 .pa-audience__icon svg { width: 21px; height: 21px; stroke-width: 1.4; }
 
-/* ── Rollout: two wide phase rows ────────────────────────────
-   A different shape from the feature bento and the workflow timeline on
-   purpose, so a third list of cards does not read as a repeat of either. */
-.pa-rollout { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
-.pa-rollout { margin-top: clamp(26px, 3vw, 36px); }
-.pa-rollout__phase {
-  display: grid; grid-template-columns: 96px minmax(0, .9fr) minmax(0, 1.5fr);
-  gap: clamp(18px, 3vw, 44px); align-items: center;
-  padding: clamp(22px, 2.4vw, 30px) clamp(24px, 2.6vw, 34px);
-  background: var(--pa-paper); border: 1px solid var(--pa-line);
-  border-radius: 16px; box-shadow: var(--pa-shadow-sm);
-}
-.pa-split .pa-rollout__phase {
-  grid-template-columns: minmax(0, 1fr); gap: 10px;
-  justify-items: start; align-items: start;
-  padding: clamp(20px, 2.2vw, 26px) clamp(22px, 2.4vw, 28px);
-}
-.pa-rollout__chip {
-  display: inline-flex; align-items: center; margin: 0;
-  padding: 7px 14px; border-radius: 999px;
-  font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-}
-/* The first phase is the one in play, so it carries the accent and the
-   second reads as queued behind it. */
-.pa-rollout__phase:first-child .pa-rollout__chip { background: var(--pa-teal); color: #fff; }
-.pa-rollout__phase:not(:first-child) .pa-rollout__chip {
-  background: transparent; color: var(--pa-text-muted); box-shadow: inset 0 0 0 1px var(--pa-line-strong);
-}
-.pa-rollout__copy { margin: 0; }
-
 /* University network: two identical groups form one continuous, seamless
    rail. The second is hidden from assistive technology; the complete first
    group remains the semantic list. */
-.pa-universities {
-  margin-top: clamp(42px, 5vw, 64px); padding-top: clamp(30px, 3.5vw, 44px);
-  border-top: 1px solid var(--pa-line-strong); overflow: hidden;
-}
-.pa-universities__head {
-  display: flex; align-items: end; justify-content: space-between; gap: 28px;
-  margin-bottom: 24px;
-}
-.pa-universities__head .pa-subheading { margin: 10px 0 0; color: var(--pa-text); }
-.pa-universities__meta { display: flex; align-items: center; gap: 18px; }
-.pa-universities__meta > p {
-  max-width: 34ch; margin: 0; text-align: right;
-  font-size: 12px; line-height: 1.65; color: var(--pa-text-faint);
-}
-.pa-universities__meta button {
-  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-  min-height: 44px; padding: 0 13px; flex: none;
-  border: 1px solid var(--pa-line-strong); border-radius: 10px;
-  background: var(--pa-paper); color: var(--pa-text-muted);
-  font-size: 11px; font-weight: 700;
-  transition: border-color .2s var(--pa-ease), color .2s var(--pa-ease);
-}
-.pa-universities__meta button:hover { border-color: var(--pa-teal); color: var(--pa-teal); }
-.pa-universities__meta button svg { width: 15px; height: 15px; }
+.pa-universities { overflow: hidden; }
 .pa-universities__viewport {
   position: relative; overflow: hidden; width: 100%;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
@@ -446,7 +393,6 @@
   will-change: transform;
 }
 .pa-universities__viewport:hover .pa-universities__track { animation-play-state: paused; }
-.pa-universities.is-paused .pa-universities__track { animation-play-state: paused; }
 .pa-universities__group { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; }
 .pa-university {
   display: flex; align-items: center; gap: 13px; flex: 0 0 190px;
@@ -467,10 +413,6 @@
 .pa-university__mark img.is-unavailable { display: none; }
 .pa-university__name {
   font-size: 12px; line-height: 1.35; font-weight: 700; color: var(--pa-text);
-}
-.pa-universities__note {
-  margin: 14px 0 0; font-size: 10px; line-height: 1.55;
-  color: var(--pa-text-faint); text-align: center;
 }
 @keyframes pa-university-scroll {
   to { transform: translateX(calc(-50% - 7px)); }
@@ -605,10 +547,6 @@
   }
   .pa-flow__node { position: absolute; left: 0; top: 0; }
   .pa-flow__steps .pa-card-title { margin-top: 0; }
-  .pa-rollout__phase {
-    grid-template-columns: minmax(0, 1fr); gap: 10px;
-    justify-items: start; align-items: start;
-  }
   .pa-project-nav { position: relative; top: auto; }
   .pa-project-nav__inner { align-items: flex-start; min-height: 0; padding-top: 14px; padding-bottom: 14px; }
   .pa-project-nav__inner > div { gap: 20px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
@@ -633,9 +571,6 @@
   .pa-scope p + p { border-left: 0; border-top: 1px solid rgba(255, 255, 255, .2); }
   .pa-scope strong { font-size: 29px; }
   .pa-closing__inner { width: calc(100% - 32px); padding-left: 20px; padding-right: 20px; border-radius: 20px; }
-  .pa-universities__head { align-items: flex-start; flex-direction: column; gap: 10px; }
-  .pa-universities__meta { width: 100%; justify-content: space-between; align-items: center; }
-  .pa-universities__meta > p { text-align: left; }
   .pa-universities__viewport {
     width: calc(100% + 40px); margin-left: -20px;
     -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
@@ -656,7 +591,6 @@
   .pa-universities__track { animation: none; }
   .pa-universities__group[aria-hidden="true"] { display: none; }
   .pa-universities__viewport { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
-  .pa-universities__meta button { display: none; }
 }
 
 .proj-arch-mobile-brand {

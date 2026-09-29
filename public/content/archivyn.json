@@ -152,24 +152,7 @@
         }
       ]
     },
-    "rollout": {
-      "media": { "type": "image", "src": "", "alt": "", "caption": "" },
-      "eyebrow": "Where we’re starting",
-      "title": "Built for R1 universities, starting with the Big Ten.",
-      "description": "Proj Arch is built for research-intensive universities, where the work students are trying to understand is being produced. We are starting with the Big Ten and expanding across R1 institutions from there.",
-      "phases": [
-        {
-          "label": "First",
-          "title": "Big Ten universities",
-          "description": "The first rollout focuses on the Big Ten, connecting learners to the scholars and research at those institutions."
-        },
-        {
-          "label": "Next",
-          "title": "R1 universities",
-          "description": "The platform then extends to R1 institutions, the Carnegie classification for universities with very high research activity."
-        }
-      ]
-    },
+    "rollout": {},
     "team": {
       "eyebrow": "The people behind the project",
       "title": "Meet the team",

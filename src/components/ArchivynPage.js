@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRightIcon, ArrowDownRightIcon, BookOpenIcon, AcademicCapIcon, SparklesIcon, UsersIcon, PauseIcon, PlayIcon } from '@heroicons/react/24/outline';
+import { ArrowUpRightIcon, ArrowDownRightIcon, BookOpenIcon, AcademicCapIcon, SparklesIcon, UsersIcon } from '@heroicons/react/24/outline';
 import useArchivynContent from '../lib/useArchivynContent';
 import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
@@ -58,21 +58,7 @@ function UniversityMark({ university }) {
 }
 
 function UniversityRail() {
-  const [paused, setPaused] = useState(false);
-  return <div className={`pa-universities${paused ? ' is-paused' : ''}`}>
-    <div className="pa-universities__head">
-      <div>
-        <p className="pa-kicker">Initial university network</p>
-        <h3 className="pa-subheading">Across the Big Ten</h3>
-      </div>
-      <div className="pa-universities__meta">
-        <p>18 member institutions in the first rollout footprint.</p>
-        <button type="button" onClick={() => setPaused(value => !value)} aria-pressed={paused}>
-          {paused ? <PlayIcon aria-hidden="true" /> : <PauseIcon aria-hidden="true" />}
-          {paused ? 'Resume motion' : 'Pause motion'}
-        </button>
-      </div>
-    </div>
+  return <div className="pa-universities">
     <div className="pa-universities__viewport" role="region" aria-label="Big Ten member universities in the initial rollout">
       <div className="pa-universities__track">
         <ul className="pa-universities__group">
@@ -83,7 +69,6 @@ function UniversityRail() {
         </ul>
       </div>
     </div>
-    <p className="pa-universities__note">Institutional marks identify the universities in the proposed starting network; they do not imply endorsement.</p>
   </div>;
 }
 
@@ -302,22 +287,9 @@ export default function ArchivynPage() {
       </div>
     </section>
 
-    {page.rollout && <section id="project-rollout" className="pa-band pa-band--paper" aria-labelledby="pa-rollout-title">
-      <div className={split('rollout')}>
-        <div className="pa-split__text" data-reveal>
-          <p className="pa-kicker">{page.rollout.eyebrow}</p>
-          <h2 id="pa-rollout-title" className="pa-display">{page.rollout.title}</h2>
-          <p className="pa-lead">{page.rollout.description}</p>
-          <ol className="pa-rollout">
-            {page.rollout.phases.map(phase => <li key={phase.title} className="pa-rollout__phase">
-              <p className="pa-rollout__chip">{phase.label}</p>
-              <h3 className="pa-card-title">{phase.title}</h3>
-              <p className="pa-body pa-rollout__copy">{phase.description}</p>
-            </li>)}
-          </ol>
-          <UniversityRail />
-        </div>
-        {media('rollout')}
+    {page.rollout && <section id="project-rollout" className="pa-band pa-band--paper" aria-label="Big Ten universities">
+      <div className="ark-container" data-reveal>
+        <UniversityRail />
       </div>
     </section>}
 
