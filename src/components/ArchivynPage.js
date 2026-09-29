@@ -208,13 +208,6 @@ export default function ArchivynPage() {
       </div>
     </nav>
 
-    <aside className="pa-scope" aria-label="Project scope">
-      <div className="ark-container pa-scope__inner">
-        <p><strong>{String(page.features.length).padStart(2, '0')}</strong><span>Connected product experiences</span></p>
-        <p><strong>{String(page.audience.items.length).padStart(2, '0')}</strong><span>Learner audiences</span></p>
-      </div>
-    </aside>
-
     {/* From here each band is a two-column split that flips side by side:
         copy left, then copy right, then left again. `--reverse` reorders the
         columns visually and the DOM keeps copy first, so a narrow screen and

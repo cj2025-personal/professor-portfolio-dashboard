@@ -260,19 +260,6 @@
 .pa-project-nav a:hover { color: var(--pa-teal); }
 .pa-project-nav a:hover::after { right: 0; }
 
-.pa-scope { background: var(--pa-teal); color: #fff; }
-.pa-scope__inner { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.pa-scope p {
-  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center;
-  gap: 16px; min-height: 104px; margin: 0; padding: 20px clamp(20px, 3vw, 40px);
-}
-.pa-scope p + p { border-left: 1px solid rgba(255, 255, 255, .2); }
-.pa-scope strong {
-  font-family: var(--ark-font-display); font-size: 34px; line-height: 1; font-weight: 400;
-  letter-spacing: -.03em;
-}
-.pa-scope span { max-width: 22ch; font-size: 11px; line-height: 1.55; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
-
 /* ── Mission: centred manifesto + full-width pull quote ───────── */
 .pa-goal {
   margin: clamp(26px, 3vw, 36px) 0 0; padding: clamp(20px, 2.2vw, 26px) 0 0;
@@ -643,10 +630,6 @@
   .pa-org__monogram { width: 54px; height: 54px; font-size: 1rem; }
   .pa-closing__inner .pa-btn { flex: 1 1 100%; }
   .pa-footer { padding-bottom: 96px; }
-  .pa-scope__inner { grid-template-columns: minmax(0, 1fr); padding-top: 8px; padding-bottom: 8px; }
-  .pa-scope p { min-height: 76px; padding: 14px 0; }
-  .pa-scope p + p { border-left: 0; border-top: 1px solid rgba(255, 255, 255, .2); }
-  .pa-scope strong { font-size: 29px; }
   .pa-closing__inner { width: calc(100% - 32px); padding-left: 20px; padding-right: 20px; border-radius: 20px; }
   .pa-universities__viewport {
     width: calc(100% + 40px); margin-left: -20px;
