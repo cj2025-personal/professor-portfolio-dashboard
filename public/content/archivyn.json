@@ -58,56 +58,56 @@
     },
     "features": [
       {
-        "demo": "directory",
+        "animation": { "src": "/media/feature-directory.json?v=20260929-1", "label": "A scholar’s profile card assembles: portrait, name, publication counts and research topics." },
         "icon": "scholar",
         "label": "Scholar directory",
         "title": "Find the person behind the work.",
         "description": "Explore academic profiles through fields of study, institutions, and backgrounds. A profile brings together a scholar’s research focus, work, milestones, and publications, giving learners a starting point for understanding their expertise."
       },
       {
-        "demo": "veri",
+        "animation": { "src": "/media/feature-veri.json?v=20260929-1", "label": "Veri AI answers the same question three times, each reply longer and richer as the reading level rises." },
         "icon": "explanation",
         "label": "Veri AI",
         "title": "Explore expertise at your level.",
         "description": "Veri AI is the platform’s domain-specialized AI layer. Ask about a scholar or an idea, then adapt the explanation by age, grade, language, and learning depth, from a first introduction to a more advanced discussion."
       },
       {
-        "demo": "readers",
+        "animation": { "src": "/media/feature-readers.json?v=20260929-1", "label": "A magnifying glass sweeps an open book, the sentence that proves the answer lights up, and a badge is earned." },
         "icon": "reading",
         "label": "Young readers",
         "title": "Build comprehension through practice.",
         "description": "Reading warm-ups combine riddles, passage puzzles, story prompts, vocabulary, and inference questions. Learners practice noticing clues, making predictions, and supporting an answer with evidence. Streaks and badges are part of the proposed experience."
       },
       {
-        "demo": "hubs",
+        "animation": { "src": "/media/feature-hubs.json?v=20260929-1", "label": "A scholar at the centre of a hub with a podcast waveform, a course video and course materials orbiting." },
         "icon": "reading",
         "label": "Scholar knowledge hubs",
         "title": "Keep the conversation and resources together.",
         "description": "A scholar’s hub connects AI-assisted conversation with course materials, podcasts, course videos, and groups. Summarize an answer, request a different explanation, or translate it to keep exploring in a way that works for you."
       },
       {
-        "demo": "community",
+        "animation": { "src": "/media/feature-community.json?v=20260929-1", "label": "Five learners gather around a shared question and threads connect them." },
         "icon": "community",
         "label": "Learning communities",
         "title": "Learn through shared questions.",
         "description": "Discover research circles, interest groups, and labs through scholar details. Open and closed groups provide spaces to share updates, discuss papers, comment on ideas, and organize course materials, meetings, and resources."
       },
       {
-        "demo": "adult",
+        "animation": { "src": "/media/feature-adult.json?v=20260929-1", "label": "A laptop feed refreshes with new posts while a coffee cools beside it." },
         "icon": "community",
         "label": "Adult Hub",
         "title": "Continue learning beyond the classroom.",
         "description": "An adult-focused space brings profiles, courses, community news, and social updates together. It gives learners a place to explore academic interests and follow conversations across research, professional learning, and community life."
       },
       {
-        "demo": "discovery",
+        "animation": { "src": "/media/feature-discovery.json?v=20260929-1", "label": "A question typed into search fans out into scholars, courses, labs and podcasts." },
         "icon": "explanation",
         "label": "AI-assisted discovery",
         "title": "Start with a topic that interests you.",
         "description": "Describe what you want to explore in your own words. The search experience is designed to bring together relevant scholars, courses, labs, podcasts, and community resources so a question can lead to several useful paths."
       },
       {
-        "demo": "schools",
+        "animation": { "src": "/media/feature-schools.json?v=20260929-1", "label": "Grade, language and depth dials turn, and the passage beneath reflows to match." },
         "icon": "scholar",
         "label": "Schools and learning platforms",
         "title": "Adapt the experience to your learners.",

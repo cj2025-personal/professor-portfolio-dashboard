@@ -319,6 +319,12 @@
   border-radius: 14px; background: var(--pa-teal-tint); color: var(--pa-teal);
 }
 .pa-feature__icon svg { width: 22px; height: 22px; stroke-width: 1.4; }
+/* The spot illustration: a fixed 3:2 vignette, sized before the Lottie
+   arrives so the card never shifts. Small on purpose: the copy is the card. */
+.pa-feature__art { width: 174px; height: 116px; margin: 18px 0 14px; }
+.pa-feature__art svg { display: block; width: 100%; height: 100%; }
+.pa-feature--lead .pa-feature__art,
+.pa-feature--wide .pa-feature__art { width: 210px; height: 140px; }
 /* Classes, not a bare `p`: an element selector would out-specify
    .pa-feature__label and kill the `margin-top: auto` that pins the label to
    the bottom of every card, so the labels stopped aligning across a row. */

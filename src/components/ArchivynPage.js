@@ -5,7 +5,7 @@ import useArchivynContent from '../lib/useArchivynContent';
 import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
 import HeroAnimation from './HeroAnimation';
-import ArchivynDemo, { initials } from './ArchivynDemos';
+import { initials } from './ArchivynDemos';
 import '../styles/proj-arch.css';
 import '../styles/proj-arch-demos.css';
 
@@ -133,14 +133,14 @@ function SectionMedia({ media }) {
   </figure>;
 }
 
-// Each card is keyed to one demo in ArchivynDemos by `demo` in the content
+// Each card carries the spot illustration named by `animation` in the content
 // file, falling back to the plain icon when a feature has no miniature yet.
 function Feature({ feature, index, variant, delay }) {
   return <article className={`pa-feature${variant ? ` pa-feature--${variant}` : ''}`}
     data-reveal style={delay ? { '--pa-delay': delay } : undefined}>
     <p className="pa-feature__num">{pad(index)}</p>
-    {feature.demo
-      ? <ArchivynDemo name={feature.demo} />
+    {feature.animation?.src
+      ? <HeroAnimation src={feature.animation.src} label={feature.animation.label} className="pa-feature__art" />
       : <span className="pa-feature__icon"><ProjectIcon name={feature.icon} /></span>}
     <h3 className="pa-card-title">{feature.title}</h3>
     <p className="pa-feature__copy">{feature.description}</p>
