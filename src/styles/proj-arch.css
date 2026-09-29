@@ -505,6 +505,7 @@
   object-fit: cover; object-position: 50% 50%;
   transform: scale(1.2); transform-origin: 50% 42%;
 }
+.pa-org__portrait--lead img { object-position: 50% 36%; transform: none; }
 /* Team members: a smaller circle than the lead's. Their photographs are
    cropped square around head and shoulders before they reach the page, so
    they need none of the zoom above. */

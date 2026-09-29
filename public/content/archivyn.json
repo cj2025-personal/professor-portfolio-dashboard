@@ -174,6 +174,7 @@
       "eyebrow": "The people behind the project",
       "title": "Meet the team",
       "leadRole": "Innovator, CEO",
+      "leadPhoto": "/images/cj.png",
       "members": [
         { "name": "Ram", "role": "Technology developer", "photo": "/images/ram.png" },
         { "name": "Nikhil Sai Jaddu", "role": "Technology developer", "photo": "/images/nikhil.jpg" }

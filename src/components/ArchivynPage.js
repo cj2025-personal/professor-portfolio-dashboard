@@ -334,8 +334,8 @@ export default function ArchivynPage() {
             is what left the band mostly empty. */}
         <div className="pa-org" data-reveal style={{ '--pa-delay': '80ms' }}>
           {scholar.name && <div className="pa-org__lead pa-org__node">
-            {scholar.photoUrl
-              ? <div className="pa-org__portrait"><img src={scholar.photoUrl} alt={scholar.name} loading="lazy" /></div>
+            {page.team.leadPhoto || scholar.photoUrl
+              ? <div className="pa-org__portrait pa-org__portrait--lead"><img src={page.team.leadPhoto || scholar.photoUrl} alt={scholar.name} loading="lazy" /></div>
               : <span className="pa-org__monogram pa-org__monogram--lead" aria-hidden="true">{initials(scholar.name)}</span>}
             <p className="pa-card-title">{scholar.name}</p>
             <p className="pa-meta pa-org__role">{page.team.leadRole}</p>
