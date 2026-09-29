@@ -49,7 +49,8 @@
   padding-top: 80px;
   overflow: clip;
 }
-.proj-arch-page section[id], #project-top { scroll-margin-top: 152px; }
+/* Anchor targets clear the fixed site header (80px) with a little room. */
+.proj-arch-page section[id], #project-top { scroll-margin-top: 96px; }
 .proj-arch-page a:focus-visible,
 .proj-arch-page button:focus-visible { outline: 2px solid var(--pa-teal-mid); outline-offset: 3px; border-radius: 8px; }
 
@@ -230,36 +231,6 @@
 .pa-mission-art { min-width: 0; margin: 0; align-self: center; }
 .pa-mission-animation { width: 100%; aspect-ratio: 640 / 520; }
 .pa-mission-animation svg { display: block; width: 100%; height: 100%; }
-
-/* A compact index keeps the long-form case study easy to scan without
-   competing with the portfolio navigation above it. */
-.pa-project-nav {
-  position: sticky; top: 80px; z-index: 20;
-  background: rgba(255, 255, 255, .92); border-top: 1px solid var(--pa-line);
-  border-bottom: 1px solid var(--pa-line); backdrop-filter: blur(14px);
-}
-.pa-project-nav__inner {
-  display: flex; align-items: center; justify-content: space-between; gap: 28px;
-  min-height: 58px;
-}
-.pa-project-nav__inner > p {
-  display: flex; align-items: center; gap: 10px; margin: 0; flex: none;
-  font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
-  color: var(--pa-text-faint);
-}
-.pa-project-nav__inner > p span { color: var(--pa-gold); }
-.pa-project-nav__inner > div { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); }
-.pa-project-nav a {
-  position: relative; display: inline-flex; align-items: center; min-height: 44px;
-  font-size: 12px; font-weight: 600; color: var(--pa-text-muted);
-  transition: color .2s var(--pa-ease);
-}
-.pa-project-nav a::after {
-  content: ''; position: absolute; left: 0; right: 100%; bottom: 5px; height: 1px;
-  background: var(--pa-gold); transition: right .25s var(--pa-ease);
-}
-.pa-project-nav a:hover { color: var(--pa-teal); }
-.pa-project-nav a:hover::after { right: 0; }
 
 /* ── Mission: centred manifesto + full-width pull quote ───────── */
 .pa-goal {
@@ -613,11 +584,6 @@
   }
   .pa-flow__node { position: absolute; left: 0; top: 0; }
   .pa-flow__steps .pa-card-title { margin-top: 0; }
-  .pa-project-nav { position: relative; top: auto; }
-  .pa-project-nav__inner { align-items: flex-start; min-height: 0; padding-top: 14px; padding-bottom: 14px; }
-  .pa-project-nav__inner > div { gap: 20px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
-  .pa-project-nav__inner > div::-webkit-scrollbar { display: none; }
-  .pa-project-nav__inner > p { display: none; }
 }
 @media (max-width: 640px) {
   .proj-arch-page { padding-top: 68px; }

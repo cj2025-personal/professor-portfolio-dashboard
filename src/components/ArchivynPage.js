@@ -160,13 +160,6 @@ export default function ArchivynPage() {
   const video = art ? null : content.summary?.video;
   const hasMedia = key => Boolean(page[key]?.media?.src);
   const media = key => <SectionMedia media={page[key]?.media} />;
-  const projectSections = [
-    ['project-mission', 'Purpose'],
-    ['project-product', 'Platform'],
-    ['project-audience', 'Audience'],
-    ['project-rollout', 'Rollout'],
-    ['project-team', 'Team'],
-  ];
   // Only a section with an asset splits into two columns; the rest run full
   // width rather than reserving an empty half.
   const split = (key, reverse) => 'ark-container'
@@ -195,15 +188,6 @@ export default function ArchivynPage() {
         </div>}
       </div>
     </header>
-
-    <nav className="pa-project-nav" aria-label="Proj Arch sections">
-      <div className="ark-container pa-project-nav__inner">
-        <p><span aria-hidden="true">01</span> Project index</p>
-        <div>
-          {projectSections.map(([href, label]) => <a key={href} href={`#${href}`}>{label}</a>)}
-        </div>
-      </div>
-    </nav>
 
     {/* From here each band is a two-column split that flips side by side:
         copy left, then copy right, then left again. `--reverse` reorders the
