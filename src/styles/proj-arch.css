@@ -261,7 +261,7 @@
 .pa-project-nav a:hover::after { right: 0; }
 
 .pa-scope { background: var(--pa-teal); color: #fff; }
-.pa-scope__inner { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pa-scope__inner { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .pa-scope p {
   display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center;
   gap: 16px; min-height: 104px; margin: 0; padding: 20px clamp(20px, 3vw, 40px);

@@ -5,7 +5,7 @@ import useArchivynContent from '../lib/useArchivynContent';
 import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
 import HeroAnimation from './HeroAnimation';
-import ArchivynDemo, { WorkflowScene, initials } from './ArchivynDemos';
+import ArchivynDemo, { initials } from './ArchivynDemos';
 import '../styles/proj-arch.css';
 import '../styles/proj-arch-demos.css';
 
@@ -164,7 +164,6 @@ export default function ArchivynPage() {
   const projectSections = [
     ['project-mission', 'Purpose'],
     ['project-product', 'Platform'],
-    ['project-workflow', 'Journey'],
     ['project-audience', 'Audience'],
     ['project-rollout', 'Rollout'],
     ['project-team', 'Team'],
@@ -208,7 +207,6 @@ export default function ArchivynPage() {
     <aside className="pa-scope" aria-label="Project scope">
       <div className="ark-container pa-scope__inner">
         <p><strong>{String(page.features.length).padStart(2, '0')}</strong><span>Connected product experiences</span></p>
-        <p><strong>{String(page.workflow.steps.length).padStart(2, '0')}</strong><span>Steps in the learning journey</span></p>
         <p><strong>{String(page.audience.items.length).padStart(2, '0')}</strong><span>Learner audiences</span></p>
       </div>
     </aside>
@@ -253,24 +251,6 @@ export default function ArchivynPage() {
           {rest.map((feature, index) => <Feature key={feature.label} feature={feature}
             index={index + 2} delay={`${index * 60}ms`} />)}
         </div>
-      </div>
-    </section>
-
-    <section id="project-workflow" className="pa-band pa-band--paper pa-flow" aria-labelledby="pa-flow-title">
-      <div className={split('workflow')}>
-        <div className="pa-split__text" data-reveal>
-          <p className="pa-kicker">{page.workflow.eyebrow}</p>
-          <h2 id="pa-flow-title" className="pa-display">{page.workflow.title}</h2>
-          <ol className="pa-flow__steps" data-reveal>
-            {page.workflow.steps.map((step, index) => <li key={step.title} style={{ '--pa-cue': `${index * 3}s` }}>
-              <span className="pa-flow__node" aria-hidden="true">{pad(index)}</span>
-              <h3 className="pa-card-title">{step.title}</h3>
-              <p className="pa-body">{step.description}</p>
-              <WorkflowScene index={index} />
-            </li>)}
-          </ol>
-        </div>
-        {media('workflow')}
       </div>
     </section>
 

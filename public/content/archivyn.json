@@ -114,25 +114,6 @@
         "description": "The Veri AI concept includes customization for schools and other platforms. Explanations by age and grade, multiple languages, and adjustable learning depth help shape the experience around different learners and educational settings."
       }
     ],
-    "workflow": {
-      "media": { "type": "video", "src": "", "alt": "", "caption": "" },
-      "eyebrow": "How it comes together",
-      "title": "Follow your curiosity. Build your understanding.",
-      "steps": [
-        {
-          "title": "Discover a starting point.",
-          "description": "Browse a scholar’s profile or search for a topic. Explore the research, publications, and resources connected to it."
-        },
-        {
-          "title": "Ask and adapt.",
-          "description": "Use Veri AI to explore a question. Choose your language and learning level, then summarize, explain, or translate as needed."
-        },
-        {
-          "title": "Practice and participate.",
-          "description": "Work through reading activities, explore a knowledge hub, or continue the discussion in a learning community."
-        }
-      ]
-    },
     "audience": {
       "media": { "type": "image", "src": "", "alt": "", "caption": "" },
       "eyebrow": "Who it’s for",
