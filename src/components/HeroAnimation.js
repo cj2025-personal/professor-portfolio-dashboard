@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 
-// A Lottie that floats in a page header. lottie-web's light build (SVG only,
-// no expression engine) is loaded on demand, so it stays out of the main
-// bundle. It plays while on screen and pauses off it. Visitors who asked for
-// less motion get one still frame: the one the animation marks "rest".
-export default function HeroAnimation({ src, label }) {
+// A reusable Lottie illustration. lottie-web's light build (SVG only, no
+// expression engine) is loaded on demand, so it stays out of the main bundle.
+// It plays while on screen and pauses off it. Visitors who asked for less
+// motion get one still frame: the one the animation marks "rest".
+export default function HeroAnimation({ src, label, className = 'pa-hero__art' }) {
   const box = useRef(null);
 
   useEffect(() => {
@@ -46,5 +46,5 @@ export default function HeroAnimation({ src, label }) {
     };
   }, [src]);
 
-  return <div ref={box} className="pa-hero__art" role="img" aria-label={label} />;
+  return <div ref={box} className={className} role="img" aria-label={label} />;
 }

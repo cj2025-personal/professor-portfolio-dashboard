@@ -41,6 +41,10 @@
     },
     "mission": {
       "media": { "type": "image", "src": "", "alt": "", "caption": "" },
+      "animation": {
+        "src": "/media/proj-arch-mission-characters.json?v=20260929-1",
+        "label": "A scholar shares a dense research paper with Veri AI, which turns it into a clear Grade 5 reading card for a learner."
+      },
       "eyebrow": "Why we’re building this",
       "title": "Make academic knowledge part of everyday learning.",
       "description": "Finding a scholar is only the beginning. Learners need a way to understand unfamiliar ideas, connect them to their own interests, and practice reasoning. Proj Arch brings discovery, explanation, and participation together so that research can become a starting point for learning at every level.",

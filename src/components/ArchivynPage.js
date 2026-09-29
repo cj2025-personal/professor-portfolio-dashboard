@@ -5,7 +5,7 @@ import useArchivynContent from '../lib/useArchivynContent';
 import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
 import HeroAnimation from './HeroAnimation';
-import ArchivynDemo, { MissionArch, WorkflowScene, initials } from './ArchivynDemos';
+import ArchivynDemo, { WorkflowScene, initials } from './ArchivynDemos';
 import '../styles/proj-arch.css';
 import '../styles/proj-arch-demos.css';
 
@@ -228,7 +228,10 @@ export default function ArchivynPage() {
             <blockquote>{page.mission.goal}</blockquote>
           </figure>
         </div>
-        <MissionArch />
+        {page.mission.animation && <div className="pa-mission-art" data-reveal style={{ '--pa-delay': '80ms' }}>
+          <HeroAnimation src={page.mission.animation.src} label={page.mission.animation.label}
+            className="pa-mission-animation" />
+        </div>}
       </div>
     </section>
 

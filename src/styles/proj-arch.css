@@ -226,6 +226,9 @@
    before the Lottie arrives, so nothing shifts when it does. */
 .pa-hero__art { width: 100%; aspect-ratio: 640 / 520; }
 .pa-hero__art svg { display: block; }
+.pa-mission-art { min-width: 0; margin: 0; align-self: center; }
+.pa-mission-animation { width: 100%; aspect-ratio: 640 / 520; }
+.pa-mission-animation svg { display: block; width: 100%; height: 100%; }
 
 /* A compact index keeps the long-form case study easy to scan without
    competing with the portfolio navigation above it. */
