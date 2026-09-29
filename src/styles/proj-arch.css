@@ -250,11 +250,10 @@
   letter-spacing: -.02em; color: var(--pa-text); text-wrap: balance;
 }
 
-/* ── Rails ───────────────────────────────────────────────────
-   One mechanism for the feature cards and the university marks (see
-   components/Rail.js). The viewport is a native scroll container with the
-   scrollbar hidden and both edges faded; arrows sit over the edges. Feature
-   cards snap; the university rail drifts and wraps. */
+/* ── Rail ────────────────────────────────────────────────────
+   The university marks (see components/Rail.js). The viewport is a native
+   scroll container with the scrollbar hidden and both edges faded; arrows
+   sit over the edges; the track drifts and wraps. */
 .pa-rail { position: relative; }
 .pa-rail__viewport {
   position: relative; overflow-x: auto; overflow-y: hidden; width: 100%;
@@ -271,12 +270,6 @@
 .pa-rail__track { display: flex; width: max-content; }
 .pa-rail__group { display: flex; margin: 0; padding: 0; list-style: none; }
 .pa-rail__group > li { scroll-snap-align: start; }
-/* Padding on the group, not the viewport, so the fade masks the padding too
-   and the first card can scroll fully into the clear zone. */
-.pa-features__rail .pa-rail__track, .pa-features__rail .pa-rail__group { gap: 20px; padding: 6px 0 14px; }
-.pa-features__rail .pa-rail__group { padding-left: 24px; padding-right: 24px; }
-/* Snap points sit inside the faded edge, so a snapped card is never cut. */
-.pa-features__rail .pa-rail__viewport { scroll-padding-inline: 24px; }
 .pa-universities__rail .pa-rail__track, .pa-universities__rail .pa-rail__group { gap: 14px; padding: 4px 0 8px; }
 .pa-rail__arrow {
   position: absolute; top: 50%; z-index: 3; display: grid; place-items: center;
@@ -291,42 +284,68 @@
 .pa-rail__arrow:hover { transform: translateY(-1px); box-shadow: var(--pa-shadow-md); border-color: var(--pa-line-strong); }
 .pa-rail__arrow:disabled { opacity: 0; pointer-events: none; }
 .pa-rail__arrow:focus-visible { outline: 2px solid var(--pa-teal-mid); outline-offset: 3px; }
-.pa-feature {
-  position: relative; display: flex; flex-direction: column; overflow: hidden;
-  flex: 0 0 340px; padding: clamp(22px, 2.2vw, 30px);
-  background: var(--pa-paper); border: 1px solid var(--pa-line); border-radius: 16px;
-  box-shadow: var(--pa-shadow-sm);
-  transition: transform .3s var(--pa-ease), box-shadow .3s var(--pa-ease), border-color .3s var(--pa-ease);
+/* ── Feature showcase ────────────────────────────────────────
+   A product tour (components/FeatureShowcase.js): a tablist of the seven
+   features on the left, one feature on a large stage on the right. Only
+   one description is on screen at a time. Below 860px the list becomes an
+   accordion and the stage opens under the active row. */
+.pa-showcase {
+  position: relative; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 5vw, 72px); align-items: start;
 }
-.pa-feature::before {
-  content: ''; position: absolute; inset: 0 auto auto 0; width: 100%; height: 3px;
-  background: var(--pa-teal); transform: scaleX(0); transform-origin: left;
-  transition: transform .35s var(--pa-ease);
+.pa-showcase__list { display: flex; flex-direction: column; border-top: 1px solid var(--pa-line); }
+.pa-showcase__tab {
+  position: relative; display: flex; flex-direction: column; gap: 4px; width: 100%;
+  margin: 0; padding: 16px 16px 18px 22px; border: 0; border-bottom: 1px solid var(--pa-line);
+  background: transparent; text-align: left; cursor: pointer; color: var(--pa-text-muted);
+  transition: color .2s var(--pa-ease), background-color .2s var(--pa-ease);
 }
-.pa-feature:hover { transform: translateY(-4px); box-shadow: var(--pa-shadow-md); border-color: var(--pa-line-strong); }
-.pa-feature:hover::before { transform: scaleX(1); }
-.pa-feature__num {
-  margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .14em;
-  font-variant-numeric: tabular-nums; color: var(--pa-teal-mid);
+/* The gold rule at the left is the page's kicker mark; it grows in on the
+   active row. */
+.pa-showcase__tab::before {
+  content: ''; position: absolute; left: 0; top: 18px; bottom: 20px; width: 3px; border-radius: 2px;
+  background: var(--pa-gold); transform: scaleY(0); transform-origin: top;
+  transition: transform .3s var(--pa-ease);
 }
-.pa-feature__icon {
-  display: grid; place-items: center; width: 46px; height: 46px; margin: 18px 0 20px;
-  border-radius: 14px; background: var(--pa-teal-tint); color: var(--pa-teal);
+.pa-showcase__tab:hover { color: var(--pa-text); background: rgba(24, 62, 72, .03); }
+.pa-showcase__tab.is-active { color: var(--pa-text); }
+.pa-showcase__tab.is-active::before { transform: scaleY(1); }
+.pa-showcase__tab:focus-visible { outline: 2px solid var(--pa-teal-mid); outline-offset: -2px; border-radius: 8px; }
+.pa-showcase__name {
+  font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--pa-text-faint); transition: color .2s var(--pa-ease);
 }
-.pa-feature__icon svg { width: 22px; height: 22px; stroke-width: 1.4; }
-/* The spot illustration: a fixed 3:2 vignette, sized before the Lottie
-   arrives so the card never shifts. Small on purpose: the copy is the card. */
-.pa-feature__art { width: 174px; height: 116px; margin: 18px 0 14px; }
-.pa-feature__art svg { display: block; width: 100%; height: 100%; }
-/* Classes, not a bare `p`: an element selector would out-specify
-   .pa-feature__label and kill the `margin-top: auto` that pins the label to
-   the bottom of every card, so the labels stopped aligning across a row. */
-.pa-feature__copy { margin: 12px 0 0; font-size: 15px; line-height: 1.75; color: var(--pa-text-muted); }
-.pa-feature__label {
-  margin: auto 0 0; padding-top: 18px; font-size: 12px; font-weight: 700;
-  letter-spacing: .14em; text-transform: uppercase; color: var(--pa-text-faint);
+.pa-showcase__tab.is-active .pa-showcase__name { color: var(--pa-teal-mid); }
+.pa-showcase__benefit {
+  font-family: var(--ark-font-display); font-size: 20px; line-height: 1.3; letter-spacing: -.01em;
 }
-
+/* The progress line runs the length of one interval along the row's bottom. */
+.pa-showcase__progress {
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--pa-teal-mid);
+  transform: scaleX(0); transform-origin: left; animation: pa-showcase-progress 6s linear forwards;
+}
+@keyframes pa-showcase-progress { to { transform: scaleX(1); } }
+.pa-showcase__stage { min-width: 0; }
+.pa-showcase__panel { animation: pa-showcase-in .45s var(--pa-ease) both; }
+@keyframes pa-showcase-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+/* The scene is the animation's own 3:2 frame on a soft ground, sized before
+   the Lottie arrives so nothing shifts. */
+.pa-showcase__scene {
+  aspect-ratio: 3 / 2; width: 100%; border-radius: 20px; overflow: hidden;
+  background: var(--pa-paper); border: 1px solid var(--pa-line);
+}
+.pa-showcase__art { box-sizing: border-box; width: 100%; height: 100%; padding: 3% 4%; }
+.pa-showcase__art svg { display: block; width: 100%; height: 100%; }
+.pa-showcase__copy { max-width: 62ch; margin: 22px 0 0; font-size: 17px; line-height: 1.75; color: var(--pa-text-muted); }
+.pa-showcase__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Accordion: the stage opens under the active row. */
+.pa-showcase--accordion { grid-template-columns: minmax(0, 1fr); }
+.pa-showcase--accordion .pa-showcase__panel { padding: 4px 0 24px; border-bottom: 1px solid var(--pa-line); }
+.pa-showcase--accordion .pa-showcase__tab.is-active { border-bottom-color: transparent; }
+.pa-showcase--accordion .pa-showcase__copy { margin-top: 16px; font-size: 15px; }
 
 /* ── Workflow: horizontal timeline ───────────────────────────── */
 .pa-flow__steps {
@@ -599,9 +618,6 @@
   }
   .pa-rail__arrow--prev { left: 6px; }
   .pa-rail__arrow--next { right: 6px; }
-  .pa-features__rail .pa-rail__group { padding-left: 20px; padding-right: 20px; }
-  .pa-features__rail .pa-rail__viewport { scroll-padding-inline: 20px; }
-  .pa-feature { flex-basis: 296px; }
   .pa-org__row { gap: 14px; padding-top: 60px; }
   .pa-org { padding: 28px 18px 30px; border-radius: 20px; }
   .pa-org__monogram { width: 54px; height: 54px; font-size: 1rem; }
@@ -616,11 +632,13 @@
 /* ── Reduced motion ──────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .pa-motion [data-reveal] { opacity: 1; transform: none; transition: none; }
-  .pa-btn, .pa-btn svg, .pa-feature, .pa-university, .pa-university__mark,
+  .pa-btn, .pa-btn svg, .pa-showcase__tab, .pa-showcase__tab::before, .pa-university, .pa-university__mark,
   .pa-university__mark img, .pa-university__name,
   .pa-audience article, .pa-footer a, .pa-footer svg { transition: none; }
-  .pa-btn:hover, .pa-feature:hover, .pa-university:hover,
+  .pa-btn:hover, .pa-university:hover,
   .pa-audience article:hover, .pa-btn:hover svg { transform: none; }
+  /* Showcase: no auto-advance (FeatureShowcase.js also checks), no entrance fade. */
+  .pa-showcase__panel, .pa-showcase__progress { animation: none; }
   /* Rails: no drift (Rail.js also checks), no smooth scrolling, no fades. */
   .pa-rail__viewport { scroll-behavior: auto; -webkit-mask-image: none; mask-image: none; }
   .pa-rail__arrow { transition: none; }

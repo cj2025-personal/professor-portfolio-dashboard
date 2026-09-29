@@ -6,6 +6,7 @@ import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
 import HeroAnimation from './HeroAnimation';
 import Rail from './Rail';
+import FeatureShowcase from './FeatureShowcase';
 import { initials } from './ArchivynDemos';
 import UNIVERSITIES from '../lib/universities';
 import '../styles/proj-arch.css';
@@ -20,7 +21,6 @@ const ProjectIcon = ({ name }) => {
 // The audience list is copy-only; the icons are presentation, matched to the
 // order the four groups are written in.
 const AUDIENCE_ICONS = ['reading', 'scholar', 'community', 'explanation'];
-const pad = index => String(index + 1).padStart(2, '0');
 
 // The initial Big Ten rollout visual. A university's official logo appears
 // only once its brand office has given written permission and supplied the
@@ -134,20 +134,6 @@ function SectionMedia({ media }) {
   </figure>;
 }
 
-// Each card carries the spot illustration named by `animation` in the content
-// file, falling back to the plain icon when a feature has no miniature yet.
-function Feature({ feature, index }) {
-  return <li className="pa-feature">
-    <p className="pa-feature__num">{pad(index)}</p>
-    {feature.animation?.src
-      ? <HeroAnimation src={feature.animation.src} label={feature.animation.label} className="pa-feature__art" />
-      : <span className="pa-feature__icon"><ProjectIcon name={feature.icon} /></span>}
-    <h3 className="pa-card-title">{feature.title}</h3>
-    <p className="pa-feature__copy">{feature.description}</p>
-    <p className="pa-feature__label">{feature.label}</p>
-  </li>;
-}
-
 export default function ArchivynPage() {
   const { content, loading } = useArchivynContent();
   const { scholar } = useScholar();
@@ -223,13 +209,10 @@ export default function ArchivynPage() {
           </div>
           {media('product')}
         </div>
-        {/* The cards sit still on a rail beneath the split until the reader
-            moves them: arrows step one card, the mouse drags, touch swipes,
-            and the cards snap into place. */}
-        <div className="pa-features pa-split__below" data-reveal style={{ '--pa-delay': '80ms' }}>
-          <Rail label="Connected product experiences" className="pa-features__rail">
-            {page.features.map((feature, index) => <Feature key={feature.label} feature={feature} index={index} />)}
-          </Rail>
+        {/* A product tour beneath the split: the seven features as a list on
+            the left, one of them on a large stage on the right. */}
+        <div className="pa-split__below" data-reveal style={{ '--pa-delay': '80ms' }}>
+          <FeatureShowcase features={page.features} />
         </div>
       </div>
     </section>
