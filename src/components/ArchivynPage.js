@@ -210,7 +210,9 @@ export default function ArchivynPage() {
         columns visually and the DOM keeps copy first, so a narrow screen and
         a screen reader both get the text before its image. */}
     <section id="project-mission" className="pa-band pa-band--paper" aria-labelledby="pa-mission-title">
-      <div className="ark-container pa-split">
+      {/* Art on the left, copy on the right, so the page alternates with the
+          hero above it. The DOM keeps the copy first. */}
+      <div className="ark-container pa-split pa-split--reverse">
         <div className="pa-split__text" data-reveal>
           <p className="pa-kicker">{page.mission.eyebrow}</p>
           <h2 id="pa-mission-title" className="pa-display">{page.mission.title}</h2>

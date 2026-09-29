@@ -148,7 +148,8 @@
 :not(.pa-split) > .pa-split__text > .pa-display { max-width: 26ch; }
 :not(.pa-split) > .pa-split__text > .pa-lead { max-width: 74ch; }
 .pa-split--reverse .pa-split__text { order: 2; }
-.pa-split--reverse .pa-split__media { order: 1; }
+.pa-split--reverse .pa-split__media,
+.pa-split--reverse .pa-mission-art { order: 1; }
 .pa-split__below { margin-top: clamp(36px, 4.4vw, 64px); }
 
 /* ── Media slot ──────────────────────────────────────────────── */
@@ -599,7 +600,8 @@
      dropped rather than leaving half the sections image-first. */
   .pa-split { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .pa-split--reverse .pa-split__text,
-  .pa-split--reverse .pa-split__media { order: 0; }
+  .pa-split--reverse .pa-split__media,
+  .pa-split--reverse .pa-mission-art { order: 0; }
   /* The full-width variants have to fold here too. */
   .pa-audience { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pa-flow__steps { grid-template-columns: minmax(0, 1fr); gap: 0; }
