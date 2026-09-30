@@ -6,7 +6,7 @@ import { useScholar } from '../lib/useScholar';
 import { DemoVideo } from './PortfolioPlatform';
 import HeroAnimation from './HeroAnimation';
 import Rail from './Rail';
-import FeatureShowcase from './FeatureShowcase';
+import FeatureJourney from './FeatureJourney';
 import { initials } from './ArchivynDemos';
 import UNIVERSITIES from '../lib/universities';
 import '../styles/proj-arch.css';
@@ -209,10 +209,10 @@ export default function ArchivynPage() {
           </div>
           {media('product')}
         </div>
-        {/* A product tour beneath the split: the seven features as a list on
-            the left, one of them on a large stage on the right. */}
+        {/* The seven features as stops on one path, from the first question
+            to a deeper understanding. */}
         <div className="pa-split__below" data-reveal style={{ '--pa-delay': '80ms' }}>
-          <FeatureShowcase features={page.features} />
+          <FeatureJourney features={page.features} />
         </div>
       </div>
     </section>

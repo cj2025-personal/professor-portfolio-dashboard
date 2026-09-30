@@ -284,77 +284,112 @@
 .pa-rail__arrow:hover { transform: translateY(-1px); box-shadow: var(--pa-shadow-md); border-color: var(--pa-line-strong); }
 .pa-rail__arrow:disabled { opacity: 0; pointer-events: none; }
 .pa-rail__arrow:focus-visible { outline: 2px solid var(--pa-teal-mid); outline-offset: 3px; }
-/* ── Feature showcase ────────────────────────────────────────
-   A product tour (components/FeatureShowcase.js): a tablist of the seven
-   features on the left, one feature on a large stage on the right. Only
-   one description is on screen at a time. Below 860px the list becomes an
-   accordion and the stage opens under the active row. */
-.pa-showcase {
-  position: relative; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: clamp(32px, 5vw, 72px); align-items: start;
+/* ── Feature journey ─────────────────────────────────────────
+   Seven stops on one path (components/FeatureJourney.js). Each stop is a
+   button: a small scene, a node on the path, the number, the product name
+   and its benefit line. The path is drawn by each node's pseudo-elements,
+   gold up to the active stop and hairline beyond it, so the line always
+   sits exactly on the nodes whatever the column width. One panel beneath
+   carries the active stop's copy, with a caret under that stop. */
+.pa-journey { position: relative; }
+.pa-journey__stops {
+  display: grid; grid-template-columns: repeat(var(--count, 7), minmax(0, 1fr)); gap: 10px;
+  overflow: hidden; padding: 6px 0 2px;
 }
-.pa-showcase__list { display: flex; flex-direction: column; border-top: 1px solid var(--pa-line); }
-.pa-showcase__tab {
-  position: relative; display: flex; flex-direction: column; gap: 4px; width: 100%;
-  margin: 0; padding: 16px 16px 18px 22px; border: 0; border-bottom: 1px solid var(--pa-line);
-  background: transparent; text-align: left; cursor: pointer; color: var(--pa-text-muted);
-  transition: color .2s var(--pa-ease), background-color .2s var(--pa-ease);
+.pa-journey__stop {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  margin: 0; padding: 6px 4px 10px; border: 0; border-radius: 16px; background: transparent;
+  text-align: center; cursor: pointer; color: var(--pa-text-muted);
+  transition: color .2s var(--pa-ease);
 }
-/* The gold rule at the left is the page's kicker mark; it grows in on the
-   active row. */
-.pa-showcase__tab::before {
-  content: ''; position: absolute; left: 0; top: 18px; bottom: 20px; width: 3px; border-radius: 2px;
-  background: var(--pa-gold); transform: scaleY(0); transform-origin: top;
-  transition: transform .3s var(--pa-ease);
-}
-.pa-showcase__tab:hover { color: var(--pa-text); background: rgba(24, 62, 72, .03); }
-.pa-showcase__tab.is-active { color: var(--pa-text); }
-.pa-showcase__tab.is-active::before { transform: scaleY(1); }
-.pa-showcase__tab:focus-visible { outline: 2px solid var(--pa-teal-mid); outline-offset: -2px; border-radius: 8px; }
-.pa-showcase__name {
-  font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--pa-text-faint); transition: color .2s var(--pa-ease);
-}
-.pa-showcase__tab.is-active .pa-showcase__name { color: var(--pa-teal-mid); }
-.pa-showcase__benefit {
-  font-family: var(--ark-font-display); font-size: 20px; line-height: 1.3; letter-spacing: -.01em;
-}
-/* The progress line runs the length of one interval along the row's bottom. */
-.pa-showcase__progress {
-  position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--pa-teal-mid);
-  transform: scaleX(0); transform-origin: left; animation: pa-showcase-progress 6s linear forwards;
-}
-@keyframes pa-showcase-progress { to { transform: scaleX(1); } }
-/* The stage sits at the list's mid-height. Inside it the scene is a modest
-   panel beside the copy, one media row, so the artwork reads as an accent
-   to the text rather than a billboard above it. */
-.pa-showcase__stage { min-width: 0; align-self: center; }
-.pa-showcase__panel {
-  display: grid; grid-template-columns: minmax(0, 292px) minmax(0, 1fr); gap: clamp(22px, 2.6vw, 36px);
-  align-items: center; animation: pa-showcase-in .45s var(--pa-ease) both;
-}
-@keyframes pa-showcase-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: none; }
-}
-/* The scene is the animation's own 3:2 frame on a soft ground, sized before
-   the Lottie arrives so nothing shifts. */
-.pa-showcase__scene {
-  aspect-ratio: 3 / 2; width: 100%; border-radius: 18px; overflow: hidden;
+.pa-journey__stop:focus-visible { outline: 2px solid var(--pa-teal-mid); outline-offset: -2px; }
+.pa-journey__scene {
+  display: block; width: 100%; max-width: 156px; aspect-ratio: 3 / 2; border-radius: 14px; overflow: hidden;
   background: var(--pa-paper); border: 1px solid var(--pa-line); box-shadow: var(--pa-shadow-sm);
+  transition: transform .25s var(--pa-ease), box-shadow .25s var(--pa-ease), border-color .25s var(--pa-ease);
 }
-.pa-showcase__art { box-sizing: border-box; width: 100%; height: 100%; padding: 3% 4%; }
-.pa-showcase__art svg { display: block; width: 100%; height: 100%; }
-.pa-showcase__copy { max-width: 48ch; margin: 0; font-size: 16px; line-height: 1.75; color: var(--pa-text-muted); }
-.pa-showcase__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-/* Accordion: the stage opens under the active row. */
-.pa-showcase--accordion { grid-template-columns: minmax(0, 1fr); }
-.pa-showcase--accordion .pa-showcase__panel {
-  grid-template-columns: minmax(0, 1fr); gap: 0; padding: 4px 0 24px; border-bottom: 1px solid var(--pa-line);
+.pa-journey__stop:hover .pa-journey__scene { transform: translateY(-2px); box-shadow: var(--pa-shadow-md); }
+.pa-journey__stop.is-active .pa-journey__scene { border-color: var(--pa-teal-mid); box-shadow: var(--pa-shadow-md); transform: translateY(-2px); }
+.pa-journey__art { display: block; box-sizing: border-box; width: 100%; height: 100%; padding: 3% 4%; }
+.pa-journey__art svg { display: block; width: 100%; height: 100%; }
+/* The node, and the two path segments that reach out from it. */
+.pa-journey__node {
+  position: relative; display: block; width: 14px; height: 14px; margin: 12px 0 10px; border-radius: 50%;
+  background: var(--pa-paper); border: 2px solid var(--pa-line); box-sizing: border-box;
+  transition: background-color .25s var(--pa-ease), border-color .25s var(--pa-ease), box-shadow .25s var(--pa-ease);
 }
-.pa-showcase--accordion .pa-showcase__scene { max-width: 260px; }
-.pa-showcase--accordion .pa-showcase__tab.is-active { border-bottom-color: transparent; }
-.pa-showcase--accordion .pa-showcase__copy { margin-top: 16px; font-size: 15px; }
+.pa-journey__node::before, .pa-journey__node::after {
+  content: ''; position: absolute; top: 50%; width: 240px; height: 2px; margin-top: -1px; background: var(--pa-line);
+}
+.pa-journey__node::before { right: 100%; margin-right: 2px; }
+.pa-journey__node::after { left: 100%; margin-left: 2px; }
+.pa-journey__stop:first-child .pa-journey__node::before,
+.pa-journey__stop:last-child .pa-journey__node::after { display: none; }
+.pa-journey__stop.is-passed .pa-journey__node { background: var(--pa-gold); border-color: var(--pa-gold); }
+.pa-journey__stop.is-passed .pa-journey__node::before,
+.pa-journey__stop.is-passed .pa-journey__node::after,
+.pa-journey__stop.is-active .pa-journey__node::before { background: var(--pa-gold); }
+.pa-journey__stop.is-active .pa-journey__node {
+  background: var(--pa-teal); border-color: var(--pa-teal); box-shadow: 0 0 0 4px var(--pa-teal-tint);
+}
+.pa-journey__num { font-size: 11px; font-weight: 700; letter-spacing: .14em; font-variant-numeric: tabular-nums; color: var(--pa-gold); }
+/* Two lines tall whether the name needs them or not, so every benefit line
+   starts at the same height across the row. */
+.pa-journey__name {
+  display: flex; align-items: center; justify-content: center; min-height: 2.9em;
+  font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--pa-text-faint);
+  transition: color .2s var(--pa-ease);
+}
+.pa-journey__stop.is-active .pa-journey__name { color: var(--pa-teal-mid); }
+.pa-journey__benefit {
+  max-width: 150px; font-family: var(--ark-font-display); font-size: 15px; line-height: 1.3; letter-spacing: -.01em;
+  color: var(--pa-text); text-wrap: balance;
+}
+/* The detail panel, with a caret under the active stop. */
+.pa-journey__detail { display: grid; grid-template-columns: repeat(var(--count, 7), minmax(0, 1fr)); margin-top: 8px; }
+.pa-journey__caret {
+  grid-row: 1; justify-self: center; width: 14px; height: 14px; margin-bottom: -8px; z-index: 1;
+  background: var(--pa-paper); border-left: 1px solid var(--pa-line); border-top: 1px solid var(--pa-line);
+  transform: rotate(45deg);
+}
+.pa-journey__panel {
+  grid-column: 1 / -1; grid-row: 2; display: flex; align-items: center; justify-content: space-between; gap: 28px;
+  padding: 22px 26px; border-radius: 16px; background: var(--pa-paper); border: 1px solid var(--pa-line);
+  animation: pa-journey-in .35s var(--pa-ease) both;
+}
+@keyframes pa-journey-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.pa-journey__copy { max-width: 74ch; margin: 0; font-size: 15.5px; line-height: 1.75; color: var(--pa-text-muted); }
+.pa-journey__nav { display: flex; align-items: center; gap: 8px; flex: none; }
+.pa-journey__count { margin-right: 6px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--pa-text-faint); }
+.pa-journey__arrow {
+  display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border-radius: 50%;
+  border: 1px solid var(--pa-line); background: var(--pa-paper); color: var(--pa-teal); cursor: pointer;
+  transition: border-color .2s var(--pa-ease), box-shadow .2s var(--pa-ease), transform .2s var(--pa-ease);
+}
+.pa-journey__arrow svg { width: 18px; height: 18px; stroke-width: 1.8; }
+.pa-journey__arrow:hover:not(:disabled) { border-color: var(--pa-line-strong); box-shadow: var(--pa-shadow-sm); transform: translateY(-1px); }
+.pa-journey__arrow:disabled { opacity: .35; cursor: default; }
+.pa-journey__arrow:focus-visible { outline: 2px solid var(--pa-teal-mid); outline-offset: 3px; }
+/* Vertical journey: the path runs down the left, the copy opens under its stop. */
+/* One path line on the container, from the first node to the last; the
+   per-node segments are off here so nothing reaches past the ends. */
+.pa-journey--vertical .pa-journey__stops { position: relative; display: flex; flex-direction: column; gap: 0; padding: 0 4px; overflow: hidden; }
+.pa-journey--vertical .pa-journey__stops::before {
+  content: ""; position: absolute; left: 12px; top: 42px; bottom: 42px; width: 2px; background: var(--pa-line);
+}
+.pa-journey--vertical .pa-journey__stop {
+  display: grid; grid-template-columns: 18px 96px minmax(0, 1fr); grid-template-rows: auto auto auto;
+  column-gap: 14px; row-gap: 2px; align-items: center; padding: 10px 0; text-align: left;
+}
+.pa-journey--vertical .pa-journey__node { grid-column: 1; grid-row: 1 / 4; justify-self: center; margin: 0; z-index: 1; }
+.pa-journey--vertical .pa-journey__node::before, .pa-journey--vertical .pa-journey__node::after { display: none; }
+.pa-journey--vertical .pa-journey__scene { grid-column: 2; grid-row: 1 / 4; max-width: none; }
+.pa-journey--vertical .pa-journey__num, .pa-journey--vertical .pa-journey__name, .pa-journey--vertical .pa-journey__benefit { grid-column: 3; }
+.pa-journey--vertical .pa-journey__name { display: block; min-height: 0; text-align: left; }
+.pa-journey--vertical .pa-journey__benefit { max-width: none; font-size: 17px; }
+.pa-journey--vertical .pa-journey__panel { display: block; margin: 0 0 12px 32px; padding: 18px 20px; animation: none; }
+.pa-journey--vertical .pa-journey__copy { font-size: 15px; }
+.pa-journey--vertical .pa-journey__nav { margin-top: 14px; }
 
 /* ── Workflow: horizontal timeline ───────────────────────────── */
 .pa-flow__steps {
@@ -641,13 +676,13 @@
 /* ── Reduced motion ──────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .pa-motion [data-reveal] { opacity: 1; transform: none; transition: none; }
-  .pa-btn, .pa-btn svg, .pa-showcase__tab, .pa-showcase__tab::before, .pa-university, .pa-university__mark,
+  .pa-btn, .pa-btn svg, .pa-journey__stop, .pa-journey__scene, .pa-journey__node, .pa-journey__arrow, .pa-university, .pa-university__mark,
   .pa-university__mark img, .pa-university__name,
   .pa-audience article, .pa-footer a, .pa-footer svg { transition: none; }
   .pa-btn:hover, .pa-university:hover,
   .pa-audience article:hover, .pa-btn:hover svg { transform: none; }
-  /* Showcase: no auto-advance (FeatureShowcase.js also checks), no entrance fade. */
-  .pa-showcase__panel, .pa-showcase__progress { animation: none; }
+  .pa-journey__panel { animation: none; }
+  .pa-journey__stop:hover .pa-journey__scene, .pa-journey__stop.is-active .pa-journey__scene { transform: none; }
   /* Rails: no drift (Rail.js also checks), no smooth scrolling, no fades. */
   .pa-rail__viewport { scroll-behavior: auto; -webkit-mask-image: none; mask-image: none; }
   .pa-rail__arrow { transition: none; }
