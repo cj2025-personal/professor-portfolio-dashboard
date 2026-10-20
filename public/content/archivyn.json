@@ -138,7 +138,7 @@
       "leadRole": "Innovator, CEO",
       "leadPhoto": "/images/cj.png",
       "members": [
-        { "name": "Ram", "role": "Technology developer", "photo": "/images/ram.png" },
+        { "name": "Ram", "role": "Technology developer · Co-founder", "photo": "/images/ram.png" },
         { "name": "Nikhil Sai Jaddu", "role": "Technology developer", "photo": "/images/nikhil.jpg" }
       ]
     },
